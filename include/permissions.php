@@ -1,0 +1,6 @@
+<?php
+
+$permissions = [	
+];
+
+return $permissions;
