@@ -37,6 +37,7 @@ class TbActiveRecord extends \yii\db\ActiveRecord
 		} else {
 			$store = \Yii::$app->tenant->getModel((new \ReflectionClass(self::className()))->getShortName(), 'store');		
 			if ($store!==false && $store!='') {
+				// Remember to use andWhere() in your own Condition queries
 				return parent::find()->where(['store' => \Yii::$app->tenant->current[$store]]);
 			} elseif ($store=='') {
 				return parent::find();
@@ -66,7 +67,7 @@ class TbActiveRecord extends \yii\db\ActiveRecord
         			// model requires it, then, in backend zone, 
         			// the value of the store will be assigned to
         			// root store. Remember this point for later
-        			// security checking if needed.
+        			// security checking if needed. Feel free to override this class and method.        		
         			$this->store = \Yii::$app->tenant->root[$store];	        		
 	        	}
 	        } elseif ($store=='') {

@@ -30,6 +30,14 @@ class Module extends \gxc\yii2base\classes\Module
 	
 	public function init()
 	{				
-		parent::init();					
+		parent::init();		
+
+		// set up i8n
+        if (empty(\Yii::$app->i18n->translations['base'])) {
+            \Yii::$app->i18n->translations['base'] = [
+                'class' => 'yii\i18n\PhpMessageSource',
+                'basePath' => __DIR__ . '/messages',                
+            ];
+        }					
 	}
 }

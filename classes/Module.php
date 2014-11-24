@@ -27,15 +27,10 @@ class Module extends \yii\base\Module
 	public $name = 'Yii2 Module';
 
 	/**
-	 * Call Module parent init function. 
-	 */
+     * @inheritdoc
+     */
 	public function init()
 	{		
 		parent::init();				
-	}
-
-	public function getModel($id, $type = false)
-	{
-		return \Yii::$app->tenant->getModel($id, $type);
-	}
+	}	
 }

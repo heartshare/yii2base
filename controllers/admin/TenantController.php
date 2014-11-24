@@ -71,7 +71,7 @@ class TenantController extends BeController
     public function actionCreate()
     {
 
-        $model = \Yii::createObject($this->getModel('class'));        
+        $model = \Yii::$app->tenant->createModel('Tenant');        
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
