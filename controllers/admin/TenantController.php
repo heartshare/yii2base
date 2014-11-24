@@ -70,8 +70,6 @@ class TenantController extends BeController
      */
     public function actionCreate()
     {
-        var_dump(\Yii::$app->tenant->current);
-        exit;
 
         $model = \Yii::createObject($this->getModel('class'));        
 
@@ -112,7 +110,6 @@ class TenantController extends BeController
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
         return $this->redirect(['index']);
     }
 
@@ -130,15 +127,5 @@ class TenantController extends BeController
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-
-    /**
-     * Return Tenant model information based on Tenant Component
-     * @param string $type
-     * @return mixed Tenant Information     
-     */
-    protected function getModel($type = false)
-    {
-        return \Yii::$app->tenant->getModel('Tenant', $type);        
-    }
+    }    
 }

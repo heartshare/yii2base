@@ -58,7 +58,7 @@ class UserController extends BeController
      * @return mixed
      */
     public function actionView($id)
-    {
+    {        
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -70,7 +70,7 @@ class UserController extends BeController
      * @return mixed
      */
     public function actionCreate()
-    {
+    {        
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -123,7 +123,8 @@ class UserController extends BeController
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne($id)) !== null) {
+        $modelClass = \Yii::$app->tenant->getModel('User', 'class');
+        if (($model = $modelClass::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

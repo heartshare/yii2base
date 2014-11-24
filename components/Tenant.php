@@ -116,4 +116,14 @@ class Tenant extends Component
         return BaseHelper::getModel($id, $type);
     }
 
+    /**
+     * Create a Model Class
+     * @param  string $id    [Id of the Model]
+     * @return object Model Object
+     */
+    public function createModel($id)
+    {
+        return \Yii::createObject(BaseHelper::getModel($id, 'class'));        
+    }
+
 }

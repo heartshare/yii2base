@@ -12,6 +12,8 @@ use yii\helpers\StringHelper;
 use yii\helpers\FileHelper;
 use yii\helpers\ArrayHelper;
 
+use yii\base\InvalidConfigException;
+
 /**
  * Base Helper Class 
  * @author  Tuan Nguyen <nganhtuan63@gmail.com>
@@ -91,8 +93,8 @@ class BaseHelper
 	public static function getModel($id = false, $type = false)
 	{
 		$keys = self::getModels();		
-		if ($id && isset($keys[$id])) {
-			$result = false;
+		$result = false;
+		if ($id && isset($keys[$id])) {			
 			switch ($type) {
 				case 'class':
 					$result = $keys[$id]['class'];
@@ -105,9 +107,13 @@ class BaseHelper
 					break;
 			}		
 			return $result;	
+		}
+
+		if ($result!==false) {
+			return $result;	
 		} else {
-			return false;
-		}		
+			throw new InvalidConfigException(Yii::t('base', 'Model not found.'));
+		}
 	}
 
 	/**
@@ -175,12 +181,31 @@ class BaseHelper
 		return $menu;
 	}
 
-	public static function getTenant($id)
-	{
-		$tenantClass = self::getModel('Tenant', 'class');
-		return $tenantClass::find()->asArray()->where(['id'=>$id])->one();
+	/**
+	 * Get Tenant Object based on the Id. Use cache to store information.
+	 * @param  [integer] $id [ID of the Tenant]
+	 * @return [mixed]         [Tenant Object]
+	 */
+	public static function getTenantById($id)
+	{		
+		$cacheId = self::getCacheKey('tenant', 'tenant_id') . $id;
+		$tenant = \Yii::$app->cache->get($cacheId);
+		if ($tenant === false) {
+			$tenantClass = self::getModel('Tenant', 'class');
+			$tenant = $tenantClass::find()->asArray()->where(['id'=>$id])->one();
+			if ($tenant) {
+				Yii::$app->cache->set($cacheId, $tenant, self::getCacheKeyTimeExpired('teant', 'detail_id'));
+			} 
+		}
+		return $tenant;				
 	}
 
+
+	/**
+	 * Generate a unique Tenant Store
+	 * @param  [string] $type [Type of Store]
+	 * @return [string]         [Store unique key]
+	 */
 	public static function generateTenantStoreId($type = 'a')
 	{		
 		return $type.'.'.uniqid();

@@ -50,7 +50,7 @@ class BackendConfigBehavior extends Behavior
 	 */
 	public function beforeRequest()
 	{		
-		$rootTenant = BaseHelper::getTenant($this->rootTenant);		
+		$rootTenant = BaseHelper::getTenantById($this->rootTenant);		
 		if ($rootTenant) {			
 			\Yii::$app->tenant->isBackend = true;
 			\Yii::$app->tenant->current = \Yii::$app->tenant->root = $rootTenant;

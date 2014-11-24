@@ -25,14 +25,14 @@ use gxc\yii2widgets\switcher\Switcher;
             </div>
             <div class="inner-form row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'domain')->textInput(['maxlength' => 128]) ?>
+                    <?= $form->field($model, 'system_domain')->textInput(['maxlength' => 128]) ?>
                 </div>
             </div>
             <div class="inner-form row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'system_domain')->textInput(['maxlength' => 128]) ?>
+                    <?= $form->field($model, 'domain')->textInput(['maxlength' => 128]) ?>
                 </div>
-            </div>
+            </div>            
             <div class="inner-form row">
                 <div class="col-md-3">
                     <?= $form->field($model, 'logo')->textInput(['maxlength' => 128]) ?>

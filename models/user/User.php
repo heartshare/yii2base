@@ -8,6 +8,7 @@
 namespace gxc\yii2base\models\user;
 
 use Yii;
+use gxc\yii2base\classes\TbActiveRecord;
 
 /**
  * This is the model class for table "base_user".
@@ -20,7 +21,7 @@ use Yii;
  * @author  Tuan Nguyen <nganhtuan63@gmail.com>
  * @since  2.0
  */
-class User extends \yii\db\ActiveRecord
+class User extends TbActiveRecord
 {
     /**
      * @inheritdoc
