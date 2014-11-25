@@ -14,7 +14,9 @@ use yii\web\NotFoundHttpException;
 use gxc\yii2base\helpers\BaseHelper;
 
 /**
- * Tenant component
+ * Tenant component. This component holds all information of
+ * current and root tenant. It also provides some methods
+ * to create and get model data.
  *
  * @author Tuan Nguyen <nganhtuan63@gmail.com>
  * @since 2.0

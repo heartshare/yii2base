@@ -54,6 +54,15 @@ class BackendConfigBehavior extends Behavior
 		if ($rootTenant) {			
 			\Yii::$app->tenant->isBackend = true;
 			\Yii::$app->tenant->current = \Yii::$app->tenant->root = $rootTenant;
+			// Start setting the locale component
+			// We set default Timezone based on the application config
+			// You can change this based on what you want
+			\Yii::$app->locale->defaultTimezone = \Yii::$app->timeZone;
+
+			// You can change local Timezone based on user session
+			// application setting, or whatever you want
+			\Yii::$app->locale->localTimezone = \Yii::$app->locale->defaultTimezone;
+
 		} else {
 			throw new InvalidConfigException(Yii::t('base', 'No Root Tenant Found'));
 		}					
