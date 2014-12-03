@@ -39,8 +39,9 @@ class User extends TbActiveRecord
         return [
             [['store', 'email'], 'required'],
             [['store'], 'string', 'max' => 64],
+            [['email'], 'email'],
             [['email'], 'string', 'max' => 128],
-            [['store', 'email'], 'unique', 'targetAttribute' => ['store', 'email'], 'message' => \Yii::t('base','Store and Email has already been taken.')]
+            [['store', 'email'], 'unique', 'targetAttribute' => ['store', 'email'], 'message' => \Yii::t('base','Email has already been taken.')]
         ];
     }
 
@@ -55,4 +56,16 @@ class User extends TbActiveRecord
             'email' => Yii::t('base', 'Email'),
         ];
     }
+
+    /**
+     * Finds user by email
+     *
+     * @param string Email
+     * @return static|null
+     */
+    public static function findByEmail($email)
+    {
+        return static::findOne(['email' => $email]);
+    }
+
 }

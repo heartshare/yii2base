@@ -195,6 +195,10 @@ margin-bottom: 15px;
 .login-externalbox a {
     color: #aaa;
 }
+
+.login_body .form-group{
+	margin-bottom: 0px!important;
+}
 .main-ctn .nav.nav-tabs{ padding: 0 15px;}
 .main-ctn .tab-ctn { padding: 0 15px;} 
 .middle { font-size: 12px; line-height: 32px;}

@@ -8,6 +8,8 @@
 namespace gxc\yii2base\models\user;
 
 use Yii;
+use yii\web\IdentityInterface;
+use gxc\yii2base\classes\TbActiveRecord;
 
 /**
  * This is the model class for table "base_user_identity".
@@ -21,8 +23,6 @@ use Yii;
  * @property string $auth_params
  * @property string $auth_key
  * @property string $password_hash
- * @property integer $login_attempts
- * @property string $recent_login
  * @property string $recent_password_change
  * @property integer $status
  * 
@@ -30,8 +30,11 @@ use Yii;
  * @author  Tuan Nguyen <nganhtuan63@gmail.com>
  * @since  2.0
  */
-class UserIdentity extends \yii\db\ActiveRecord
+class UserIdentity extends TbActiveRecord implements IdentityInterface
 {
+    const STATUS_DISABLED = 0;
+    const STATUS_ACTIVE = 15;
+
     /**
      * @inheritdoc
      */
@@ -45,14 +48,14 @@ class UserIdentity extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['user_id', 'auth_key', 'password_hash', 'recent_login', 'recent_password_change'], 'required'],
-            [['user_id', 'login_attempts', 'status'], 'integer'],
-            [['auth_params'], 'string'],
-            [['recent_login', 'recent_password_change'], 'safe'],
-            [['store', 'zone'], 'string', 'max' => 64],
-            [['auth_provider', 'auth_provider_uid', 'auth_key', 'password_hash'], 'string', 'max' => 255],
-            [['store', 'user_id', 'zone'], 'unique', 'targetAttribute' => ['store', 'user_id', 'zone'], 'message' => 'The combination of Store, User ID and Zone has already been taken.']
+        return [            
+            [['recent_password_change', 'auth_key', 'password_hash'], 'safe'],
+            [['user_id', 'status', 'recent_password_change'], 'integer'],
+            [['auth_params'], 'string'],            
+            [['store', 'zone'], 'string', 'max' => 64],            
+            [['store', 'user_id', 'zone'], 'unique', 'targetAttribute' => ['store', 'user_id', 'zone'], 'message' => 'User ID and Zone have already been taken.'],
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DISABLED]],
         ];
     }
 
@@ -70,11 +73,95 @@ class UserIdentity extends \yii\db\ActiveRecord
             'auth_provider_uid' => Yii::t('base', 'Auth Provider Uid'),
             'auth_params' => Yii::t('base', 'Auth Params'),
             'auth_key' => Yii::t('base', 'Auth Key'),
-            'password_hash' => Yii::t('base', 'Password Hash'),
-            'login_attempts' => Yii::t('base', 'Login Attempts'),
-            'recent_login' => Yii::t('base', 'Recent Login'),
+            'password_hash' => Yii::t('base', 'Password Hash'),            
             'recent_password_change' => Yii::t('base', 'Recent Password Change'),
             'status' => Yii::t('base', 'Status'),
         ];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public static function findIdentity($id)
+    {
+        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    /**
+     * Finds user by email
+     *
+     * @param string $email
+     * @return static|null
+     */
+    public static function findByEmail($email, $zone='site')
+    {
+        // First we have to find the user based on User Model      
+        $user_model = \Yii::$app->tenant->createModel('User');  
+        $user = $user_model::find()->asArray()->where(['email'=>$email])->one();
+        if ($user) {                        
+            return static::findOne(['user_id' => $user['id'], 'zone' => $zone, 'auth_provider' => 'app']);
+        }
+        return null;        
+    }    
+
+    /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return boolean if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+
+    /**
+     * Generates "remember me" authentication key
+     */
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
+    }    
 }
