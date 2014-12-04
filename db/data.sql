@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.1.73)
 # Database: gxcapp
-# Generation Time: 2014-11-21 09:50:30 +0000
+# Generation Time: 2014-12-03 10:38:44 +0000
 # ************************************************************
 
 
@@ -181,7 +181,7 @@ LOCK TABLES `base_tenant` WRITE;
 
 INSERT INTO `base_tenant` (`id`, `app_store`, `content_store`, `resource_store`, `name`, `domain`, `system_domain`, `logo`, `status`)
 VALUES
-	(1,'a.546f08bdcc7a2','c.546f08d949cb5','r.546f08ea80786','GXC','gxcsoft.com','www.gxcsoft.com',NULL,0);
+  (1,'a.6f9.r27','c.e68.f79','r.6d9.299','GXC','gxcsoft.com','www.gxcsoft.com',NULL,1);
 
 /*!40000 ALTER TABLE `base_tenant` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -257,6 +257,15 @@ CREATE TABLE `base_user` (
   KEY `store_email` (`store`,`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `base_user` WRITE;
+/*!40000 ALTER TABLE `base_user` DISABLE KEYS */;
+
+INSERT INTO `base_user` (`id`, `store`, `email`)
+VALUES
+  (4,'c.e68.f79','nganhtuan63@gmail.com');
+
+/*!40000 ALTER TABLE `base_user` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table base_user_confirmation
@@ -302,6 +311,15 @@ CREATE TABLE `base_user_display` (
   KEY `store_zone_screen_name_unique` (`store`,`zone`,`screen_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `base_user_display` WRITE;
+/*!40000 ALTER TABLE `base_user_display` DISABLE KEYS */;
+
+INSERT INTO `base_user_display` (`id`, `store`, `zone`, `user_id`, `screen_name`, `display_name`, `tagline`, `avatar`)
+VALUES
+  (1,'c.e68.f79','staff',4,'mr80','Tuan Nguyen',NULL,NULL);
+
+/*!40000 ALTER TABLE `base_user_display` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table base_user_group
@@ -355,8 +373,6 @@ CREATE TABLE `base_user_identity` (
   `auth_params` longtext,
   `auth_key` varchar(255) NOT NULL,
   `password_hash` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `login_attempts` int(11) NOT NULL DEFAULT '0',
-  `recent_login` datetime NOT NULL,
   `recent_password_change` datetime NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
@@ -365,6 +381,15 @@ CREATE TABLE `base_user_identity` (
   KEY `user_zone_status_store` (`user_id`,`zone`,`status`,`store`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `base_user_identity` WRITE;
+/*!40000 ALTER TABLE `base_user_identity` DISABLE KEYS */;
+
+INSERT INTO `base_user_identity` (`id`, `store`, `user_id`, `zone`, `auth_provider`, `auth_provider_uid`, `auth_params`, `auth_key`, `password_hash`, `recent_password_change`, `status`)
+VALUES
+  (4,'c.e68.f79',4,'staff','app',NULL,NULL,'pEK3z9A3kj9QixQp0856SXOGodpCXzu1',X'243279243133246A647A4366334A313069704D6646483143735271457549554A476B7956734D30444C587076725A2E624E30524630625A427335614F','0000-00-00 00:00:00',15);
+
+/*!40000 ALTER TABLE `base_user_identity` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table base_user_login
@@ -380,7 +405,7 @@ CREATE TABLE `base_user_login` (
   `login_at` datetime NOT NULL,
   `login_status` tinyint(1) NOT NULL DEFAULT '1',
   `login_provider` varchar(255) DEFAULT 'app',
-  `ip_address` int(10) DEFAULT NULL,
+  `ip_address` int(32) unsigned NOT NULL,
   `user_agent` text,
   PRIMARY KEY (`id`),
   KEY `store_user_zone` (`store`,`user_id`,`zone`)
@@ -411,6 +436,15 @@ CREATE TABLE `base_user_profile` (
   KEY `user_zone_store` (`user_id`,`zone`,`store`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `base_user_profile` WRITE;
+/*!40000 ALTER TABLE `base_user_profile` DISABLE KEYS */;
+
+INSERT INTO `base_user_profile` (`id`, `store`, `user_id`, `zone`, `gender`, `first_name`, `last_name`, `location`, `company`, `birthday`, `bio`, `registered_at`)
+VALUES
+  (1,'c.e68.f79',4,'staff',1,'Tuan','Nguyen',NULL,NULL,NULL,NULL,'0000-00-00 00:00:00');
+
+/*!40000 ALTER TABLE `base_user_profile` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 

@@ -55,7 +55,7 @@ class TbActiveRecord extends \yii\db\ActiveRecord
 	public function beforeSave($insert)
 	{
 	    if (parent::beforeSave($insert)) {
-	        $store = \Yii::$app->tenant->getModel((new \ReflectionClass(get_clas($this)))->getShortName(), 'store');
+	        $store = \Yii::$app->tenant->getModel((new \ReflectionClass(get_class($this)))->getShortName(), 'store');
 	        if ($store!==false && $store!='') {
 	        	if (!\Yii::$app->tenant->isBackend) {
 	        		// If this is the model accessing from Guest Tenant
@@ -63,7 +63,8 @@ class TbActiveRecord extends \yii\db\ActiveRecord
 	        		// to use the store from the current tenant
 	        		$this->store = \Yii::$app->tenant->current[$store];
 	        	} elseif ($this->store=='') {	        		
-        			// If the store value is not setted although the 
+        			// If the store value is not setted when creating or updateing
+        			// a model although the 
         			// model requires it, then, in backend zone, 
         			// the value of the store will be assigned to
         			// root store. Remember this point for later

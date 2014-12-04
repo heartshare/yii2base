@@ -40,6 +40,10 @@ return [
 		'class' => 'gxc\yii2base\models\user\UserLogin',
 		'store' => 'content_store'
 	],
+	'UserDisplay' => [
+		'class' => 'gxc\yii2base\models\user\UserDisplay',
+		'store' => 'content_store'
+	],	
 	'UserGroup' => [
 		'class' => 'gxc\yii2base\models\user\UserGroup',
 		'store' => 'content_store'
@@ -48,4 +52,8 @@ return [
 		'class' => 'gxc\yii2base\models\user\UserGroupAssign',
 		'store' => 'content_store'
 	],	
+	'BackendLoginForm' => [
+		'class' => 'gxc\yii2base\models\user\BackendLoginForm',
+		'store' => ''
+	]
 ];

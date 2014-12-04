@@ -7,6 +7,7 @@
 namespace gxc\yii2base\models\user;
 
 use Yii;
+use gxc\yii2base\classes\TbActiveRecord;
 
 /**
  * This is the model class for table "base_user_login".
@@ -24,8 +25,14 @@ use Yii;
  * @author  Tuan Nguyen <nganhtuan63@gmail.com>
  * @since  2.0
  */
-class UserLogin extends \yii\db\ActiveRecord
+class UserLogin extends TbActiveRecord
 {
+
+    const FAILED_ACCOUNT_DISABLED = 0;
+    const FAILED_WRONG_PASSWORD = 1;
+    const FAILED_ACCOUNT_NOT_FOUND = 2;
+    const SUCCESS = 3;
+
     /**
      * @inheritdoc
      */

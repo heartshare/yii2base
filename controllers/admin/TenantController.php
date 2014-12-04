@@ -69,8 +69,7 @@ class TenantController extends BeController
      * @return mixed
      */
     public function actionCreate()
-    {
-
+    {        
         $model = \Yii::$app->tenant->createModel('Tenant');        
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

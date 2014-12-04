@@ -8,6 +8,7 @@
 namespace gxc\yii2base\models\user;
 
 use Yii;
+use gxc\yii2base\classes\TbActiveRecord;
 
 /**
  * This is the model class for table "base_user_display".
@@ -25,7 +26,7 @@ use Yii;
  * @author  Tuan Nguyen <nganhtuan63@gmail.com>
  * @since  2.0
  */
-class UserDisplay extends \yii\db\ActiveRecord
+class UserDisplay extends TbActiveRecord
 {
     /**
      * @inheritdoc
@@ -40,8 +41,7 @@ class UserDisplay extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['user_id'], 'required'],
+        return [            
             [['user_id'], 'integer'],
             [['store', 'zone'], 'string', 'max' => 64],
             [['screen_name', 'display_name'], 'string', 'max' => 128],
