@@ -133,7 +133,7 @@ ul, li { list-style: none; }
 .generalForm  { padding: 15px;}
 .generalForm > .section.buttons{ padding-left: 15px; padding-right: 15px; text-align: right; }
 .generalForm label { display: block;}
-.generalForm select { height: 28px; line-height: 28px;}
+/*.generalForm select { height: 28px; line-height: 28px;}*/
 .section>.section-summary { padding-left: 50px; padding-right: 0; }
 .section>.section-summary h1, .section>.section-summary h2 {
 font-size: 18px;
