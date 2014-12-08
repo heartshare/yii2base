@@ -52,18 +52,6 @@ class TenantController extends BeController
     }
 
     /**
-     * Displays a single Tenant model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
      * Creates a new Tenant model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -73,7 +61,8 @@ class TenantController extends BeController
         $model = \Yii::$app->tenant->createModel('Tenant');        
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('message', ['success', 'Create Tenant Details Successfully.']);
+            return $this->redirect(['update', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -92,7 +81,10 @@ class TenantController extends BeController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            // flash successfully
+            Yii::$app->session->setFlash('message', ['success', 'Update Tenant Details Successfully.']);
+            // redirect
+            return $this->redirect(['update', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,

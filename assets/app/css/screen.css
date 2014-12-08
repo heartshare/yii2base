@@ -287,3 +287,28 @@ margin-bottom: 15px;
 	.popup .form-control { width: 59%;}
 
 }
+
+.label-as-badge {
+    border-radius: 1em;
+}
+
+.fa-alert {
+    vertical-align: middle;
+}
+
+.table .summary {
+    padding: 10px 0;
+}
+
+ul.quick-filter {
+    list-style-type: none;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+ul.quick-filter li {
+    display: inline;
+}
+ul.quick-filter li a {
+    padding: 0 5px;
+}

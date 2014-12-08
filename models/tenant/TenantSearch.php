@@ -12,14 +12,17 @@ use gxc\yii2base\models\tenant\Tenant;
  */
 class TenantSearch extends Tenant
 {
+    public $keywords;
+    public $field;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'status'], 'integer'],
-            [['app_store', 'content_store', 'resource_store', 'name', 'domain', 'system_domain', 'logo'], 'safe'],
+            [['status'], 'integer'],
+            [['name', 'domain', 'system_domain'], 'string']
         ];
     }
 
@@ -65,5 +68,15 @@ class TenantSearch extends Tenant
             ->andFilterWhere(['like', 'logo', $this->logo]);
 
         return $dataProvider;
+    }
+
+    public function getTenantSearchFields()
+    {
+        return [
+            'all' => Yii::t('base', 'All'),
+            'name' => Yii::t('base','Name'),
+            'domain' => Yii::t('base', 'Domain'),
+            'system_domain' => Yii::t('base', 'System Domain'),
+        ];
     }
 }

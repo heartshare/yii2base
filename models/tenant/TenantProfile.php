@@ -2,6 +2,7 @@
 
 namespace gxc\yii2base\models\tenant;
 
+use gxc\yii2base\classes\TbActiveRecord;
 use Yii;
 
 /**
@@ -13,7 +14,7 @@ use Yii;
  * @property string $address_registered_id
  * @property string $registered_at
  */
-class TenantProfile extends \yii\db\ActiveRecord
+class TenantProfile extends TbActiveRecord
 {
     /**
      * @inheritdoc

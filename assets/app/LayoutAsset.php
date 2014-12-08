@@ -28,7 +28,7 @@ class LayoutAsset extends AssetBundle
 	public $baseUrl = '@web';
 
 	public $css = [	
-		'css/font-awesome.css',
+		'css/font-awesome.min.css',
 		'css/bootstrap-datetimepicker.min.css',
 		'css/screen.css',
 	];

@@ -1,16 +1,9 @@
 <?php
-
-use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-use gxc\yii2widgets\switcher\Switcher;
-
 ?>
-
 <div class="tenant-form">
-    <?php $form = ActiveForm::begin([
-            'options' => ['class' => 'generalForm']
-        ]); 
+    <?php $form = ActiveForm::begin();
     ?>
     <div class="row section section-no-border">
         <div class="col-md-3 section-summary">
@@ -18,29 +11,35 @@ use gxc\yii2widgets\switcher\Switcher;
             <p><?= \Yii::t('base', 'All fields are required.'); ?></p>
         </div>
         <div class="col-md-9 section-content">
-            <div class="inner-form row">
-                <div class="col-md-8">
-                    <?= $form->field($model, 'name')->textInput(['maxlength' => 128]) ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?= $form->field($model, 'name')->textInput(['maxlength' => 128]) ?>
+                        </div>
+                        <div class="col-md-12">
+                            <?= $form->field($model, 'domain')->textInput(['maxlength' => 128]) ?>
+                        </div>
+                        <div class="col-md-12">
+                            <?= $form->field($model, 'system_domain')->textInput(['maxlength' => 128]) ?>
+                        </div>
+                        <div class="col-md-12">
+                            <?= $form->field($model, 'status')->dropDownList($model->getTenantStatuses(), ['class' => 'form-control']); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="control-label">&nbsp;</label>
+                            <div class="img-rounded" style="height: 180px; width: 100%; max-width: 180px; background: #c0c0c0"></div>
+                            <div style="text-align: center; width: 180px; padding: 5px;">
+                                <a href="#">Add Logo</a> - <a href="#">Remove</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="inner-form row">
-                <div class="col-md-8">
-                    <?= $form->field($model, 'system_domain')->textInput(['maxlength' => 128]) ?>
-                </div>
-            </div>
-            <div class="inner-form row">
-                <div class="col-md-8">
-                    <?= $form->field($model, 'domain')->textInput(['maxlength' => 128]) ?>
-                </div>
-            </div>            
-            <div class="inner-form row">
-                <div class="col-md-3">
-                    <?= $form->field($model, 'logo')->textInput(['maxlength' => 128]) ?>
-                </div>
-                <div class="col-md-3">
-                    <?= $form->field($model, 'status')->dropDownList($model->tenantStatuses()); ?>
-                </div>
-            </div>                                
         </div>
     </div>
     <div class="row section">
@@ -49,26 +48,22 @@ use gxc\yii2widgets\switcher\Switcher;
             <p><?= \Yii::t('base', 'Store in Tenant is used to seperate or merge data between tenants.'); ?></p>
         </div>
         <div class="col-md-9 section-content">
-            <div class="inner-form row">
+            <div class="row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'app_store')->textInput(['maxlength' => 64]) ?>
+                    <?= $form->field($model, 'app_store')->dropDownList($model->getTenantStores('app', $model), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
                 </div>
             </div>
-            <div class="inner-form row">
+            <div class="row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'content_store')->textInput(['maxlength' => 64]) ?>
+                    <?= $form->field($model, 'content_store')->dropDownList($model->getTenantStores('content'), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
                 </div>
             </div>
-            <div class="inner-form row">
+            <div class="row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'resource_store')->textInput(['maxlength' => 64]) ?>
+                    <?= $form->field($model, 'resource_store')->dropDownList($model->getTenantStores('resource'), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
                 </div>
             </div>                    
         </div>
-    </div>    
-    <div class="row section buttons">
-        <?= Html::submitButton(Yii::t('base', ' CREATE '), ['class' => 'btn btn-primary']) ?>
-    </div>    
-
+    </div>
     <?php ActiveForm::end(); ?>
 </div>
