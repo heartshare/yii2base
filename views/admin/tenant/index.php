@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
 
 $this->title = Yii::t('base', 'Tenants');
 $this->params['breadcrumbs'][] = ['label' => $this->title, 'icon' => 'fa fa-globe'];
@@ -9,16 +8,15 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add new Tenant'), 'url'
 ?>
 
 <?= $this->render('../widgets/_sub_header.php', ['breadcrumbs' => $this->params['breadcrumbs'], 'buttons' => $this->params['buttons']]); ?>
-<div class="container-fluid">
-<div class="rows">
+<section class="main-ctn col-md-12">
+<div class="inner">
     <div class="col-md-12">
+        <section class="row search-region">
         <?= $this->render('_search', ['model' => $searchModel]); ?>
-
-        <?= GridView::widget([
+        </section>
+        <section class="row">
+        <?= \gxc\yii2base\widgets\BaseGridView::widget([
             'dataProvider' => $dataProvider,
-            'options' => [
-                'class' => 'table table-responsive table-striped'
-            ],
             'columns' => [
                 [
                     'class'=>'yii\grid\DataColumn',
@@ -29,7 +27,7 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add new Tenant'), 'url'
                 ],
                 [
                     'class'=>'yii\grid\DataColumn',
-                    'attribute' => 'status',
+                    'attribute' => 'name',
                     'content' => function ($model) {
                         return Html::a($model->name, ["update", 'id' => $model->id]);
                     }
@@ -45,12 +43,12 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add new Tenant'), 'url'
                 'content_store',
                 'resource_store',
                 [
-                    'class' => 'yii\grid\ActionColumn',
-                    'template' => '{update} {delete}',
+                    'class' => 'gxc\yii2base\widgets\BaseActionColumn',
+                    'template' => '<div class="btn-group pull-right">{update} {delete}</div>',
                 ],
             ],
         ]); ?>
-
+        </section>
     </div>
 </div>
-</div>
+</section>

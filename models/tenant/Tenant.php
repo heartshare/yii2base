@@ -9,7 +9,6 @@ namespace gxc\yii2base\models\tenant;
 
 use gxc\yii2base\classes\TbActiveRecord;
 use gxc\yii2base\components\Hashids;
-use gxc\yii2base\helpers\UtilHelper;
 use Yii;
 
 /**
@@ -45,7 +44,8 @@ class Tenant extends TbActiveRecord
             [['name', 'domain', 'system_domain', 'logo'], 'string', 'max' => 128],
             [['app_store', 'domain', 'system_domain'], 'unique'],
             [['domain', 'system_domain'], 'url'],
-            [['name', 'domain', 'system_domain', 'status', 'app_store', 'content_store', 'resource_store'],'required']
+            [['name', 'domain', 'system_domain', 'status'], 'required'],
+            [['app_store', 'content_store', 'resource_store'], 'required', 'on' => 'update']
         ];
     }
 
@@ -81,13 +81,13 @@ class Tenant extends TbActiveRecord
         $encryptId = $hashIds->encrypt(time());
 
         // init app store code
-        if(empty($this->app_store))
+        if (empty($this->app_store))
             $this->app_store = 'a.' . $encryptId;
         // init content store code
-        if(empty($this->content_store))
+        if (empty($this->content_store))
             $this->content_store = 'c.' . $encryptId;
         // init resource store code
-        if(empty($this->resource_store))
+        if (empty($this->resource_store))
             $this->resource_store = 'r.' . $encryptId;
 
         return true;
@@ -133,7 +133,7 @@ class Tenant extends TbActiveRecord
 
     public static function renderTenantStatus($state)
     {
-        switch($state) {
+        switch ($state) {
             case self::TENANT_STATUS_ACTIVE:
                 return '<span class="label label-as-badge label-success">' . Yii::t('base', 'Active') . '</span>';
 

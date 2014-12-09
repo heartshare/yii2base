@@ -1,41 +1,34 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
 ?>
-<!--<div class="search-area highlight" style="background-color: #f7f7f9; padding: 10px 10px 0 10px; margin-top: 10px; border-radius: 4px;">-->
-<div class="well well-sm" style="margin-top: 10px; margin-bottom: 5px;">
-    <div class="row">
-
-        <?php $form = ActiveForm::begin([
-            'action' => ['index'],
-            'method' => 'get',
-        ]); ?>
-        <div class="col-md-4">
-            <?= $form->field($model, 'keywords') ?>
+<div class="col-md-12">
+    <?php $form = ActiveForm::begin([
+        'id' => 'tenant-search-form',
+        'action' => ['index'],
+        'method' => 'get',
+        'options' => ['class' => 'form-inline']
+    ]); ?>
+        <div class="form-group">
+            <?= Html::activeInput('text', $model, 'keywords', ['class' => 'form-control input-sm', 'placeholder' => Yii::t('base', 'Search Keywords in ...')]) ?>
+            <?= Html::activeDropDownList($model, 'field', $model->getTenantSearchFields(), ['class' => 'form-control input-sm']) ?>
+            <?= Html::submitButton(Yii::t('base', 'Search'), ['class' => 'btn btn-sm btn-warning']) ?>
         </div>
-        <div class="col-md-4">
-            <?= $form->field($model, 'field')->dropDownList($model->getTenantSearchFields(), ['class' => 'form-control']); ?>
-        </div>
-
-        <div class="col-md-1">
-            <div class="form-group">
-                <label class="control-label">&nbsp;</label>
-            <?= Html::submitButton(Yii::t('base', 'Search'), ['class' => 'btn btn-primary form-control']) ?>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-            <label>Quick filter: </label>
-            <ul class="quick-filter">
-                <li><a href="">All</a></li>
-                <li><a href="">Active</a></li>
-                <li><a href="">Inactive</a></li>
+        <div class="form-group" style="display: block;">
+            <ul class="list-filter list-inline">
+                <li><a href="javascript:;" onclick="tenantQuickFilter('all');">All</a></li>
+                <li><a href="javascript:;" onclick="tenantQuickFilter('active');">Active</a></li>
+                <li><a href="javascript:;" onclick="tenantQuickFilter('inactive');">Inactive</a></li>
             </ul>
+            <?= Html::activeHiddenInput($model, 'status'); ?>
         </div>
+    <?php ActiveForm::end(); ?>
 
-        <?php ActiveForm::end(); ?>
-
-    </div>
 </div>
+<script>
+    function tenantQuickFilter(status){
+        $target_status_input = $("#<?= Html::getInputId($model, 'status'); ?>");
+        $target_status_input.val(status);
+        $("#tenant-search-form").submit();
+    };
+</script>

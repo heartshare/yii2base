@@ -2,8 +2,12 @@
 use yii\widgets\ActiveForm;
 
 ?>
-<div class="tenant-form">
-    <?php $form = ActiveForm::begin();
+<div class="form tenant-form">
+    <?php $form = ActiveForm::begin([
+        'options' => [
+            'class' => 'form-horizontal',
+        ]
+    ]);
     ?>
     <div class="row section section-no-border">
         <div class="col-md-3 section-summary">

@@ -270,7 +270,7 @@ margin-bottom: 15px;
 	.header-right { float: none!important; padding: 0 0 15px 15px; width: 190px; margin: 0 auto;}
 	.login_body .wrap { width: 300px; margin-left: -150px;}
 	.popup .form-control { width: 90%;}
-	#myform .form-control { width: 100%;}
+	.form .form-control { width: 100%;}
 	.login_body .form-control { width: 100%;}
 	.frm-1 { margin: 10px; height: 300px;}
 	.frm-1 table tr td { padding: 5px; text-align: left;}
@@ -288,27 +288,24 @@ margin-bottom: 15px;
 
 }
 
-.label-as-badge {
-    border-radius: 1em;
-}
+/*custom*/
+.label-as-badge {border-radius: 1em;}
+.fa-alert {vertical-align: middle;}
+table.tbl-1 > thead > tr > th {border-top: 1px solid #ddd !important; border-bottom: 1px solid #ddd; margin-bottom: 0;}
+table.tbl-1 {margin-bottom: 0px; border-bottom: 1px solid #ddd;}
 
-.fa-alert {
-    vertical-align: middle;
-}
+/*gridview search region*/
+.search-region{background: #f0f0f0; padding: 10px 0; margin: 10px 0;}
+.addition-wrapper{padding: 10px;}
+.addition-wrapper .pagination {margin: 0;}
+.addition-wrapper .custom-summary {font-size: 12px; font-weight: 400; padding: 5px 0;}
 
-.table .summary {
-    padding: 10px 0;
-}
+/*footer*/
+.footer{background-color: #f2f4f5; margin-top: 20px;}
+.footer .footer-main{font-size: 16px; padding: 15px 20px; float: left; margin: 0;}
+.footer .footer-right{padding: 15px 20px;}
 
-ul.quick-filter {
-    list-style-type: none;
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-}
-ul.quick-filter li {
-    display: inline;
-}
-ul.quick-filter li a {
-    padding: 0 5px;
-}
+/*custom pagination*/
+.custom-pagination {list-style-type: none;}
+.custom-pagination li {float: left; margin-left: 2px;}
+.custom-pagination .btn {padding: 5px 10px;}

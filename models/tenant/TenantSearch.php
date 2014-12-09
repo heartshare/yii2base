@@ -21,8 +21,10 @@ class TenantSearch extends Tenant
     public function rules()
     {
         return [
-            [['status'], 'integer'],
-            [['name', 'domain', 'system_domain'], 'string']
+//            [['status'], 'integer'],
+//            [['name', 'domain', 'system_domain'], 'string']
+            ['keywords', 'string'],
+            ['field', 'string']
         ];
     }
 
@@ -48,24 +50,40 @@ class TenantSearch extends Tenant
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 10
+            ]
         ]);
 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'status' => $this->status,
-        ]);
+        if (!empty($this->keywords))
+            switch ($this->field) {
+                case 'name':
+                    $query->andFilterWhere(['like', 'name', $this->keywords]);
+                    break;
 
-        $query->andFilterWhere(['like', 'app_store', $this->app_store])
-            ->andFilterWhere(['like', 'content_store', $this->content_store])
-            ->andFilterWhere(['like', 'resource_store', $this->resource_store])
-            ->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'domain', $this->domain])
-            ->andFilterWhere(['like', 'system_domain', $this->system_domain])
-            ->andFilterWhere(['like', 'logo', $this->logo]);
+                case 'domain':
+                    $query->andFilterWhere(['like', 'domain', $this->keywords]);
+                    break;
+
+                case 'system_domain':
+                    $query->andFilterWhere(['like', 'system_domain', $this->keywords]);
+                    break;
+
+                default:
+                    $query->andFilterWhere(['like', 'name', $this->keywords]);
+                    $query->andFilterWhere(['like', 'domain', $this->keywords]);
+                    $query->andFilterWhere(['like', 'system_domain', $this->keywords]);
+            }
+
+
+        if ($this->status == 'active')
+            $query->andFilterWhere(['status' => Tenant::TENANT_STATUS_ACTIVE]);
+        elseif ($this->status == 'inactive')
+            $query->andFilterWhere(['status' => Tenant::TENANT_STATUS_INACTIVE]);
 
         return $dataProvider;
     }
@@ -74,7 +92,7 @@ class TenantSearch extends Tenant
     {
         return [
             'all' => Yii::t('base', 'All'),
-            'name' => Yii::t('base','Name'),
+            'name' => Yii::t('base', 'Name'),
             'domain' => Yii::t('base', 'Domain'),
             'system_domain' => Yii::t('base', 'System Domain'),
         ];

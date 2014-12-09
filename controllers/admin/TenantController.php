@@ -58,7 +58,7 @@ class TenantController extends BeController
      */
     public function actionCreate()
     {        
-        $model = \Yii::$app->tenant->createModel('Tenant');        
+        $model = \Yii::$app->tenant->createModel('Tenant');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('message', ['success', 'Create Tenant Details Successfully.']);
@@ -113,7 +113,8 @@ class TenantController extends BeController
      */
     protected function findModel($id)
     {
-        if (($model = Tenant::findOne($id)) !== null) {
+        $tenantClass = \Yii::$app->tenant->createModel('Tenant', 'class');
+        if (($model = $tenantClass::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -12,8 +12,6 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Save'), 'options' => ['
 
 <?= $this->render('../widgets/_sub_header.php', ['breadcrumbs' => $this->params['breadcrumbs'], 'buttons' => $this->params['buttons']]); ?>
 <?= $this->render('../widgets/_notification.php') ?>
-<div class="tenant-update">
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-</div>
+<?= $this->render('_form', [
+    'model' => $model,
+]) ?>
