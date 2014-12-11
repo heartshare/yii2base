@@ -16,7 +16,7 @@ use gxc\yii2base\classes\BeController;
 /**
  * Tenant Controller of Base Module
  * 
- * This is the base user controller for app user CRUD
+ * This is the base Tenant controller
  * 
  * @author  Tuan Nguyen <nganhtuan63@gmail.com>
  * @since  2.0
@@ -112,7 +112,7 @@ class TenantController extends BeController
      */
     protected function findModel($id)
     {
-        $tenantClass = \Yii::$app->tenant->createModel('Tenant', 'class');
+        $tenantClass = \Yii::$app->tenant->createModel('Tenant');
         if (($model = $tenantClass::findOne($id)) !== null) {
             return $model;
         } else {
