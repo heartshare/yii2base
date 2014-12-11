@@ -208,6 +208,6 @@ class BaseHelper
 	 */
 	public static function generateTenantStoreId($type = 'a')
 	{		
-		return $type.'.'.substr(md5(uniqid()), 0, 3).'.'.substr(md5(microtime()), 0, 3);
+		return $type.'.'.substr(md5(uniqid()), -3).'.'.substr(md5(microtime()), -3);
 	}
 }

@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 ?>
 
-<header class="header-ctn col-md-12">
+<div class="header-row">
   <div class="header-row-wrapper">
       <header class="header-1">
           <h1 class="header-main" id="page-header" rel="">

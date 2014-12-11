@@ -24,7 +24,7 @@ class Module extends \gxc\yii2base\classes\Module
 
 	public $version = '1.0.0-dev';
 
-	public $id = 'yii2base';
+	public $permissionId = 'yii2base';
 
 	public $name = 'Base Application Module';
 	

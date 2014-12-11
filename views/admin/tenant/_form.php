@@ -1,7 +1,10 @@
 <?php
 use yii\widgets\ActiveForm;
 
+use \gxc\yii2base\assets\app\LayoutAsset;
+$layoutAsset = LayoutAsset::register($this);
 ?>
+
 <div class="form tenant-form">
     <?php $form = ActiveForm::begin([
         'options' => [
@@ -15,6 +18,7 @@ use yii\widgets\ActiveForm;
             <p><?= \Yii::t('base', 'All fields are required.'); ?></p>
         </div>
         <div class="col-md-9 section-content">
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="row">
@@ -36,7 +40,9 @@ use yii\widgets\ActiveForm;
                     <div class="row">
                         <div class="col-md-6">
                             <label class="control-label">&nbsp;</label>
-                            <div class="img-rounded" style="height: 180px; width: 100%; max-width: 180px; background: #c0c0c0"></div>
+                            <div class="img-rounded">
+                                <img src="<?= $layoutAsset->baseUrl; ?>/images/thumb-default.jpg" style=" width: 100%; max-width: 180px; background: #c0c0c0"  />
+                            </div>
                             <div style="text-align: center; width: 180px; padding: 5px;">
                                 <a href="#">Add Logo</a> - <a href="#">Remove</a>
                             </div>

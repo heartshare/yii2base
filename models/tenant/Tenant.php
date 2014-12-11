@@ -7,9 +7,11 @@
 
 namespace gxc\yii2base\models\tenant;
 
+use Yii;
+use yii\helpers\Html;
+
 use gxc\yii2base\classes\TbActiveRecord;
 use gxc\yii2base\helpers\BaseHelper;
-use Yii;
 
 /**
  * This is the model class for table "base_tenant".
@@ -19,7 +21,7 @@ use Yii;
  */
 class Tenant extends TbActiveRecord
 {
-    // define tenant status constant
+    // Define tenant status constant
     const TENANT_STATUS_INACTIVE = 0;
     const TENANT_STATUS_ACTIVE = 1;
 
@@ -68,31 +70,26 @@ class Tenant extends TbActiveRecord
     public function afterSave()
     {
         parent::afterSave($this->isNewRecord, $this);
-
-
-
     }
 
     /**
-     * pre-init tenant store if empty
-     *
-     * @return bool|void
+     * @inheritdoc
      */
     public function beforeValidate()
     {
-        parent::beforeValidate();
+        if (parent::beforeValidate()) {
 
-        // init app store code
-        if (empty($this->app_store))
-            $this->app_store = BaseHelper::generateTenantStoreId('a');;
-        // init content store code
-        if (empty($this->content_store))
-            $this->content_store = BaseHelper::generateTenantStoreId('c');;
-        // init resource store code
-        if (empty($this->resource_store))
-            $this->resource_store = BaseHelper::generateTenantStoreId('r');;
-
-        return true;
+            // Auto Generate Store if not having
+            if (empty($this->app_store))
+                $this->app_store = BaseHelper::generateTenantStoreId('a');;
+            // init content store code
+            if (empty($this->content_store))
+                $this->content_store = BaseHelper::generateTenantStoreId('c');;
+            // init resource store code
+            if (empty($this->resource_store))
+                $this->resource_store = BaseHelper::generateTenantStoreId('r');
+            return true; 
+        }
     }
 
     /**
@@ -133,22 +130,25 @@ class Tenant extends TbActiveRecord
 
     }
 
+    /**
+     * Render Tenant Status Label
+     *
+     * @return string
+     */
     public static function renderTenantStatus($state)
     {
         switch ($state) {
             case self::TENANT_STATUS_ACTIVE:
-                return '<span class="label label-as-badge label-success">' . Yii::t('base', 'Active') . '</span>';
-
+                return Html::beginTag('span', ['class' => 'label label-as-badge label-success']).Yii::t('base', 'Active').Html::endTag('span');
             case self::TENANT_STATUS_INACTIVE:
-                return '<span class="label label-as-badge label-danger">' . Yii::t('base', 'Inactive') . '</span>';
-
+                return Html::beginTag('span', ['class' => 'label label-as-badge label-danger']).Yii::t('base', 'Inactive').Html::endTag('span');
             default:
                 return '';
         }
     }
 
     /**
-     * get all tenant statuses
+     * Get Tenant Statuses
      *
      * @return array
      */

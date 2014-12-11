@@ -10,7 +10,7 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add new Tenant'), 'url'
 <?= $this->render('../widgets/_sub_header.php', ['breadcrumbs' => $this->params['breadcrumbs'], 'buttons' => $this->params['buttons']]); ?>
 <section class="main-ctn col-md-12">
 <div class="inner">
-    <div class="col-md-12">
+    
         <section class="row search-region">
         <?= $this->render('_search', ['model' => $searchModel]); ?>
         </section>
@@ -49,6 +49,6 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add new Tenant'), 'url'
             ],
         ]); ?>
         </section>
-    </div>
+    
 </div>
 </section>

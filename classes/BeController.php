@@ -16,5 +16,6 @@ use yii\filters\VerbFilter;
  */
 class BeController extends \yii\web\Controller
 {
-	
+	public $layoutAsset;
+
 }

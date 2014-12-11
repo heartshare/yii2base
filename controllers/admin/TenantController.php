@@ -8,11 +8,10 @@
 namespace gxc\yii2base\controllers\admin;
 
 use Yii;
-use gxc\yii2base\models\tenant\Tenant;
-use gxc\yii2base\models\tenant\TenantSearch;
-use gxc\yii2base\classes\BeController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use gxc\yii2base\classes\BeController;
 
 /**
  * Tenant Controller of Base Module
@@ -42,7 +41,7 @@ class TenantController extends BeController
      */
     public function actionIndex()
     {
-        $searchModel = new TenantSearch();
+        $searchModel = \Yii::$app->tenant->createModel('TenantSearch');
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -61,7 +60,7 @@ class TenantController extends BeController
         $model = \Yii::$app->tenant->createModel('Tenant');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('message', ['success', 'Create Tenant Details Successfully.']);
+            Yii::$app->session->setFlash('message', ['success', 'Create Tenant Successfully.']);
             return $this->redirect(['update', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -82,7 +81,7 @@ class TenantController extends BeController
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             // flash successfully
-            Yii::$app->session->setFlash('message', ['success', 'Update Tenant Details Successfully.']);
+            Yii::$app->session->setFlash('message', ['success', 'Update Tenant Successfully.']);
             // redirect
             return $this->redirect(['update', 'id' => $model->id]);
         } else {
