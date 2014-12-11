@@ -2,7 +2,7 @@
 use yii\widgets\ActiveForm;
 
 ?>
-<div class="form tenant-form">
+<div class="form tenant-form clearfix">
     <?php $form = ActiveForm::begin([
         'options' => [
             'class' => 'form-horizontal',

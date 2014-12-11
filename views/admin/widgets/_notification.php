@@ -32,7 +32,7 @@ if (Yii::$app->session->hasFlash('message')):
         echo \yii\bootstrap\Alert::widget([
             'options' => [
                 'class' => 'alert-' . $message[0],
-                'style' => 'border-radius:0;'
+                'style' => 'border-radius:0; margin:0; padding:10px 30px; clear:both;'
             ],
             'body' => $body,
         ]);
