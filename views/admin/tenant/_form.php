@@ -4,26 +4,23 @@ use yii\widgets\ActiveForm;
 use \gxc\yii2base\assets\app\LayoutAsset;
 $layoutAsset = LayoutAsset::register($this);
 ?>
-<<<<<<< HEAD
 
-<div class="form tenant-form">
-=======
-<div class="form tenant-form clearfix">
->>>>>>> FETCH_HEAD
+
+<div class="clearfix">
     <?php $form = ActiveForm::begin([
+        'id' => $formId,
         'options' => [
-            'class' => 'form-horizontal',
+            'class' => 'base-form',
         ]
     ]);
     ?>
-    <div class="row section section-no-border">
+    <div class="row section section-first">
         <div class="col-md-3 section-summary">
             <h1><?= \Yii::t('base', 'Overview'); ?></h1>
             <p><?= \Yii::t('base', 'All fields are required.'); ?></p>
         </div>
         <div class="col-md-9 section-content">
-
-            <div class="row">
+            <div class="inner-form row">
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-12">

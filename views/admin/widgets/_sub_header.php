@@ -2,27 +2,14 @@
 use yii\helpers\Html;
 ?>
 
-<div class="header-row">
-  <div class="header-row-wrapper">
+<div class="header-row-wrapper">
+  <div class="header-row">
       <header class="header-1">
-          <h1 class="header-main" id="page-header" rel="">
+          <h1 class="header-main" id="page-header">
                 <?php
-                    if(!empty($breadcrumbs)) {
-                        $end_of_arr = count($breadcrumbs) - 1;
-                        foreach ($breadcrumbs as $k => $item):
-                            if (is_string($item)) {
-                                echo $item;
-                            } else {
-                                if ($k == 0 && !empty($item['icon']))
-                                    echo Html::tag('i', '', ['class' => $item['icon']]);
-
-                                echo Html::beginTag('span', ['class' => 'breadcrumb']);
-                                echo Html::a(isset($item['label']) ? $item['label'] : '', isset($item['url']) ? $item['url'] : 'javascript:;');
-                                echo ($k != $end_of_arr)?' \\':'';
-                                echo Html::endTag('span');
-                            }
-                        endforeach;
-                    }
+                    echo \gxc\yii2base\widgets\BaseBreadcrumbs::widget([
+                        'links' => $breadcrumbs
+                    ]);
                 ?>
           </h1>
           <div class="header-right pull-right">
@@ -35,4 +22,4 @@ use yii\helpers\Html;
           </div>
       </header>
   </div>
-</header>
+</div>
