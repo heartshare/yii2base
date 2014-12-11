@@ -4,8 +4,12 @@ use yii\widgets\ActiveForm;
 use \gxc\yii2base\assets\app\LayoutAsset;
 $layoutAsset = LayoutAsset::register($this);
 ?>
+<<<<<<< HEAD
 
 <div class="form tenant-form">
+=======
+<div class="form tenant-form clearfix">
+>>>>>>> FETCH_HEAD
     <?php $form = ActiveForm::begin([
         'options' => [
             'class' => 'form-horizontal',
