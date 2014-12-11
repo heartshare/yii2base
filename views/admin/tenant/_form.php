@@ -76,5 +76,8 @@ $layoutAsset = LayoutAsset::register($this);
             </div>                    
         </div>
     </div>
+    <div class="row section buttons">
+        <input value="Save" class="btn btn-success" type="submit">
+    </div>
     <?php ActiveForm::end(); ?>
 </div>
