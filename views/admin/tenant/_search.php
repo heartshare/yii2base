@@ -16,19 +16,43 @@ use yii\widgets\ActiveForm;
         </div>
         <div class="form-group" style="display: block;">
             <ul class="list-filter list-inline">
-                <li><a href="javascript:;" onclick="tenantQuickFilter('all');">All</a></li>
-                <li><a href="javascript:;" onclick="tenantQuickFilter('active');">Active</a></li>
-                <li><a href="javascript:;" onclick="tenantQuickFilter('inactive');">Inactive</a></li>
+                <li><a href="javascript:;" onclick="tenantQuickFilter('all');" class="fall">All</a></li>
+                <li><a href="javascript:;" onclick="tenantQuickFilter('active');" class="factive">Active</a></li>
+                <li><a href="javascript:;" onclick="tenantQuickFilter('inactive');" class="finactive">Inactive</a></li>
             </ul>
             <?= Html::activeHiddenInput($model, 'status'); ?>
         </div>
     <?php ActiveForm::end(); ?>
 
 </div>
-<script>
-    function tenantQuickFilter(status){
-        $target_status_input = $("#<?= Html::getInputId($model, 'status'); ?>");
+<?php
+$js_filter_submit = '
+    function tenantQuickFilter(status, obj){
+        $target_status_input = $("#'.Html::getInputId($model, 'status').'");
         $target_status_input.val(status);
         $("#tenant-search-form").submit();
     };
-</script>
+';
+Yii::$app->view->registerJs($js_filter_submit, \yii\web\View::POS_END);
+
+$js_filter = "var current_status = getParameterByName('" . urlencode(Html::getInputName($model, 'status')) . "');
+    switch(current_status){
+        case 'all':
+            $('.fall').attr('class', 'fall activated');
+            break;
+
+        case 'active':
+            $('.factive').attr('class', 'factive activated');
+            break;
+
+        case 'inactive':
+            $('.finactive').attr('class', 'finactive activated');
+            break;
+
+        default:
+            $('.fall').attr('class', 'fall activated');
+            break;
+    }";
+Yii::$app->view->registerJs($js_filter);
+
+?>

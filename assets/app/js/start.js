@@ -25,3 +25,10 @@ function openInformPopup(id, timeout) {
 
 	$("#"+id).fadeOut(timeout);
 }
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "a" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}

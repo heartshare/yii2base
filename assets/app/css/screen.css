@@ -9,10 +9,11 @@ ul, li { list-style: none; }
 .tab-ctn { overflow: hidden}
 .tab-ctn > .col-md-10 > .row:first-child , .tab-ctn > .row:first-child{ background:#f0f0f0; padding: 10px 0; margin: 10px 0;}
 #txt-search { max-width: 200px; margin-right: 10px;	}
-.list-filter { margin: 0; color:#999;}
+.list-filter { margin: 5px 0 0 0; color:#999;}
 .list-filter li { position: relative;}
 .list-filter li a { color:#999; font-size: 12px;}
 .list-filter li a:hover { color:#000;}
+.list-filter li a.activated {color:#000;}
 #drop1 { font-size: 18px; font-weight: bold; color:#000; text-decoration: none;}
 .progress { margin: 0; height: 6px;}
 .table  td{ vertical-align: middle!important;}
@@ -293,6 +294,7 @@ margin-bottom: 15px;
 .fa-alert {vertical-align: middle;}
 table.tbl-1 > thead > tr > th {border-top: 1px solid #ddd !important; border-bottom: 1px solid #ddd; margin-bottom: 0;}
 table.tbl-1 {margin-bottom: 0px; border-bottom: 1px solid #ddd;}
+table.tbl-1 thead > tr > th > a {color: #333}
 
 /*gridview search region*/
 .search-region{background: #f0f0f0; padding: 10px 0; margin: 10px 0;}

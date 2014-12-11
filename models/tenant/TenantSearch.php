@@ -21,8 +21,6 @@ class TenantSearch extends Tenant
     public function rules()
     {
         return [
-//            [['status'], 'integer'],
-//            [['name', 'domain', 'system_domain'], 'string']
             ['keywords', 'string'],
             ['field', 'string']
         ];
@@ -58,7 +56,6 @@ class TenantSearch extends Tenant
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-
         if (!empty($this->keywords))
             switch ($this->field) {
                 case 'name':
@@ -74,9 +71,9 @@ class TenantSearch extends Tenant
                     break;
 
                 default:
-                    $query->andFilterWhere(['like', 'name', $this->keywords]);
-                    $query->andFilterWhere(['like', 'domain', $this->keywords]);
-                    $query->andFilterWhere(['like', 'system_domain', $this->keywords]);
+                    $query->orFilterWhere(['like', 'name', $this->keywords]);
+                    $query->orFilterWhere(['like', 'domain', $this->keywords]);
+                    $query->orFilterWhere(['like', 'system_domain', $this->keywords]);
             }
 
 

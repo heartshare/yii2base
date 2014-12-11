@@ -67,6 +67,14 @@ class Tenant extends TbActiveRecord
         ];
     }
 
+    public function afterSave()
+    {
+        parent::afterSave($this->isNewRecord, $this);
+
+
+
+    }
+
     /**
      * pre-init tenant store if empty
      *
@@ -77,7 +85,7 @@ class Tenant extends TbActiveRecord
         parent::beforeValidate();
 
         // generate encrypt id by time
-        $hashIds = new Hashids(self::TENANT_HASH_TOKEN, 17);
+        $hashIds = new Hashids(self::TENANT_HASH_TOKEN, 10);
         $encryptId = $hashIds->encrypt(time());
 
         // init app store code
