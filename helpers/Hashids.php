@@ -8,7 +8,7 @@
 	hashids may be freely distributed under the MIT license.
 */
 
-namespace gxc\yii2base\components;
+namespace gxc\yii2base\helpers;
 
 class Hashids {
 	

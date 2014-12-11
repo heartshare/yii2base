@@ -9,6 +9,7 @@ namespace gxc\yii2base\models\tenant;
 
 use gxc\yii2base\classes\TbActiveRecord;
 use gxc\yii2base\components\Hashids;
+use gxc\yii2base\helpers\BaseHelper;
 use Yii;
 
 /**
@@ -84,19 +85,15 @@ class Tenant extends TbActiveRecord
     {
         parent::beforeValidate();
 
-        // generate encrypt id by time
-        $hashIds = new Hashids(self::TENANT_HASH_TOKEN, 10);
-        $encryptId = $hashIds->encrypt(time());
-
         // init app store code
         if (empty($this->app_store))
-            $this->app_store = 'a.' . $encryptId;
+            $this->app_store = BaseHelper::generateTenantStoreId('a');;
         // init content store code
         if (empty($this->content_store))
-            $this->content_store = 'c.' . $encryptId;
+            $this->content_store = BaseHelper::generateTenantStoreId('c');;
         // init resource store code
         if (empty($this->resource_store))
-            $this->resource_store = 'r.' . $encryptId;
+            $this->resource_store = BaseHelper::generateTenantStoreId('r');;
 
         return true;
     }
