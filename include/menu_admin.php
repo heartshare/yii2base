@@ -37,6 +37,14 @@ return [
 
 		],
 
+		// Auth
+		'auth' => [
+			'label' => \Yii::t('base', 'Auth'),
+			'url' => '#',
+			'url' => ['/base/admin/auth/index'],
+			'icon' => 'lock',						
+		],
+
 		// Tenants
 		'tenants' => [
 			'label' => \Yii::t('base', 'Tenants'),

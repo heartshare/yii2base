@@ -32,7 +32,7 @@ class TbActiveRecord extends \yii\db\ActiveRecord
     	 * 
     	 * Remember to use andWhere() in your own Condition queries
     	 */
-		if (!\Yii::$app->tenant->isBackend) {
+		if (\Yii::$app->tenant->isBackend) {
 			return parent::find();
 		} else {
 			$store = \Yii::$app->tenant->getModel((new \ReflectionClass(self::className()))->getShortName(), 'store');		

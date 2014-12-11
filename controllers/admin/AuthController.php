@@ -32,17 +32,38 @@ class AuthController extends BeController
      */
     public function actionIndex()
     {
-    	$module = isset($_GET['module']) ? $_GET['module'] : 'app';    	
+    	$moduleId = isset($_GET['module']) ? $_GET['module'] : 'app';    	
+        $tenantId = isset($_GET['tenant']) ? $_GET['tenant'] : \Yii::$app->tenant->current['id'];     
     	
-    	// Get Tenant Module information
-    	$tenantModuleModel = \Yii::$app->tenant->createModel('TenantModule');
-        
-        // Find the Module which is from current Tenant
-        return $this->render('index', [
-                //'model' => $model,
+        $tenant = false;
+        $currentModule = false;
+        $modules = false;
+        // Need to check on this for Data Store
+        $tenant = \Yii::$app->tenant->createModel('Tenant')->findOne($tenantId);
+
+        if ($tenant) {
+            $store = \Yii::$app->tenant->getModel('TenantModule', 'store');     
+            $arrCondition = [];
+            if ($store!==false && $store!='') {
+                $arrCondition = ['store' => $tenant->$store];                
+            }
+
+            $modules = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->all();
+
+            $arrCondition= ['store' => $tenant->$store, 'module' => $moduleId];
+            $currentModule = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->one();
+
+            // Find the Module which is from current Tenant
+            return $this->render('index', [                
+                'currentModule' => $currentModule,
+                'modules' => $modules,
+                'tenant' => $tenant,
             ]);
-
-
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+        
+        
     }
 
     /**
