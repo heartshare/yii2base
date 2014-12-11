@@ -8,7 +8,6 @@
 namespace gxc\yii2base\models\tenant;
 
 use gxc\yii2base\classes\TbActiveRecord;
-use gxc\yii2base\components\Hashids;
 use gxc\yii2base\helpers\BaseHelper;
 use Yii;
 
@@ -23,8 +22,6 @@ class Tenant extends TbActiveRecord
     // define tenant status constant
     const TENANT_STATUS_INACTIVE = 0;
     const TENANT_STATUS_ACTIVE = 1;
-
-    const TENANT_HASH_TOKEN = '28A053DAD374';
 
     /**
      * @inheritdoc
