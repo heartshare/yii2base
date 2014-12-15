@@ -18,43 +18,48 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
 ]); ?>
 
 <div class="auth-index">    
-	<section class="main-ctn col-md-12">
+	<section class="main-ctn col-md-12">		
 		<div class="inner">
+
+
 			
 			<h3><?= \Yii::t('base', '{tenantName} Modules and Permissions', ['tenantName'=>$tenant->name]);?> </h3>
 
 			<?php 				
 				foreach ($modules as $m) {
 					$moduleNav[] = [
- 						'label' => ucfirst($m->module), 	
+ 						'label' => ucfirst($m->module).' '.'Module', 	
  						'url' => [''],			
  						'active' => $currentModule->module == $m->module
  					];
 				}
 			?>
 
-				<h5>Modules</h5>
+				
 			<?php
 				echo Nav::widget(['items'=>$moduleNav, 'options'=>['class'=>'nav nav-pills']]);
 			?>
 
-			<table cellpadding="4">
-					
-			<tbody><tr><td align="center"><i class="fa fa-sitemap"></i></td><td>Working Office: Main Office</td></tr>
-			<tr><td align="center"><i class="fa fa-map-marker"></i></td><td>Department:
+			<section class="row summary-region">
+        		<table cellpadding="4">					
+					<tbody>
+						<tr>
+							<td align="center"><i class="fa fa-info-circle"></i></td>
+							<td>&nbsp;Plan: <?= $currentModule->plan;?></td>
+						</tr>
+						<tr>
+							<td align="center"><i class="fa fa-unlock"></i></td>
+							<td>&nbsp;Expired mode: IT</td>
+						</tr>
+						<tr>
+							<td align="center"><i class="fa fa-clock-o"></i></td>
+							<td>&nbsp;n/a</td>
+						</tr>
+					</tbody>
+				</table>
+        	</section>
 
-																 IT
-									
-			</td></tr>
-
-			<tr><td align="center"><i class="fa fa-envelope"></i></td><td>vinhnguyen0201@gmail.com</td></tr>
-			
-
-			
-
-							</tbody></table>
-
-				<i class="fa fa-info-circle"></i>
+        	<h5>Roles</h5>						
 			
 		</div>
 	</section>    

@@ -16,5 +16,34 @@ use yii\filters\VerbFilter;
  */
 class BeController extends \yii\web\Controller
 {	
+	public function beforeAction($action)
+    {
 
+    	if (parent::beforeAction($action)) {
+            $module = $action->controller->module;
+	    	if (get_class($module) == 'yii\web\Application') {    		
+	    		$accessSpace = 'app';
+	    		if (\Yii::$app->tenant->isBackend) {
+	    			$accessSpace.=  '.admin';
+	    		} else {
+	    			$accessSpace.= '.site';    		
+	    		}
+	    	} elseif (isset($module->permissionId)) {
+	    		$accessSpace = $module->permissionId;
+	    	} else {
+	    		$accessSpace = $module->id;
+	    	}
+
+	    	$permissionName = $accessSpace.'.'.str_replace('/', '.',$action->controller->id).'.'.$action->id;	    	
+
+	    	//  Start to check the permission
+	    	//  
+            return true;  // or false if needed
+        } else {
+            return false;
+        }
+    }
+    	
+        
+    
 }

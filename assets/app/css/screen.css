@@ -304,7 +304,9 @@ table.tbl-1 {margin-bottom: 0px; border-bottom: 1px solid #ddd;}
 table.tbl-1 thead > tr > th > a {color: #333}
 
 /*gridview search region*/
-.search-region{background: #f0f0f0; padding: 10px 0; margin: 10px 0;border-radius: 3px 3px 3px 3px;-moz-border-radius: 3px 3px 3px 3px;-webkit-border-radius: 3px 3px 3px 3px;}
+.search-region{background: #f0f0f0; padding: 10px 0; margin: 10px 0;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;}
+.summary-region{background: #f0f0f0; padding: 10px; margin: 10px 0;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;}
+
 .addition-wrapper{padding: 10px;}
 .addition-wrapper .pagination {margin: 0;}
 .addition-wrapper .custom-summary {font-size: 12px; font-weight: 400; padding: 5px 0;}

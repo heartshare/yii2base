@@ -6,7 +6,7 @@ return [
 	'items' => [		
 
 		// Tenant Actions
-		'tenant.create' => [
+		'base.admin.tenant.create' => [
 			'description' => 'Add a Tenant',
 		],
 		'tenant.update' => [
@@ -45,7 +45,7 @@ return [
 	'roles' => [		
 		'app.superAdmin' => [
 			'description' => 'Super Admin',			
-		]
+		],
 		'app.admin' => [
 			'description' => 'Admin',
 			'children' => [
