@@ -1,6 +1,0 @@
-<?php
-
-$permissions = [	
-];
-
-return $permissions;

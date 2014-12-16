@@ -27,6 +27,8 @@ class Module extends \gxc\yii2base\classes\Module
 	public $permissionId = 'base';
 
 	public $name = 'Base Application Module';
+
+	public $allowedTenants = false;
 	
 	public function init()
 	{				
