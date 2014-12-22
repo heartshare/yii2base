@@ -1,4 +1,18 @@
 
+jQuery(document).ready(function($){ 
+	 $('.datepicker').datetimepicker();
+
+	$('.nav-pills, .nav-tabs').tabdrop({
+		'text': '<i class="fa fa-bars"></i>'
+	});
+
+	// http://www.bootstrap-switch.org/options-3.html
+	$(".switch").bootstrapSwitch({
+		'onColor': 'success',
+		'offColor': 'danger',
+	});
+
+});
 function openPopup(id) {
 	$("#"+id).fadeIn(100);	 
 	var h = $("#"+id+" > .popup").height();
@@ -27,8 +41,8 @@ function openInformPopup(id, timeout) {
 }
 
 function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "a" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		results = regex.exec(location.search);
+	return results === null ? "a" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
