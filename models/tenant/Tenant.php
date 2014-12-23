@@ -7,11 +7,15 @@
 
 namespace gxc\yii2base\models\tenant;
 
+use gxc\yii2base\helpers\UtilHelper;
 use Yii;
+use yii\helpers\BaseFormatConverter;
 use yii\helpers\Html;
 
 use gxc\yii2base\classes\TbActiveRecord;
 use gxc\yii2base\helpers\BaseHelper;
+use yii\i18n\I18N;
+use yii\web\View;
 
 /**
  * This is the model class for table "base_tenant".
@@ -139,9 +143,9 @@ class Tenant extends TbActiveRecord
     {
         switch ($state) {
             case self::TENANT_STATUS_ACTIVE:
-                return Html::beginTag('span', ['class' => 'label label-as-badge label-success']).Yii::t('base', 'Active').Html::endTag('span');
+                return Html::tag('span', Yii::t('base', 'Active'), ['class' => 'label label-success']);
             case self::TENANT_STATUS_INACTIVE:
-                return Html::beginTag('span', ['class' => 'label label-as-badge label-danger']).Yii::t('base', 'Inactive').Html::endTag('span');
+                return Html::tag('span', Yii::t('base', 'Inactive'), ['class' => 'label label-danger']);
             default:
                 return '';
         }
@@ -158,5 +162,78 @@ class Tenant extends TbActiveRecord
             self::TENANT_STATUS_ACTIVE => Yii::t('base', 'Active'),
             self::TENANT_STATUS_INACTIVE => Yii::t('base', 'Inactive'),
         ];
+    }
+
+    /**
+     * render base Tenant information in gridview
+     *
+     * @param $tenant
+     * @param bool $view
+     * @return string
+     */
+    public static function renderBasicInfo($tenant, $view = false)
+    {
+        $html = '';
+
+        // get tenant name
+        // format: <strong><a href="#" class="name-info">Phuong Sex Store</a></strong>
+        $html .= Html::a(Html::tag('strong', $tenant->name), ['view', 'id' => $tenant->id], ['class' => 'name-info', 'style' => 'vertical-align: middle; line-height: 18px;']);
+        // get tenant status
+        // format: <span class="label label-success">Active</span>
+        $html .= "\n" . self::renderTenantStatus($tenant->status);
+
+        // get tenant domain
+        // format: <p><a href="http://tungmv.com" target="_blank">http://psestoreofphuong.com</a></p>
+        $html .= "\n" . Html::tag('p', Html::a($tenant->domain, [$tenant->domain], ['target' => '_blank']));
+
+        // get registered time
+        // format: <p class="join-des"><span>Registered 20 days ago.</span></p>
+        // we use moment.js fromNow from unix timestamp to optimize
+        // http://momentjs.com/docs/#/displaying/fromnow/
+        if($view !== false) {
+            $duration = strtotime('-2day'); // local time
+            $html .= "\n" . Html::tag('p', Html::hiddenInput('registered_time_ago', $duration, ['id' => 'duration_' . $tenant->id]), ['class' => 'join-des']);
+            $durationJs = '$("#duration_'.$tenant->id.'").parent().html("<span>'.Yii::t('base', 'Registered ').'"+moment.unix($("#duration_'.$tenant->id.'").val()).fromNow()+"</span>");';
+            $view->registerJs($durationJs, View::POS_READY);
+        }
+
+        return $html;
+    }
+
+    /**
+     * render tenant logo base logoPath and resource path
+     *
+     * @param $logoPath
+     * @return string
+     */
+    public static function renderLogo($logoPath)
+    {
+        if(!empty($logoPath)){
+            return '';
+        }else{
+            return Html::tag('span', Html::tag('span','', ['class'=>'fa fa-user fa-4x text-primary']), ['class' => 'thumb-wrapper-circle']);
+        }
+    }
+
+
+    public static function renderContactInfo($modelId)
+    {
+        $html = '';
+        // get user display name
+        // format: <strong class="name-info">Phuong Nguyen</strong>
+        $html .= Html::tag('strong', 'Phuong Nguyen', ['class' => 'name-info']);
+        $html .= "\n" . Html::tag('br');
+
+        // get address info
+        // email: <i class="fa fa-envelope"></i> <span><a href="#">phuongxa@gmail.com</a></span>
+        $html .= Html::tag('i', '', ['class' => 'fa fa-envelope']);
+        $html .= "\n" . Html::tag('span', Html::a('huongxa@gmail.co ', ['mailto:huongxa@gmail.com']));
+        $html .= "\n" . Html::tag('br');
+
+        // phone:  <i class="fa fa-phone"></i> <span>+84230292311</span>
+        $html .= "\n" . Html::tag('i', '', ['class' => 'fa fa-phone']);
+        $html .= "\n" . Html::tag('span', '+84230292311');
+        return $html;
+
     }
 }
