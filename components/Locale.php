@@ -64,7 +64,7 @@ class Locale extends Component
 			// So we have a string 
 			// The string means that this is a date time in string format
 			// and it is from Local TimeZone
-			$result = \DateTime::createFromFormat($formatInput, $value);									
+			$result = \DateTime::createFromFormat($formatInput, $value, new \DateTimeZone($this->localTimezone));									
 		} elseif ($value===null) {
 			$result = new \DateTime(null, new \DateTimeZone($this->localTimezone));						
 		}	
@@ -90,12 +90,12 @@ class Locale extends Component
 		if ($value &&  is_numeric($value)) {
 			$result = new \DateTime($value, new \DateTimeZone('UTC'));						
 		} elseif (is_string($value)) {
-			$result = \DateTime::createFromFormat($formatInput, $value);									
+			$result = \DateTime::createFromFormat($formatInput, $value, new \DateTimeZone('UTC'));												
 		} elseif ($value===null) {
 			$result = new \DateTime(null, new \DateTimeZone('UTC'));						
 		}	
 		if ($result) {			
-			$result = new \DateTime($value, new \DateTimeZone($this->localTimezone));
+			$result->setTimeZone(new \DateTimeZone($this->localTimezone));				
 		}
 		return ($formatOutput) ? $result->format($formatOutput) : $result;			
 	}
