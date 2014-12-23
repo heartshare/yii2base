@@ -38,6 +38,13 @@ return [
 		'user.*' => [
 			'description' => 'All User actions',
 		],
+
+		// Sample Rule
+		['sample.Rule'] => [
+			'description' => 'Sample structure for rule saving',
+			'ruleName' => 'sampleRule',
+			'ruleClass' => 'gxc\yii2base\permissions\rules\SampleRule',
+		]
 						
 	],
 
