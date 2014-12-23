@@ -17,7 +17,13 @@ use yii\widgets\Breadcrumbs;
  * @author Tung Mang Vien <tungmv7@gmail.com>
  * @since 2.0
  */
-class BaseBreadcrumbs extends Breadcrumbs{
+class BaseBreadcrumbs extends Breadcrumbs
+{
+    public $options = ['class' => 'breadcrumb'];
+
+    public $itemTemplate = "<li>{icon}{link}</li>\n";
+
+    public $activeItemTemplate = "<li class=\"active\">{icon}{link}</li>\n";
 
     public function run()
     {
@@ -52,8 +58,10 @@ class BaseBreadcrumbs extends Breadcrumbs{
             $result = strtr($issetTemplate ? $link['template'] : $template, ['{link}' => $label]);
         }
 
-        if(isset($link['icon']))
-            $result = '<i class="'.$link['icon'].'"></i> '. $result;
+        if(!empty($link['icon']))
+            $result = strtr($result, ['{icon}' => '<i class="'.$link['icon'].'"></i> ']);
+        else
+            $result = strtr($result, ['{icon}' => '']);
 
         return $result;
 

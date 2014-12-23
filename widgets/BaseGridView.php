@@ -26,7 +26,7 @@ class BaseGridView extends GridView{
     public $layout = "{items}\n<div class='addition-wrapper'>{summary}\n{pager}</div>";
 
     // init html class for summary
-    public $summaryOptions = ['class' => 'custom-summary pull-left'];
+    public $summaryOptions = ['class' => 'custom-summary pull-left', 'style' => 'padding-left:23px;'];
 
     // init pager
     public $pager = ['class' => 'gxc\yii2base\widgets\BaseLinkPager'];

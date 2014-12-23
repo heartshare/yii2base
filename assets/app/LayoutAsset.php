@@ -30,11 +30,15 @@ class LayoutAsset extends AssetBundle
 	public $css = [	
 		'css/font-awesome.min.css',
 		'css/bootstrap-datetimepicker.min.css',
+		'css/bootstrap-switch.min.css',
 		'css/screen.css',
 	];
 
-	public $js = [					
+	public $js = [
 		'js/moment.js',
+		'js/bootstrap-datetimepicker.min.js',
+		'js/bootstrap-tabdrop.js',
+		'js/bootstrap-switch.min.js',
 		'js/start.js',
 	];
 
