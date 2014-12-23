@@ -47,7 +47,7 @@ $this->params['html'] = $this->render('_search', ['model' => $searchModel]);
                         'class'=>'yii\grid\DataColumn',
                         'attribute' => 'name',
                         'content' => function ($model) {
-                            return \gxc\yii2base\models\tenant\Tenant::renderContactInfo($model->id);
+                            return \gxc\yii2base\models\tenant\Tenant::renderContactInfo($model);
                         }
                     ],
                     [

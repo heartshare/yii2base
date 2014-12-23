@@ -16,6 +16,7 @@ use gxc\yii2base\classes\TbActiveRecord;
 use gxc\yii2base\helpers\BaseHelper;
 use yii\i18n\I18N;
 use yii\web\View;
+use gxc\yii2base\models\user\UserDisplay;
 
 /**
  * This is the model class for table "base_tenant".
@@ -94,6 +95,16 @@ class Tenant extends TbActiveRecord
                 $this->resource_store = BaseHelper::generateTenantStoreId('r');
             return true; 
         }
+    }
+
+    public function getProfile()
+    {
+        return $this->hasOne(TenantProfile::classname(), ['store' => 'app_store']);
+    }
+
+    public function getOwner()
+    {
+        return $this->hasOne(UserDisplay::classname(), ['user_id' => 'user_registered_id'])->via('profile');
     }
 
     /**
@@ -191,7 +202,7 @@ class Tenant extends TbActiveRecord
         // we use moment.js fromNow from unix timestamp to optimize
         // http://momentjs.com/docs/#/displaying/fromnow/
         if($view !== false) {
-            $duration = strtotime('-2day'); // local time
+            $duration = Yii::$app->locale->toLocalTime($tenant->profile->registered_at, null)->getTimestamp();
             $html .= "\n" . Html::tag('p', Html::hiddenInput('registered_time_ago', $duration, ['id' => 'duration_' . $tenant->id]), ['class' => 'join-des']);
             $durationJs = '$("#duration_'.$tenant->id.'").parent().html("<span>'.Yii::t('base', 'Registered ').'"+moment.unix($("#duration_'.$tenant->id.'").val()).fromNow()+"</span>");';
             $view->registerJs($durationJs, View::POS_READY);
@@ -216,24 +227,28 @@ class Tenant extends TbActiveRecord
     }
 
 
-    public static function renderContactInfo($modelId)
+    public static function renderContactInfo($model)
     {
-        $html = '';
-        // get user display name
-        // format: <strong class="name-info">Phuong Nguyen</strong>
-        $html .= Html::tag('strong', 'Phuong Nguyen', ['class' => 'name-info']);
-        $html .= "\n" . Html::tag('br');
 
-        // get address info
-        // email: <i class="fa fa-envelope"></i> <span><a href="#">phuongxa@gmail.com</a></span>
-        $html .= Html::tag('i', '', ['class' => 'fa fa-envelope']);
-        $html .= "\n" . Html::tag('span', Html::a('huongxa@gmail.co ', ['mailto:huongxa@gmail.com']));
-        $html .= "\n" . Html::tag('br');
+        if(!empty($model->owner)) {
+            $html = '';
+            // get user display name
+            // format: <strong class="name-info">Phuong Nguyen</strong>
+            $html .= Html::tag('strong', $model->owner->display_name, ['class' => 'name-info']);
+            $html .= "\n" . Html::tag('br');
 
-        // phone:  <i class="fa fa-phone"></i> <span>+84230292311</span>
-        $html .= "\n" . Html::tag('i', '', ['class' => 'fa fa-phone']);
-        $html .= "\n" . Html::tag('span', '+84230292311');
-        return $html;
+            // get address info
+            // email: <i class="fa fa-envelope"></i> <span><a href="#">phuongxa@gmail.com</a></span>
+            $html .= Html::tag('i', '', ['class' => 'fa fa-envelope']);
+            $html .= "\n" . Html::tag('span', Html::a('huongxa@gmail.co ', ['mailto:huongxa@gmail.com']));
+            $html .= "\n" . Html::tag('br');
+
+            // phone:  <i class="fa fa-phone"></i> <span>+84230292311</span>
+            $html .= "\n" . Html::tag('i', '', ['class' => 'fa fa-phone']);
+            $html .= "\n" . Html::tag('span', '+84230292311');
+            return $html;
+        }else
+            return '';
 
     }
 }

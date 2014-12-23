@@ -1,17 +1,12 @@
 <?php
 use yii\widgets\ActiveForm;
+use gxc\yii2base\models\tenant\Tenant;
 
 use \gxc\yii2base\assets\app\LayoutAsset;
 $layoutAsset = LayoutAsset::register($this);
 ?>
 
-<<<<<<< HEAD
 <div class="form tenant-form clearfix">
-
-=======
-
-<div class="clearfix">
->>>>>>> FETCH_HEAD
     <?php $form = ActiveForm::begin([
         'id' => $formId,
         'options' => [
@@ -38,7 +33,7 @@ $layoutAsset = LayoutAsset::register($this);
                             <?= $form->field($model, 'system_domain')->textInput(['maxlength' => 128]) ?>
                         </div>
                         <div class="col-md-12">
-                            <?= $form->field($model, 'status')->dropDownList($model->getTenantStatuses(), ['class' => 'form-control']); ?>
+                            <?= $form->field($model, 'status')->dropDownList(Tenant::getTenantStatuses(), ['class' => 'form-control']); ?>
                         </div>
                     </div>
                 </div>
@@ -66,17 +61,17 @@ $layoutAsset = LayoutAsset::register($this);
         <div class="col-md-9 section-content">
             <div class="row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'app_store')->dropDownList($model->getTenantStores('app', $model), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
+                    <?= $form->field($model, 'app_store')->dropDownList(Tenant::getTenantStores('app', $model), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'content_store')->dropDownList($model->getTenantStores('content'), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
+                    <?= $form->field($model, 'content_store')->dropDownList(Tenant::getTenantStores('content'), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'resource_store')->dropDownList($model->getTenantStores('resource'), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
+                    <?= $form->field($model, 'resource_store')->dropDownList(Tenant::getTenantStores('resource'), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
                 </div>
             </div>                    
         </div>
