@@ -6,6 +6,14 @@ return [
 		'class' => 'gxc\yii2base\models\tenant\Tenant',
 		'store' => ''
 	],
+    'TenantForm' => [
+        'class' => 'gxc\yii2base\models\tenant\TenantForm',
+        'store' => ''
+    ],
+    'TenantProfile' => [
+        'class' => 'gxc\yii2base\models\tenant\TenantProfile',
+        'store' => ''
+    ],
 	'TenantSearch' => [
 		'class' => 'gxc\yii2base\models\tenant\TenantSearch',
 		'store' => ''
@@ -17,7 +25,7 @@ return [
 	'TenantModule' => [
 		'class' => 'gxc\yii2base\models\tenant\TenantModule',
 		'store' => 'content_store'
-	],	
+	],
 
 	// User Models
 	'User' => [

@@ -24,6 +24,9 @@ $layoutAsset = LayoutAsset::register($this);
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-12">
+                            <?= $form->field($model, 'email')->textInput(['maxlength' => 128]) ?>
+                        </div>
+                        <div class="col-md-12">
                             <?= $form->field($model, 'name')->textInput(['maxlength' => 128]) ?>
                         </div>
                         <div class="col-md-12">

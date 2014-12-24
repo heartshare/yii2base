@@ -1,7 +1,4 @@
-<?php
-use yii\helpers\Html;
-
-if(!empty($model)): ?>
+<?php if(!empty($model)): ?>
 <div class="row">
     <header class="header-ctn col-md-12">
         <div class="brand-view">
