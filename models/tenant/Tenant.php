@@ -8,6 +8,7 @@
 namespace gxc\yii2base\models\tenant;
 
 use gxc\yii2base\helpers\UtilHelper;
+use gxc\yii2base\models\user\User;
 use Yii;
 use yii\helpers\BaseFormatConverter;
 use yii\helpers\Html;
@@ -107,6 +108,11 @@ class Tenant extends TbActiveRecord
         return $this->hasOne(UserDisplay::classname(), ['user_id' => 'user_registered_id'])->via('profile');
     }
 
+    public function getAccount()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_registered_id'])->via('profile');
+    }
+
     /**
      * get all tenant store information by app | content | resource
      *
@@ -195,7 +201,7 @@ class Tenant extends TbActiveRecord
 
         // get tenant domain
         // format: <p><a href="http://tungmv.com" target="_blank">http://psestoreofphuong.com</a></p>
-        $html .= "\n" . Html::tag('p', Html::a($tenant->domain, [$tenant->domain], ['target' => '_blank']));
+        $html .= "\n" . Html::tag('p', Html::a($tenant->domain, $tenant->domain, ['target' => '_blank']));
 
         // get registered time
         // format: <p class="join-des"><span>Registered 20 days ago.</span></p>
@@ -240,7 +246,7 @@ class Tenant extends TbActiveRecord
             // get address info
             // email: <i class="fa fa-envelope"></i> <span><a href="#">phuongxa@gmail.com</a></span>
             $html .= Html::tag('i', '', ['class' => 'fa fa-envelope']);
-            $html .= "\n" . Html::tag('span', Html::a('huongxa@gmail.co ', ['mailto:huongxa@gmail.com']));
+            $html .= "\n" . Html::tag('span', Html::a($model->account->email, ['mailto:'.$model->account->email]));
             $html .= "\n" . Html::tag('br');
 
             // phone:  <i class="fa fa-phone"></i> <span>+84230292311</span>
