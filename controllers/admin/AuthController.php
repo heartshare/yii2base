@@ -123,9 +123,11 @@ class AuthController extends BeController
                                 if (isset($temp[0])) {
                                     $rolePermissions[$region][$item]['controller'] = $temp[0];
 
-                                    $rootAction = $temp[0] . '.*';
-                                    if (isset($rolePermissions[$region][$rootAction])) {
-                                        $rolePermissions[$region][$rootAction]['children'][] = $item;
+                                    if ($temp[1] != '*') {
+                                        $rootAction = $temp[0] . '.*';
+                                        if (isset($rolePermissions[$region][$rootAction])) {
+                                            $rolePermissions[$region][$rootAction]['children'][] = $item;
+                                        }
                                     }
                                 }
 
