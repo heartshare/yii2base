@@ -41,10 +41,7 @@ use yii\web\View;
                     <tr>
                         <td width="80%"><?= ucfirst($detail['controller']) ?> | <?= $detail['description'] ?><span class="hidden-xs"> | <?= $item ?></span></td>
                         <td width="15%">
-                            <?php
-                                $itemId = str_replace('.', '-', $item);
-                                $itemId = str_replace('*', 'all', $itemId);
-                            ?>
+                            <?php $itemId = str_replace(['.', '*'], ['-', 'all'], $item); ?>
                             <input type="checkbox" name="permission-status" id="<?= $itemId ?>" class="permission-status switch" data-group="<?= $detail['controller'] ?>"  data-size="mini" <?php if (isset($detail['check']) && $detail['check'] == 1): ?>checked<?php endif; ?>>
                             <input type="hidden" class="children" value="<?= isset($detail['children']) ? implode(',', $detail['children']) : null; ?>" />
                         </td>
@@ -57,7 +54,7 @@ use yii\web\View;
 </div>
 
 <?php
-    // Set state for all child actions if root action is checked
+    // Set state for all children actions if root action is checked
     $script = '
         $(".permission-status").on("switchChange.bootstrapSwitch", function(e, state) {
             var itemId = $(this).attr("id");
