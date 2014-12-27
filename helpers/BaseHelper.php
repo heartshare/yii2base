@@ -210,4 +210,79 @@ class BaseHelper
 	{		
 		return $type.'.'.substr(md5(uniqid()), -3).'.'.substr(md5(microtime()), -3);
 	}
+
+	/*
+    * Fetch Data from an Array File
+    */
+    public static function fetchArray($file)
+    {
+		if (is_file($file)) {
+			return include $file;
+		}
+		return false;
+    }
+
+    /*
+    * Get all roles by tenant
+    */
+	public static function getRolesByTenant($tenantId, $tenantStore)
+	{
+		$cacheId = self::getCacheKey('permission', 'role');
+		$roles = Yii::$app->cache->get($cacheId);$roles = false;
+		if ($roles == false) {
+			$arrCondition = [];
+	        if ($tenantStore !== false && $tenantStore != '') {
+				$arrCondition = ['store' => $tenantStore];
+			}
+			$modules = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->all();
+
+			$roles = [];
+		    foreach ($modules as $module) {
+				$where = '@gxc/yii2' . $module->module . '/permissions/';
+				if (is_dir(Yii::getAlias($where))) {
+					$permission_files = FileHelper::findFiles(Yii::getAlias($where), ['only' => ['items_admin.php', 'items_site.php']]);
+					foreach ($permission_files as $file) {
+						$permissions = BaseHelper::fetchArray($file);
+		                if (array_key_exists('roles', $permissions)) {
+							$roles = array_merge($permissions['roles'], $roles);
+						}
+					}
+				}
+			}
+
+			Yii::$app->cache->set($cacheId, $roles, self::getCacheKeyTimeExpired('permission', 'role'));
+		}
+		return $roles;
+	}
+
+	/*
+    * Get all roles by tenant
+    */
+	public static function getPermissionsByTenant($tenantId, $tenantStore)
+	{
+        $arrCondition = [];
+        if ($tenantStore !== false && $tenantStore != '') {
+			$arrCondition = ['store' => $tenantStore];
+		}
+		$modules = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->all();
+
+		$items = [];
+	    foreach ($modules as $module) {
+			$where = '@gxc/yii2' . $module->module . '/permissions/';
+			if (is_dir(Yii::getAlias($where))) {
+				$permission_files = FileHelper::findFiles(Yii::getAlias($where), ['only' => ['items_admin.php', 'items_site.php']]);
+				foreach ($permission_files as $k => $file) {
+					$permissions = BaseHelper::fetchArray($file);
+	                if (array_key_exists('items', $permissions)) {
+	                	$items[$module->module][$k]['items'] = $permissions['items'];
+	                }
+
+	                if (array_key_exists('roles', $permissions)) {
+	                	$items[$module->module][$k]['roles'] = $permissions['roles'];
+	                }
+				}
+			}
+		}
+		return $items;
+	}
 }

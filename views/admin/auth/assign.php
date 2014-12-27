@@ -1,11 +1,12 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 use yii\bootstrap\Nav;
 
 $this->title = Yii::t('base', 'Permissions - {modelName}', [
-	'modelName' => $tenant->name
+    'modelName' => $tenant->name
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('base', 'Auth'), 'url' => ['index'], 'icon'=>'fa fa-lock'];
 $this->params['breadcrumbs'][] = $this->title;
@@ -28,13 +29,17 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
         </div>
     </header>
 </div>
+
 <div class="row">
     <section class="main-ctn">
         <div class="inner">
             <ul class="nav nav-tabs tabs-responsive" role="tablist">
-                <li><a href="#general" role="tab" data-toggle="tab"><i class="fa fa-dashboard"></i>General</a></li>
-                <li><a href="#users" role="tab" data-toggle="tab"><i class="fa fa-users"></i>Users</a></li>
-                <li class="active"><a href="#permissions" role="tab" data-toggle="tab"><i class="fa fa-gears"></i> Permissions</a></li>
+                <li><a href="#general" role="tab" data-toggle="tab"><i class="fa fa-dashboard"></i>
+                    General</a></li>
+                <li><a href="#users" role="tab" data-toggle="tab"><i class="fa fa-users"></i>
+                    Users</a></li>
+                <li class="active"><a href="#permissions" role="tab" data-toggle="tab"><i class="fa fa-gears"></i> Permissions</a>
+                </li>
                 <li><a href="#modules" role="tab" data-toggle="tab"><i class="fa fa-tasks"></i> Modules</a></li>
             </ul>
             <!-- Tab panes -->
@@ -338,7 +343,10 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                                                 <td><span class="label label-default">Guest</span></td>
                                                 <td>
                                                     <div class="btn-group pull-right grid-action-buttons">
-                                                      
+                                                        <a class="pull-left btn btn-xs btn-default"
+                                                           href="/base/admin/tenant/update?id=1" title="Update"
+                                                           data-pjax="0"><span class="fa fa-pencil"></span>
+                                                            Update</a>
                                                       
                                                         <a class="pull-left btn btn-xs btn-default"
                                                            href="/base/admin/tenant/update?id=1" title="Update"
@@ -362,49 +370,42 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                     </div>
                 </div>
                 <div class="tab-pane active" id="permissions">
-
                     <div class="tab-ctn info-wrapper">
-
-                            <div class="content-zone">
-                                <div class="info-item">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="info-item-header with-form-control grid-header">
-                                                <h1>Permissions / Roles</h1>
-                                            </div>
-                                            <?= $this->render('_role', [
-                                                'tenantId' => $tenantId,
-                                                'roles' => $roles,
-                                            ]) ?>
-                                        </div>
-                                    </div>
-                                </div>                                
+                        <div class="content-zone">
+                            <div class="info-item">
+                                <?= $this->render('_permission_role', [
+                                            'tenantId' => $tenantId,
+                                            'modules' => $modules,
+                                            'roleName' => $roleName,
+                                            'rolePermissions' => $rolePermissions,
+                                    ]) ?>
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="tab-pane" id="modules">
                     <div class="tab-ctn info-wrapper">
                         <div class="content-zone">
 
                             <div class="info-item">
 
-                                <div class="info-item-header with-form-control grid-header">
-                                    <h1>Modules / Manage</h1>
+                                <div class="info-item-header with-form-control">
+                                    <h1>Permissions / Roles</h1>
                                     <div class="buttons">
                                         <a class="btn btn-sm btn-warning"> ADD NEW MODULE <i class="fa fa-plus fa-fw"></i>
                                         </a>
                                     </div>
                                 </div>
-                                <div class="row section section-first section-data">
                                 <table class="table table-hover tbl-1">
                                     <tbody>
                                     <tr>
-                                        <td><img src="images/paintcan.png"/></td>
-                                        <td style="width:20%;"><a href="#"><strong>Base Module</strong></a> <br> <span class="info-desc">Plan: Default</span>
+                                        <td><img src="images/stack.png"/></td>
+                                        <td style="width:20%;"><b>Base Module</b> <br> <span class="info-desc">Plan: Default</span>
                                         </td>
-                                        <td>Expires in next <b>1 year</b> <span class="statusDot statusDot-success"></span><br> <span
+                                        <td>Expires in next 36 days <br> <span
                                                 class="info-desc">15/03/2015</span></td>
-                                        <td>Updated: <b>Manual</b> <br> <span
+                                        <td>Updated: Manual <br> <span
                                                 class="info-desc">by: Tuan Nguyen at 16/03/2014</span></td>
                                         <td>
                                             <div class="btn-group pull-right grid-action-buttons">
@@ -427,11 +428,11 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                                     </tr>
                                     <tr>
                                         <td><img src="images/brightness.png"/></td>
-                                        <td><a href="#"><strong>Application Module</strong></a><br> <span
+                                        <td><b>Application Module</b> <br> <span
                                                 class="info-desc">Plan: Default</span></td>
-                                        <td>Expires in next <b>153 days</b> <span class="statusDot statusDot-success"></span> <br> <span
+                                        <td>Expires in next 36 days <br> <span
                                                 class="info-desc">15/03/2015</span></td>
-                                        <td>Updated: <b>Auto</b> <br> <span
+                                        <td>Updated: Auto <br> <span
                                                 class="info-desc">by: System at 20/02/2014</span></td>
                                         <td>
                                             <div class="btn-group pull-right grid-action-buttons">
@@ -454,11 +455,11 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                                     </tr>
                                     <tr>
                                         <td><img src="images/stack.png"/></td>
-                                        <td style="width:20%;"><a href="#"><strong>Store Module</strong></a> <br> <span class="info-desc">Plan: Default</span>
+                                        <td style="width:20%;"><b>Base Module</b> <br> <span class="info-desc">Plan: Default</span>
                                         </td>
-                                        <td>Expires in next <b>36 days</b> <span class="statusDot statusDot-success"></span> <br> <span
+                                        <td>Expires in next 36 days <br> <span
                                                 class="info-desc">15/03/2015</span></td>
-                                        <td>Updated: <b>Manual</b> <br> <span
+                                        <td>Updated: Manual <br> <span
                                                 class="info-desc">by: Tuan Nguyen at 16/03/2014</span></td>
                                         <td>
                                             <div class="btn-group pull-right grid-action-buttons">
@@ -480,12 +481,12 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><img src="images/polaroidcamera.png"/></td>
-                                        <td><a href="#"><strong>Post Module</strong></a> <br> <span
+                                        <td><img src="images/brightness.png"/></td>
+                                        <td><b>Application Module</b> <br> <span
                                                 class="info-desc">Plan: Default</span></td>
-                                        <td>Expires in next <b>27 days</b> <span class="statusDot statusDot-success"></span> <br> <span
+                                        <td>Expires in next 36 days <br> <span
                                                 class="info-desc">15/03/2015</span></td>
-                                        <td>Updated: <b>Auto</b> <br> <span
+                                        <td>Updated: Auto <br> <span
                                                 class="info-desc">by: System at 20/02/2014</span></td>
                                         <td>
                                             <div class="btn-group pull-right grid-action-buttons">
@@ -507,12 +508,12 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><img src="images/lightbulb.png"/></td>
-                                        <td style="width:20%;"><a href="#"><strong>HR Module</strong></a> <br> <span class="info-desc">Plan: Default</span>
+                                        <td><img src="images/stack.png"/></td>
+                                        <td style="width:20%;"><b>Base Module</b> <br> <span class="info-desc">Plan: Default</span>
                                         </td>
-                                        <td>Expires in next <b>13 days</b> <span class="statusDot statusDot-warning"></span><br> <span
+                                        <td>Expires in next 36 days <br> <span
                                                 class="info-desc">15/03/2015</span></td>
-                                        <td>Updated: <b>Manual</b> <br> <span
+                                        <td>Updated: Manual <br> <span
                                                 class="info-desc">by: Tuan Nguyen at 16/03/2014</span></td>
                                         <td>
                                             <div class="btn-group pull-right grid-action-buttons">
@@ -534,12 +535,12 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><img src="images/megaphone2.png"/></td>
-                                        <td><a href="#"><strong>Customer Module</strong></a> <br> <span
+                                        <td><img src="images/brightness.png"/></td>
+                                        <td><b>Application Module</b> <br> <span
                                                 class="info-desc">Plan: Default</span></td>
-                                        <td>Expires in next <b>1 day</b> <span class="statusDot statusDot-danger"></span><br> <span
+                                        <td>Expires in next 36 days <br> <span
                                                 class="info-desc">15/03/2015</span></td>
-                                        <td>Updated: <b>Auto</b> <br> <span
+                                        <td>Updated: Auto <br> <span
                                                 class="info-desc">by: System at 20/02/2014</span></td>
                                         <td>
                                             <div class="btn-group pull-right grid-action-buttons">
@@ -563,8 +564,6 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                                     </tbody>
                                 </table>
                             </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>

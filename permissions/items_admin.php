@@ -6,7 +6,10 @@ return [
 	'items' => [		
 
 		// Tenant Actions
-		'base.admin.tenant.create' => [
+		'tenant.*' => [
+			'description' => 'Add actions of Tenant',
+		],
+		'tenant.create' => [
 			'description' => 'Add a Tenant',
 		],
 		'tenant.update' => [
@@ -23,6 +26,9 @@ return [
 		],
 
 		// User Actions
+		'user.*' => [
+			'description' => 'All actions of User',
+		],
 		'user.create' => [
 			'description' => 'Add a User',
 		],
@@ -40,20 +46,19 @@ return [
 		],
 
 		// Sample Rule
-		['sample.Rule'] => [
+		'sample.Rule' => [
 			'description' => 'Sample structure for rule saving',
 			'ruleName' => 'sampleRule',
 			'ruleClass' => 'gxc\yii2base\permissions\rules\SampleRule',
 		]
-						
 	],
 
 	// Permission Roles
 	'roles' => [		
-		'app.superAdmin' => [
+		'superAdmin' => [
 			'description' => 'Super Admin',			
 		],
-		'app.admin' => [
+		'admin' => [
 			'description' => 'Admin',
 			'children' => [
 				'tenant.*',
