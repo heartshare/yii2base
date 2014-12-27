@@ -12,7 +12,7 @@ use Yii;
  * @property string $module
  * @property string $plan
  * @property string $permissions
- * @property integer $expired_mode
+ * @property integer $expiry_mode
  * @property string $expired_at
  * @property integer $status
  */
@@ -33,7 +33,7 @@ class TenantModule extends \yii\db\ActiveRecord
     {
         return [
             [['permissions'], 'string'],
-            [['expired_mode', 'status'], 'integer'],
+            [['expiry_mode', 'status'], 'integer'],
             [['expired_at'], 'safe'],
             [['store', 'module', 'plan'], 'string', 'max' => 64],
             [['store', 'module'], 'unique', 'targetAttribute' => ['store', 'module'], 'message' => 'The combination of Store and Module has already been taken.']
@@ -51,7 +51,7 @@ class TenantModule extends \yii\db\ActiveRecord
             'module' => Yii::t('base', 'Module'),
             'plan' => Yii::t('base', 'Plan'),
             'permissions' => Yii::t('base', 'Permissions'),
-            'expired_mode' => Yii::t('base', 'Expired Mode'),
+            'expiry_mode' => Yii::t('base', 'Expired Mode'),
             'expired_at' => Yii::t('base', 'Expired At'),
             'status' => Yii::t('base', 'Status'),
         ];

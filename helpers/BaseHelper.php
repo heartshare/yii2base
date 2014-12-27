@@ -272,6 +272,7 @@ class BaseHelper
 			if (is_dir(Yii::getAlias($where))) {
 				$permission_files = FileHelper::findFiles(Yii::getAlias($where), ['only' => ['items_admin.php', 'items_site.php']]);
 				foreach ($permission_files as $k => $file) {
+					$k = ($k == 0) ? 'admin' : 'site';
 					$permissions = BaseHelper::fetchArray($file);
 	                if (array_key_exists('items', $permissions)) {
 	                	$items[$module->module][$k]['items'] = $permissions['items'];

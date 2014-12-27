@@ -14,6 +14,7 @@ use yii\helpers\FileHelper;
 
 use gxc\yii2base\classes\BeController;
 use gxc\yii2base\helpers\BaseHelper;
+use gxc\yii2base\models\tenant\TenantForm;
 
 /**
  * Auth Controller of Base Module
@@ -99,21 +100,64 @@ class AuthController extends BeController
                 $arrCondition = ['store' => $tenantStore];
                 $modules = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->all(); 
 
-                // Load all roles from permission file
-                $permissions = BaseHelper::getPermissionsByTenant($tenantId, $tenantStore);
+                // Get current module
+                $arrCondition = ['store' => $tenant->$store, 'module' => $moduleId];
+                $currentModule = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->one();
 
-                // Get permission items by current module
-                $currentPermissions = isset($permissions[$moduleId]) ? $permissions[$moduleId] : [];
+                // Load all roles and permissions
+                // First get from database, if null, get from permission file
+                if (!empty($currentModule->permissions)) {
+                    $currentPermissions = unserialize($currentModule->permissions);
+                } else {
+                    $permissions = BaseHelper::getPermissionsByTenant($tenantId, $tenantStore);
+                    $currentPermissions = isset($permissions[$moduleId]) ? $permissions[$moduleId] : [];
+                }
+
+                // Update Permission to database
+                if (isset($_POST['permissionStatus']) && !empty($_POST['permissionStatus'])) {
+                    foreach ($_POST['permissionStatus'] as $region => $postPermissions) {
+                        $currentAssignRoles = $currentPermissions[$region]['roles'][$role]['children'];
+                        foreach ($postPermissions as $item => $status) {
+                            $temp = explode('.', $item);
+                            if ($temp[1] == '*' || ($temp[1] != '*' && !isset($postPermissions[$temp[0] . '.*'])))  {
+                                $currentAssignRoles[] = $item;
+                            }
+                        }
+
+                        // Remove permission inactive
+                        foreach ($currentPermissions[$region]['roles'][$role]['children'] as $curPermission) {
+                            if (!in_array($curPermission, $_POST['permissionStatus'])) {
+                                $key = array_search($curPermission, $currentAssignRoles);
+                                unset($currentAssignRoles[$key]);
+                            }
+                        }
+
+                        // Re-assign role-permissions
+                        $currentAssignRoles = array_unique($currentAssignRoles);
+                        $currentPermissions[$region]['roles'][$role]['children'] = $currentAssignRoles;
+                    }
+
+                    if (empty($currentModule)){
+                        $currentModule = new TenantModule();
+                        $currentModule->store = $tenantStore;
+                        // $currentModule->update_by = User::findOne(['email' => $model->email])->id;
+                        $currentModule->registered_at = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
+                        $currentModule->save();
+                    } else {
+                        $currentModule->permissions = serialize($currentPermissions);
+                        // $currentModule->update_by = User::findOne(['email' => $model->email])->id;
+                        $currentModule->updated_at = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
+                        if ($currentModule->save() == 1) {
+                             Yii::$app->session->setFlash('message', ['success', 'Update Permissions Successfully.']);
+                        } else {
+                             Yii::$app->session->setFlash('message', ['error', 'Update Permissions Failed.']);
+                        }
+                    }
+                }
 
                 $rolePermissions = [];
                 if (!empty($currentPermissions)) {
                     foreach ($currentPermissions as $region => $permission) {
-                        if ($region == 0) {
-                            $region = 'admin';
-                        } else {
-                            $region = 'site';
-                        }
-
                         // Get all permission items of module
                         if (isset($permission['items'])) {
                             foreach ($permission['items'] as $item => $detail) {
@@ -160,9 +204,6 @@ class AuthController extends BeController
                         }
                     }
                 }
-
-                $arrCondition = ['store' => $tenant->$store, 'module' => $moduleId];
-                $currentModule = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->one();
 
                 // Find the Module which is from current Tenant
                 return $this->render('assign', [
