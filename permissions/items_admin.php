@@ -46,11 +46,11 @@ return [
 		],
 
 		// Sample Rule
-		'sample.Rule' => [
-			'description' => 'Sample structure for rule saving',
-			'ruleName' => 'sampleRule',
-			'ruleClass' => 'gxc\yii2base\permissions\rules\SampleRule',
-		]
+		// 'sample.Rule' => [
+		// 	'description' => 'Sample structure for rule saving',
+		// 	'ruleName' => 'sampleRule',
+		// 	'ruleClass' => 'gxc\yii2base\permissions\rules\SampleRule',
+		// ]
 	],
 
 	// Permission Roles
@@ -64,7 +64,7 @@ return [
 				'tenant.*',
 				'user.*',
 			]
-		],		
+		]
 	],	
 ];
 

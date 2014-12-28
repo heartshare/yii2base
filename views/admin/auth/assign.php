@@ -237,7 +237,7 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                                                             Update</a>
                                                         
                                                         <a class="pull-left btn btn-xs btn-default"
-                                                           href="/base/admin/tenant/update?id=1" title="Update"
+                                                           href="<?= Url::toRoute(['/base/admin/auth/assign', 'type' => 'user', 'id' => 1, 'module' => isset($currentModule->module) ? $currentModule->module : 'app', 'tenant' => $tenantId]) ?>" title="Update"
                                                            data-pjax="0"><span class="fa fa-tasks"></span>
                                                             Permissions</a>
                                                         <a class="pull-left btn btn-xs btn-default"

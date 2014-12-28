@@ -48,10 +48,10 @@ use yii\widgets\ActiveForm;
                         <tbody>
                             <?php foreach ($itemRegion as $item => $detail): ?>
                             <tr>
-                                <td width="80%"><?= ucfirst($detail['controller']) ?> | <?= $detail['description'] ?><span class="hidden-xs"> | <?= $item ?></span></td>
+                                <td width="80%"><?= $detail['controller'] ?> | <?= $detail['description'] ?><span class="hidden-xs"> | <?= $item ?></span></td>
                                 <td width="15%">
                                     <?php $itemId = str_replace(['.', '*'], ['-', 'all'], $item); ?>
-                                    <input type="checkbox" name="permissionStatus[<?= $region ?>][<?= $item ?>]" id="<?= $itemId ?>" class="permission-status switch" data-group="<?= $detail['controller'] ?>"  data-size="mini" <?php if (isset($detail['check']) && $detail['check'] == 1): ?>checked<?php endif; ?>>
+                                    <input type="checkbox" name="permissionStatus[<?= $region ?>][<?= $item ?>]" id="<?= $itemId ?>" class="permission-status switch" data-size="mini" <?php if (isset($detail['check']) && $detail['check'] == 1): ?>checked<?php endif; ?>>
                                     <input type="hidden" class="children" value="<?= isset($detail['children']) ? implode(',', $detail['children']) : null; ?>" />
                                 </td>
                             </tr>
@@ -80,6 +80,6 @@ use yii\widgets\ActiveForm;
                     });
                 }
             });';
-        $this->registerJs($script, View::POS_END);
+        // $this->registerJs($script, View::POS_END);
     ?>
 <?php endif; ?>
