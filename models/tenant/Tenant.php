@@ -7,15 +7,14 @@
 
 namespace gxc\yii2base\models\tenant;
 
-use gxc\yii2base\helpers\UtilHelper;
+use gxc\yii2base\helpers\LocalizationHelper;
+use gxc\yii2base\models\address\Address;
 use gxc\yii2base\models\user\User;
 use Yii;
-use yii\helpers\BaseFormatConverter;
 use yii\helpers\Html;
 
 use gxc\yii2base\classes\TbActiveRecord;
 use gxc\yii2base\helpers\BaseHelper;
-use yii\i18n\I18N;
 use yii\web\View;
 use gxc\yii2base\models\user\UserDisplay;
 
@@ -111,6 +110,11 @@ class Tenant extends TbActiveRecord
     public function getAccount()
     {
         return $this->hasOne(User::className(), ['id' => 'user_registered_id'])->via('profile');
+    }
+
+    public function getAddress()
+    {
+        return $this->hasOne(Address::classname(), ['id' => 'address_registered_id'])->via('profile');
     }
 
     /**
@@ -225,18 +229,24 @@ class Tenant extends TbActiveRecord
      */
     public static function renderLogo($logoPath)
     {
-        if(!empty($logoPath)){
+        if (!empty($logoPath)) {
             return '';
-        }else{
-            return Html::tag('span', Html::tag('span','', ['class'=>'fa fa-user fa-4x text-primary']), ['class' => 'thumb-wrapper-circle']);
+        } else {
+            return Html::tag('span', Html::tag('span', '', ['class' => 'fa fa-user fa-4x text-primary']), ['class' => 'thumb-wrapper-circle']);
         }
     }
 
 
+    /**
+     * render contact info
+     *
+     * @param $model
+     * @return string
+     */
     public static function renderContactInfo($model)
     {
 
-        if(!empty($model->owner)) {
+        if (!empty($model->owner)) {
             $html = '';
             // get user display name
             // format: <strong class="name-info">Phuong Nguyen</strong>
@@ -246,15 +256,37 @@ class Tenant extends TbActiveRecord
             // get address info
             // email: <i class="fa fa-envelope"></i> <span><a href="#">phuongxa@gmail.com</a></span>
             $html .= Html::tag('i', '', ['class' => 'fa fa-envelope']);
-            $html .= "\n" . Html::tag('span', Html::a($model->account->email, ['mailto:'.$model->account->email]));
+            $html .= "\n" . Html::tag('span', Html::a($model->account->email, ['mailto:' . $model->account->email]));
             $html .= "\n" . Html::tag('br');
 
             // phone:  <i class="fa fa-phone"></i> <span>+84230292311</span>
             $html .= "\n" . Html::tag('i', '', ['class' => 'fa fa-phone']);
             $html .= "\n" . Html::tag('span', '+84230292311');
             return $html;
-        }else
+        } else
             return '';
 
+    }
+
+    /**
+     * render address info
+     *
+     * @param $model
+     * @return string
+     */
+    public static function renderAddress($model)
+    {
+        if (!empty($model->address)) {
+            $address = $model->address->first_name . ' ' . $model->address->last_name . '<br/>';
+            if ($model->address->alias = Address::ALIAS_ADDRESS_1)
+                $address .= $model->address->address1;
+            else
+                $address .= $model->address->address2;
+            $address .= '<br />' . LocalizationHelper::getCountry($model->address->country_code)['name'];
+
+            return $address;
+        } else {
+            return Yii::t('base', 'not set');
+        }
     }
 }

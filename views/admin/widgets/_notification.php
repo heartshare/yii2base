@@ -13,19 +13,19 @@ if (Yii::$app->session->hasFlash('message')):
                 break;
 
             case 'danger':
-                $body = '<span class="fa fa-alert fa-exclamation-circle"></span> <span>' . \yii\helpers\Html::encode($message[1]) . '</span>';
+                $body = '<span class="fa fa-alert fa-2x  fa-exclamation-circle"></span> <span>' . \yii\helpers\Html::encode($message[1]) . '</span>';
                 break;
 
             case 'warning':
-                $body = '<span class="fa fa-alert fa-question-circle"></span> <span>' . \yii\helpers\Html::encode($message[1]) . '</span>';
+                $body = '<span class="fa fa-alert fa-2x  fa-question-circle"></span> <span>' . \yii\helpers\Html::encode($message[1]) . '</span>';
                 break;
 
             case 'info':
-                $body = '<span class="fa fa-alert fa-info-circle"></span> <span>' . \yii\helpers\Html::encode($message[1]) . '</span>';
+                $body = '<span class="fa fa-alert fa-2x  fa-info-circle"></span> <span>' . \yii\helpers\Html::encode($message[1]) . '</span>';
                 break;
 
             default:
-                $body = '<span class="fa fa-alert fa-info-circle"></span> <span>' . \yii\helpers\Html::encode($message[1]) . '</span>';
+                $body = '<span class="fa fa-alert fa-2x  fa-info-circle"></span> <span>' . \yii\helpers\Html::encode($message[1]) . '</span>';
                 break;
         }
 

@@ -168,7 +168,7 @@ ul, li { list-style: none; }
 .main-nav ul.dropdown-menu-style li.active a:hover{color:#333; background: #f5f5f5; }
 
 /*custom*/
-div.buttons > a {margin-left: 5px;}
+div.buttons > a {margin:0 5px;}
 div.buttons > a.quick-edit-button { line-height: 34px; vertical-align: middle;}
 .label-as-badge {border-radius: 1em;}
 .fa-alert {vertical-align: middle;}

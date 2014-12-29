@@ -3,7 +3,7 @@
 
         <div class="info-item">
             <div class="info-item-header">
-                <h1>Settings</h1>
+                <h1><?= Yii::t('base', 'Settings') ?></h1>
 
                 <div class="buttons pull-right">
                     <?= \yii\helpers\Html::a('<i class="fa fa-gear"></i> ' . Yii::t('base', 'Edit'), ['update', 'id' => $model->id], ['class' => 'edit-button quick-edit-button']) ?>
@@ -21,28 +21,28 @@
 
         <div class="info-item">
             <div class="info-item-header">
-                <h1>Contact Information</h1>
+                <h1><?= Yii::t('base', 'Contact Information') ?></h1>
 
                 <div class="buttons pull-right">
-                    <a class="edit-button quick-edit-button" href=""><i class="fa fa-gear"></i> Edit</a>
+                    <?= \yii\helpers\Html::a('<i class="fa fa-gear"></i> ' . Yii::t('base', 'Edit'), ['contact-update', 'id' => $model->id], ['class' => 'edit-button quick-edit-button']) ?>
                 </div>
             </div>
             <div class="info-item-content">
                 <span>Email</span>
-                <span>tungmv@gmail.com</span>
+                <span><?= isset($model->address->email) ? $model->address->email : Yii::t('base', 'not set') ?></span>
             </div>
             <div class="info-item-content">
                 <span>Address</span>
-                <span>Tung Mang Vien <br/>123 Quang Trung, Tan Binh <br/> Vietnam 10000</span>
+                <span><?= \gxc\yii2base\models\tenant\Tenant::renderAddress($model); ?></span>
             </div>
         </div>
 
         <div class="info-item">
             <div class="info-item-header">
-                <h1>Modules</h1>
+                <h1><?= Yii::t('base', 'Modules') ?></h1>
 
                 <div class="buttons pull-right">
-                    <a href="" class="quick-edit-button"><i class="fa fa-gear"></i> Edit or add new module</a>
+                    <a href="" class="quick-edit-button"><i class="fa fa-gear"></i> <?= Yii::t('base', 'Edit or add new module') ?></a>
                 </div>
             </div>
             <table class="table table-hover tbl-1">
