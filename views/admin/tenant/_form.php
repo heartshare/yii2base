@@ -80,7 +80,8 @@ $layoutAsset = LayoutAsset::register($this);
         </div>
     </div>
     <div class="row section buttons">
-        <input value="Save" class="btn btn-success" type="submit">
+        <?= \yii\helpers\Html::a(Yii::t('base', 'Cancel'), ['index'], ['class' => 'btn btn-default']) ?>
+        <?= \yii\helpers\Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
     <?php ActiveForm::end(); ?>
 </div>

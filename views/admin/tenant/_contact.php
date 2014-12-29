@@ -7,6 +7,7 @@ use \yii\widgets\ActiveForm;
     <div class="content-zone">
         <?php $form = ActiveForm::begin([
             'options' => [
+                'style' => 'padding:0;',
                 'class' => 'base-form',
             ]
         ]);
