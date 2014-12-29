@@ -258,7 +258,7 @@ class BaseHelper
 	/*
     * Get all roles by tenant
     */
-	public static function getPermissionsByTenant($tenantId, $tenantStore)
+	public static function getPermissionsFromFile($tenantId, $tenantStore)
 	{
         $arrCondition = [];
         if ($tenantStore !== false && $tenantStore != '') {
@@ -271,14 +271,25 @@ class BaseHelper
 			$where = '@gxc/yii2' . $module->module . '/permissions/';
 			if (is_dir(Yii::getAlias($where))) {
 				$permission_files = FileHelper::findFiles(Yii::getAlias($where), ['only' => ['items_admin.php', 'items_site.php']]);
-				foreach ($permission_files as $k => $file) {
+				foreach ($permission_files as $region => $file) {
+					$region= ($region == 0) ? 'admin' : 'site';
 					$permissions = BaseHelper::fetchArray($file);
+	                
 	                if (array_key_exists('items', $permissions)) {
-	                	$items[$module->module][$k]['items'] = $permissions['items'];
+	                	$items[$module->module][$region] = $permissions['items'];
 	                }
 
+	                // Get permissions assigned to role
 	                if (array_key_exists('roles', $permissions)) {
-	                	$items[$module->module][$k]['roles'] = $permissions['roles'];
+	                	foreach ($permissions['roles'] as $role => $detail) {
+	                		if (isset($detail['children'])) {
+		                		foreach ($detail['children'] as $rolePermission) {
+		                			if (isset($permissions['items'][$rolePermission])) {
+		                				$items[$module->module][$region][$rolePermission]['roles'][] = $role;
+		                			}
+		                		}
+		                	}
+	                	}
 	                }
 				}
 			}

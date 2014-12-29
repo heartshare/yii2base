@@ -21,7 +21,7 @@ use yii\helpers\Url;
                     <td><span class="statusDot statusDot-danger"></span></td>               
                     <td>
                         <div class="btn-group pull-right grid-action-buttons">
-                            <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['/base/admin/auth/assign', 'id' => $role, 'module' => isset($currentModule->module) ? $currentModule->module : 'app', 'tenant' => $tenantId]) ?>" title="Update" data-pjax="0"><span class="fa fa-tasks"></span>Permissions</a>
+                            <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['/base/admin/auth/assign', 'type' => 'role', 'id' => $role, 'module' => isset($currentModule->module) ? $currentModule->module : 'app', 'tenant' => $tenantId]) ?>" title="Update" data-pjax="0"><span class="fa fa-tasks"></span>Permissions</a>
                         </div>
                     </td>
                 </tr>

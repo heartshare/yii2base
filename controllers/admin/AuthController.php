@@ -14,6 +14,7 @@ use yii\helpers\FileHelper;
 
 use gxc\yii2base\classes\BeController;
 use gxc\yii2base\helpers\BaseHelper;
+use gxc\yii2base\models\tenant\TenantForm;
 
 /**
  * Auth Controller of Base Module
@@ -76,6 +77,12 @@ class AuthController extends BeController
     public function actionAssign()
     {
         if (isset($_GET['id'])) {
+            if (isset($_GET['type']) && $_GET['type'] == 'user') {
+                $type = 'users';
+            } else {
+                $type = 'roles';
+            }
+
             $role = $_GET['id'];
             $moduleId = isset($_GET['module']) ? $_GET['module'] : 'app';       
             $tenantId = isset($_GET['tenant']) ? $_GET['tenant'] : \Yii::$app->tenant->current['id'];     
@@ -99,70 +106,81 @@ class AuthController extends BeController
                 $arrCondition = ['store' => $tenantStore];
                 $modules = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->all(); 
 
-                // Load all roles from permission file
-                $permissions = BaseHelper::getPermissionsByTenant($tenantId, $tenantStore);
+                // Get current module
+                $arrCondition = ['store' => $tenant->$store, 'module' => $moduleId];
+                $currentModule = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->one();
 
-                // Get permission items by current module
-                $currentPermissions = isset($permissions[$moduleId]) ? $permissions[$moduleId] : [];
+                // Load all roles and permissions
+                // First get from database, if null, get from permission file
+                if (!empty($currentModule->permissions)) {
+                    $rolePermissions = unserialize($currentModule->permissions);
+                } else {
+                    $permissions = BaseHelper::getPermissionsFromFile($tenantId, $tenantStore);
+                    $rolePermissions = isset($permissions[$moduleId]) ? $permissions[$moduleId] : [];
+                }
 
-                $rolePermissions = [];
-                if (!empty($currentPermissions)) {
-                    foreach ($currentPermissions as $region => $permission) {
-                        if ($region == 0) {
-                            $region = 'admin';
-                        } else {
-                            $region = 'site';
-                        }
+                // echo '<pre>';
+                // var_dump($rolePermissions);
+                // echo '</pre>';
 
-                        // Get all permission items of module
-                        if (isset($permission['items'])) {
-                            foreach ($permission['items'] as $item => $detail) {
-                                // Get the controller of action
-                                $rolePermissions[$region][$item]['controller'] = '';
-                                $temp = explode('.', $item);
-                                if (isset($temp[0])) {
-                                    $rolePermissions[$region][$item]['controller'] = $temp[0];
-
-                                    if ($temp[1] != '*') {
-                                        $rootAction = $temp[0] . '.*';
-                                        if (isset($rolePermissions[$region][$rootAction])) {
-                                            $rolePermissions[$region][$rootAction]['children'][] = $item;
-                                        }
-                                    }
-                                }
-
-                                // Get the description of permission item
-                                $rolePermissions[$region][$item]['description'] = $detail['description'];
+                // Update Permission to database
+                if (isset($_POST['permissionStatus']) && !empty($_POST['permissionStatus'])) {
+                    foreach ($_POST['permissionStatus'] as $region => $postPermissions) {
+                        foreach ($postPermissions as $itemName => $status) {
+                            if ((isset($rolePermissions[$region][$itemName][$type]) && !in_array($role, $rolePermissions[$region][$itemName][$type])) || !isset($rolePermissions[$region][$itemName][$type])) {
+                                $rolePermissions[$region][$itemName][$type][] = $role;
                             }
                         }
+                    }
 
-                        // Set active for items assigned to role
-                        if (isset($permission['roles'][$role]['children'])) {
-                            $roleName = $permission['roles'][$role]['description'];
-                            $assignRoles = $permission['roles'][$role]['children'];
-                            foreach ($assignRoles as $assignRole) {
-                                if (isset($permission['items'][$assignRole])) {
-                                    $rolePermissions[$region][$assignRole]['check'] = 1;
-
-                                    // If item is root action, set active for all actions of this controller
-                                    $temp = explode('.', $assignRole);
-                                    if (isset($temp[1]) && $temp[1] == '*') {
-                                        if (isset($rolePermissions[$region][$assignRole]['children'])) {
-                                            foreach ($rolePermissions[$region][$assignRole]['children'] as $childRole) {
-                                                $rolePermissions[$region][$childRole]['check'] = 1;
-                                            }
-                                        }
+                    // Remove permission inactive out of a role
+                    foreach ($rolePermissions as $region => $itemPermissions) {
+                        foreach ($itemPermissions as $itemName => $detail) {
+                            if (array_key_exists($type, $detail)) {
+                                if (!isset($_POST['permissionStatus'][$region][$itemName])) {
+                                    $key = array_search($role, $detail[$type]);
+                                    if ($key !== false) {
+                                        unset($rolePermissions[$region][$itemName][$type][$key]);
                                     }
-                                } else {
-                                    $rolePermissions[$region][$assignRole]['check'] = '-1';
                                 }
                             }
                         }
                     }
+
+                    if (empty($currentModule)){
+                        $currentModule = new TenantModule();
+                        $currentModule->store = $tenantStore;
+                        $currentModule->updated_by = Yii::$app->user->info('id');
+                        $currentModule->registered_at = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
+                        $currentModule->save();
+                    } else {
+                        $currentModule->permissions = serialize($rolePermissions);
+                        $currentModule->updated_by = Yii::$app->user->info('id');
+                        $currentModule->updated_at = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
+                        if ($currentModule->save() == 1) {
+                             Yii::$app->session->setFlash('message', ['success', 'Update Permissions Successfully.']);
+                        } else {
+                             Yii::$app->session->setFlash('message', ['error', 'Update Permissions Failed.']);
+                        }
+                    }
                 }
 
-                $arrCondition = ['store' => $tenant->$store, 'module' => $moduleId];
-                $currentModule = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->one();
+                // Get additional information permission items
+                foreach ($rolePermissions as $region => $itemPermissions) {
+                    foreach ($itemPermissions as $itemName => $detail) {
+                        // Get controller of action
+                        $temp = explode('.', $itemName);
+                        $detail['controller'] = isset($temp[0]) ? ucfirst($temp[0]) : '';
+
+                        // Set active for assign roles
+                        if (isset($detail[$type]) && in_array($role, $detail[$type])) {
+                            $detail['check'] = 1;
+                        }
+
+                        $itemPermissions[$itemName] = $detail;
+                    }
+                    $rolePermissions[$region] = $itemPermissions;
+                }
 
                 // Find the Module which is from current Tenant
                 return $this->render('assign', [
