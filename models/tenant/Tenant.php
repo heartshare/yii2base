@@ -211,7 +211,7 @@ class Tenant extends TbActiveRecord
         // format: <p class="join-des"><span>Registered 20 days ago.</span></p>
         // we use moment.js fromNow from unix timestamp to optimize
         // http://momentjs.com/docs/#/displaying/fromnow/
-        if($view !== false) {
+        if($view !== false && !empty($tenant->profile)) {
             $duration = Yii::$app->locale->toLocalTime($tenant->profile->registered_at, null)->getTimestamp();
             $html .= "\n" . Html::tag('p', Html::hiddenInput('registered_time_ago', $duration, ['id' => 'duration_' . $tenant->id]), ['class' => 'join-des']);
             $durationJs = '$("#duration_'.$tenant->id.'").parent().html("<span>'.Yii::t('base', 'Registered ').'"+moment.unix($("#duration_'.$tenant->id.'").val()).fromNow()+"</span>");';
@@ -282,6 +282,11 @@ class Tenant extends TbActiveRecord
                 $address .= $model->address->address1;
             else
                 $address .= $model->address->address2;
+
+            if(!empty($model->address->city))
+                $address .= ', ' . $model->address->city;
+            if(!empty($model->address->state))
+                $address .= ', ' . $model->address->state;
             $address .= '<br />' . LocalizationHelper::getCountry($model->address->country_code)['name'];
 
             return $address;

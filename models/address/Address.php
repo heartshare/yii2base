@@ -1,35 +1,19 @@
 <?php
+/**
+ * @link http://www.gxccms.com/
+ * @copyright Copyright (c) 2014 GXC CMS
+ * @license http://www.gxccms.com/license/yii2cms/
+ */
 
 namespace gxc\yii2base\models\address;
 
 use Yii;
-use yii\behaviors\AttributeBehavior;
 
 /**
- * This is the model class for table "{{%base_address}}".
+ * This is the model class for table "base_address".
  *
- * @property string $id
- * @property string $store
- * @property string $user_id
- * @property string $country_code
- * @property string $state_code
- * @property string $city_code
- * @property string $company
- * @property string $alias
- * @property string $first_name
- * @property string $last_name
- * @property string $address1
- * @property string $address2
- * @property string $postcode
- * @property string $phone
- * @property string $phone_mobile
- * @property string $registered_as
- * @property string $note
- * @property string $created_by
- * @property string $updated_by
- * @property string $created_at
- * @property string $updated_at
- * @property integer $status
+ * @author  Tung Mang Vien<tungmv7@gmail.com>
+ * @since  2.0
  */
 class Address extends \yii\db\ActiveRecord
 {
@@ -59,7 +43,7 @@ class Address extends \yii\db\ActiveRecord
             [['created_by', 'updated_by', 'created_at', 'updated_at'], 'required'],
             [['created_at', 'updated_at'], 'safe'],
             [['store', 'country_code', 'state_code', 'city_code', 'alias', 'postcode', 'phone', 'phone_mobile'], 'string', 'max' => 64],
-            [['company'], 'string', 'max' => 255],
+            [['company', 'state', 'city'], 'string', 'max' => 255],
             [['email'], 'email'],
             [['first_name', 'last_name', 'email', 'address1', 'address2', 'registered_as'], 'string', 'max' => 128],
             [['note'], 'string', 'max' => 500]
@@ -94,6 +78,8 @@ class Address extends \yii\db\ActiveRecord
             'country_code' => Yii::t('app', 'Country Code'),
             'state_code' => Yii::t('app', 'State Code'),
             'city_code' => Yii::t('app', 'City Code'),
+            'state' => Yii::t('app', 'State'),
+            'city' => Yii::t('app', 'City'),
             'company' => Yii::t('app', 'Company'),
             'alias' => Yii::t('app', 'Alias'),
             'first_name' => Yii::t('app', 'First Name'),

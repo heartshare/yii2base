@@ -7,9 +7,8 @@
 
 namespace gxc\yii2base\models\tenant;
 
-use gxc\yii2base\models\user\User;
 use \Yii;
-use yii\base\Model;
+use \yii\base\Model;
 
 /**
  * TenantForm
@@ -45,18 +44,8 @@ class TenantForm extends Model{
             [['domain', 'system_domain'], 'url'],
             [['name', 'domain', 'system_domain', 'status', 'email'], 'required'],
             [['email'], 'email'],
-            [['email'], 'validateOwnerEmail'],
             [['app_store', 'content_store', 'resource_store'], 'required', 'on' => 'update']
         ];
-    }
-
-    public function validateOwnerEmail()
-    {
-        if(!$this->hasErrors()){
-            $user = User::findOne(['email' => trim($this->email)]);
-            if(!$user)
-                $this->addError('email', 'Do not have any account match with this email.');
-        }
     }
 
     public function attributeLabels()

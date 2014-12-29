@@ -10,6 +10,10 @@ return [
         'class' => 'gxc\yii2base\models\tenant\TenantForm',
         'store' => ''
     ],
+	'TenantContactForm' => [
+		'class' => 'gxc\yii2base\models\tenant\TenantContactForm',
+		'store' => ''
+	],
     'TenantProfile' => [
         'class' => 'gxc\yii2base\models\tenant\TenantProfile',
         'store' => ''
@@ -63,5 +67,12 @@ return [
 	'BackendLoginForm' => [
 		'class' => 'gxc\yii2base\models\user\BackendLoginForm',
 		'store' => ''
+	],
+
+	// Address Models
+	'Address' => [
+		'class' => 'gxc\yii2base\models\address\Address',
+		'store' => ''
 	]
+
 ];

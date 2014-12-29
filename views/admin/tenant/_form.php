@@ -64,17 +64,17 @@ $layoutAsset = LayoutAsset::register($this);
         <div class="col-md-9 section-content">
             <div class="row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'app_store')->dropDownList(Tenant::getTenantStores('app', $model), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
+                    <?= $form->field($model, 'app_store')->textInput(['maxlength' => 128]); ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'content_store')->dropDownList(Tenant::getTenantStores('content'), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
+                    <?= $form->field($model, 'content_store')->textInput(['maxlength' => 128]); ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <?= $form->field($model, 'resource_store')->dropDownList(Tenant::getTenantStores('resource'), ['class' => 'form-control', 'prompt' => Yii::t('base', '-- Select -- ')]); ?>
+                    <?= $form->field($model, 'resource_store')->textInput(['maxlength' => 128]); ?>
                 </div>
             </div>                    
         </div>

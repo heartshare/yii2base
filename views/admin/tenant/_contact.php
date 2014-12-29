@@ -71,9 +71,7 @@ use \yii\widgets\ActiveForm;
                                 <?= $form->field($model, 'city')->textInput() ?>
                             </div>
                             <div class="col-md-4">
-                                <?php \yii\widgets\Pjax::begin(['id' => 'states']) ?>
-                                <?= $form->field($model, 'state')->dropDownList(\gxc\yii2base\helpers\LocalizationHelper::getStates($model->country, true), ['prompt' => Yii::t('base', '-- Select -- ')]); ?>
-                                <?php \yii\widgets\Pjax::end() ?>
+                                <?= $form->field($model, 'state')->textInput(); ?>
                             </div>
                         </div>
                         <div class="inner-form row">
@@ -82,12 +80,7 @@ use \yii\widgets\ActiveForm;
                             </div>
                             <div class="col-md-4">
                                 <?= $form->field($model, 'country')->dropDownList(
-                                    \gxc\yii2base\helpers\LocalizationHelper::getCountries(true),
-                                    [
-                                        'prompt' => Yii::t('base', '-- Select -- '),
-                                        'onChange' => '$.pjax.reload({container: "#states", async: false});'
-                                    ]
-                                ); ?>
+                                    \gxc\yii2base\helpers\LocalizationHelper::getCountries(true), ['prompt' => Yii::t('base', '-- Select -- ')]); ?>
                             </div>
                         </div>
                         <div class="inner-form row">

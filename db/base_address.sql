@@ -5,6 +5,8 @@ CREATE TABLE `base_address` (
   `country_code` varchar(64) DEFAULT NULL,
   `state_code` varchar(64) DEFAULT NULL,
   `city_code` varchar(64) DEFAULT NULL,
+  `state` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
   `company` varchar(255) DEFAULT NULL,
   `alias` varchar(64) DEFAULT NULL,
   `first_name` varchar(128) NOT NULL DEFAULT '',

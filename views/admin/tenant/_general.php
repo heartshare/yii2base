@@ -17,6 +17,10 @@
                 <span>Website</span>
                 <span><?= $model->domain ?></span>
             </div>
+            <div class="info-item-content">
+                <span>Owner email</span>
+                <span><?= $model->account->email ?></span>
+            </div>
         </div>
 
         <div class="info-item">

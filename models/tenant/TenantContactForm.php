@@ -15,7 +15,7 @@ use Yii;
  * @author Tung Mang Vien <tungmv7@gmail.com>
  * @since 2.0
  */
-class TenantContact extends Model{
+class TenantContactForm extends Model{
 
     public $first_name;
     public $last_name;
@@ -35,11 +35,10 @@ class TenantContact extends Model{
     {
         return [
             [['postal_code'], 'integer'],
-            [['first_name', 'last_name', 'email', 'company_name', 'description'], 'string'],
+            [['first_name', 'last_name', 'email', 'company_name', 'description', 'state', 'city'], 'string'],
             [['postal_code', 'phone_2', 'phone_1'], 'string', 'max' => 64],
             [['first_name', 'last_name', 'email', 'company_name'], 'string', 'max' => 128],
-            [['first_name', 'last_name', 'email', 'company_name', 'address_1',
-            'city', 'postal_code', 'country', 'phone_1'], 'required'],
+            [['first_name', 'last_name', 'email', 'company_name', 'address_1', 'city', 'country', 'phone_1'], 'required'],
             [['email'], 'email'],
         ];
     }
