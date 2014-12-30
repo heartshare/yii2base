@@ -139,6 +139,7 @@ ul, li { list-style: none; }
 .base-form { padding:15px 15px 0 15px;}
 .base-form .section-first{border-top: 0px!important; padding-top: 5px;}
 .base-form .section.buttons {padding-left: 15px;padding-right: 15px;text-align: right;}
+.base-form .section-last{margin-bottom: 10px;}
 
 /*.generalForm select { height: 28px; line-height: 28px;}*/
 .section>.section-summary { padding-left: 30px; padding-right: 0;}

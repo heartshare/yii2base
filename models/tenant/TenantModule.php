@@ -4,6 +4,8 @@ namespace gxc\yii2base\models\tenant;
 
 use Yii;
 
+use gxc\yii2base\classes\TbActiveRecord;
+
 /**
  * This is the model class for table "base_tenant_module".
  *
@@ -16,7 +18,7 @@ use Yii;
  * @property string $expired_at
  * @property integer $status
  */
-class TenantModule extends \yii\db\ActiveRecord
+class TenantModule extends TbActiveRecord
 {
     /**
      * @inheritdoc

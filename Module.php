@@ -24,9 +24,11 @@ class Module extends \gxc\yii2base\classes\Module
 
 	public $version = '1.0.0-dev';
 
-	public $permissionId = 'base';
+	public $uniqueId = 'yii2base';
 
 	public $name = 'Base Application Module';
+
+	public $icon = 'icon.png';
 
 	public $allowedTenants = false;
 	

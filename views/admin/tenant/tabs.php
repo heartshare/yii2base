@@ -8,13 +8,13 @@
             </h1>
             <p><?= $model->domain ?></p>
         </div>
-        <div class="summary-view">
+        <!--<div class="summary-view">
             <ul>
                 <li><a href="javascript:;">25</a><br/>Users</li>
                 <li><a href="javascript:;">345 days</a><br/>Active</li>
                 <li><a href="javascript:;">$234</a><br/>Contribution</li>
             </ul>
-        </div>
+        </div>-->
     </header>
 </div>
 <div class="row">
@@ -31,15 +31,15 @@
                         ],
                         [
                             'label' => '<i class="fa fa-users"></i> Users',
-                            'link' => ['auth/type/user'],
+                            'link' => ['#'],
                         ],
                         [
                             'label' => '<i class="fa fa-gears"></i> Permissions',
-                            'link' => ['auth/type/role'],
+                            'link' => ['admin/auth/index', 'id' => $model->id],
                         ],
                         [
                             'label' => '<i class="fa fa-tasks"></i> Modules',
-                            'link' => ['auth/index/assign'],
+                            'link' => ['modules', 'id' => $model->id],
                         ]
                     ]
                 ]);
@@ -53,15 +53,37 @@
                         ],
                         [
                             'label' => '<i class="fa fa-users"></i> Users',
-                            'link' => ['auth/type/user'],
+                            'link' => ["#"],
                         ],
                         [
                             'label' => '<i class="fa fa-gears"></i> Permissions',
-                            'link' => ['auth/type/role'],
+                            'link' => ['admin/auth/index', 'id' => $model->id],
                         ],
                         [
                             'label' => '<i class="fa fa-tasks"></i> Modules',
-                            'link' => ['auth/index/assign'],
+                            'link' => ['modules', 'id' => $model->id],
+                        ]
+                    ]
+                ]);
+            } else if ($mode == 'modules') {
+                echo \gxc\yii2base\widgets\BaseTabs::widget([
+                    'items' => [
+                        [
+                            'label' => '<i class="fa fa-dashboard"></i> General',
+                            'link' => ['view', 'id' => $model->id],
+                        ],
+                        [
+                            'label' => '<i class="fa fa-users"></i> Users',
+                            'link' => ["#"],
+                        ],
+                        [
+                            'label' => '<i class="fa fa-gears"></i> Permissions',
+                            'link' => ['admin/auth/index', 'id' => $model->id],
+                        ],
+                        [
+                            'label' => '<i class="fa fa-tasks"></i> Modules',
+                            'content' => $this->render('_modules', ['model' =>  $model]),
+                            'active' => true
                         ]
                     ]
                 ]);

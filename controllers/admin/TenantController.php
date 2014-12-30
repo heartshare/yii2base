@@ -18,7 +18,7 @@ use gxc\yii2base\classes\BeController;
  *
  * This is the base Tenant controller
  *
- * @author  Tuan Nguyen <nganhtuan63@gmail.com>
+ * @author Tung Mang Vien <tungmv7@gmail.com>
  * @since  2.0
  */
 class TenantController extends BeController
@@ -257,7 +257,8 @@ class TenantController extends BeController
                 }
 
                 // flash successfully
-                Yii::$app->session->setFlash('message', ['success', 'Update Tenant Contact Information Successfully.']);
+                // no need flash because redirect to difference view
+                // Yii::$app->session->setFlash('message', ['success', 'Update Tenant Contact Information Successfully.']);
                 return $this->redirect(['view', 'id' => $model->id]);
 
             } else {
@@ -287,4 +288,14 @@ class TenantController extends BeController
             'contact' => $contact
         ]);
     }
+
+    public function actionModules($id)
+    {
+        $model = $this->findModel($id);
+        return $this->render('tabs', [
+            'mode' => 'modules',
+            'model' => $model,
+        ]);
+    }
+
 }

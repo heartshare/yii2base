@@ -79,7 +79,7 @@ $layoutAsset = LayoutAsset::register($this);
             </div>                    
         </div>
     </div>
-    <div class="row section buttons">
+    <div class="row section buttons section-last">
         <?= \yii\helpers\Html::a(Yii::t('base', 'Cancel'), ['index'], ['class' => 'btn btn-default']) ?>
         <?= \yii\helpers\Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
