@@ -7,7 +7,6 @@ use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\filters\VerbFilter;
 
-
 /**
  * Backend Wrapper Controller for App Module
  *
@@ -15,10 +14,9 @@ use yii\filters\VerbFilter;
  * @since 2.0
  */
 class BeController extends \yii\web\Controller
-{	
+{
 	public function beforeAction($action)
     {
-
     	if (parent::beforeAction($action)) {
             $module = $action->controller->module;
 	    	if (get_class($module) == 'yii\web\Application') {    		
@@ -28,13 +26,13 @@ class BeController extends \yii\web\Controller
 	    		} else {
 	    			$accessSpace.= '.site';    		
 	    		}
-	    	} elseif (isset($module->permissionId)) {
-	    		$accessSpace = $module->permissionId;
+	    	} elseif (isset($module->uniqueId)) {
+	    		$accessSpace = $module->uniqueId;
 	    	} else {
 	    		$accessSpace = $module->id;
 	    	}
 
-	    	$permissionName = $accessSpace.'.'.str_replace('/', '.',$action->controller->id).'.'.$action->id;	    	
+	    	$permissionName = $accessSpace.'.'.str_replace('/', '.',$action->controller->id).'.'.$action->id;
 
 	    	//  Start to check the permission
 	    	//  
@@ -43,7 +41,4 @@ class BeController extends \yii\web\Controller
             return false;
         }
     }
-    	
-        
-    
 }

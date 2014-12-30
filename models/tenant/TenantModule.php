@@ -1,22 +1,27 @@
 <?php
+/**
+ * @link http://www.gxccms.com/
+ * @copyright Copyright (c) 2014 GXC CMS
+ * @license http://www.gxccms.com/license/yii2cms/
+ */
 
 namespace gxc\yii2base\models\tenant;
 
 use Yii;
+use yii\helpers\BaseFormatConverter;
+use yii\helpers\Html;
+use yii\i18n\I18N;
+use yii\web\View;
 
 use gxc\yii2base\classes\TbActiveRecord;
+use gxc\yii2base\helpers\BaseHelper;
+use gxc\yii2base\helpers\UtilHelper;
 
 /**
  * This is the model class for table "base_tenant_module".
  *
- * @property string $id
- * @property string $store
- * @property string $module
- * @property string $plan
- * @property string $permissions
- * @property integer $expiry_mode
- * @property string $expired_at
- * @property integer $status
+ * @author  Triet Nguyen <minhtriet1989@gmail.com>
+ * @since  2.0
  */
 class TenantModule extends TbActiveRecord
 {

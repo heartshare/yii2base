@@ -14,7 +14,6 @@ use yii\helpers\FileHelper;
 
 use gxc\yii2base\classes\BeController;
 use gxc\yii2base\helpers\BaseHelper;
-use gxc\yii2base\models\tenant\TenantForm;
 
 /**
  * Auth Controller of Base Module
@@ -22,14 +21,16 @@ use gxc\yii2base\models\tenant\TenantForm;
  * This is the controller to manage Permission Items, Roles, Rules 
  * and Assignments
  * 
- * @author  Tuan Nguyen <nganhtuan63@gmail.com>
+ * @author  Triet Nguyen <minhtriet1989@gmail.com>
  * @since  2.0
  */
 class AuthController extends BeController
 {      
 
     /**
-     * Lists all Tenant models.
+     * List all Roles of Tenant
+     * If Tenant id is empty, get Tenant root
+     *
      * @return mixed
      */
     public function actionIndex()
@@ -45,32 +46,28 @@ class AuthController extends BeController
         $tenant = \Yii::$app->tenant->createModel('Tenant')->findOne($tenantId);
 
         if ($tenant) {
+            // Get store of Tenant Module
             $store = \Yii::$app->tenant->getModel('TenantModule', 'store');
-            $tenantStore = '';
-            if ($store !== false && $store != '') {
-                $tenantStore = $tenant->$store;
-            }
 
             // Load all roles from permission file
-            $roles = BaseHelper::getRolesByTenant($tenantId, $tenantStore);
+            $roles = BaseHelper::getRolesByTenant();
 
             // Find the Module which is from current Tenant
             $arrCondition = ['store' => $tenant->$store, 'module' => $moduleId];
             $currentModule = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->one();
-            
+
             return $this->render('index', [
-                'tenantId' => $tenantId,
                 'currentModule' => $currentModule,
                 'tenant' => $tenant,
-                'roles' => $roles
+                'roles' => $roles,
             ]);
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(\Yii::t('base','The requested page does not exist.'));
         }
     }
 
     /**
-     * Assign Role
+     * Assign Permissions to specific Role or User
      * 
      * @return mixed
      */
@@ -90,7 +87,6 @@ class AuthController extends BeController
             $tenant = false;
             $currentModule = false;
             $modules = false;
-            $roleName = '';
 
             // Need to check on this for Data Store
             $tenant = \Yii::$app->tenant->createModel('Tenant')->findOne($tenantId);
@@ -110,20 +106,19 @@ class AuthController extends BeController
                 $arrCondition = ['store' => $tenant->$store, 'module' => $moduleId];
                 $currentModule = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->one();
 
-                // Load all roles and permissions
+                // Load all permissions
                 // First get from database, if null, get from permission file
                 if (!empty($currentModule->permissions)) {
                     $rolePermissions = unserialize($currentModule->permissions);
                 } else {
-                    $permissions = BaseHelper::getPermissionsFromFile($tenantId, $tenantStore);
+                    $permissions = BaseHelper::getPermissionsFromFile();
                     $rolePermissions = isset($permissions[$moduleId]) ? $permissions[$moduleId] : [];
                 }
 
-                // echo '<pre>';
-                // var_dump($rolePermissions);
-                // echo '</pre>';
+                // Get role detail
+                $roles = BaseHelper::getRolesByTenant();
+                $roleName = isset($roles[$role]['description']) ? $roles[$role]['description'] : '';
 
-                // Update Permission to database
                 if (isset($_POST['permissionStatus']) && !empty($_POST['permissionStatus'])) {
                     foreach ($_POST['permissionStatus'] as $region => $postPermissions) {
                         foreach ($postPermissions as $itemName => $status) {
@@ -147,6 +142,7 @@ class AuthController extends BeController
                         }
                     }
 
+                    // Update Permission to database
                     if (empty($currentModule)){
                         $currentModule = new TenantModule();
                         $currentModule->store = $tenantStore;
@@ -173,7 +169,7 @@ class AuthController extends BeController
                         $detail['controller'] = isset($temp[0]) ? ucfirst($temp[0]) : '';
 
                         // Set active for assign roles
-                        if (isset($detail[$type]) && in_array($role, $detail[$type])) {
+                        if ($role == 'superAdmin' || (isset($detail[$type]) && in_array($role, $detail[$type]))) {
                             $detail['check'] = 1;
                         }
 
@@ -182,7 +178,6 @@ class AuthController extends BeController
                     $rolePermissions[$region] = $itemPermissions;
                 }
 
-                // Find the Module which is from current Tenant
                 return $this->render('assign', [
                     'tenantId' => $tenantId,
                     'modules' => $modules,
@@ -192,10 +187,10 @@ class AuthController extends BeController
                     'rolePermissions' => $rolePermissions
                 ]);
             } else {
-                throw new NotFoundHttpException('The requested page does not exist.');
+                throw new NotFoundHttpException(\Yii::t('base','The requested page does not exist.'));
             }
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(\Yii::t('base','The requested page does not exist.'));
         }
     }
 
@@ -208,5 +203,4 @@ class AuthController extends BeController
     {
         
     }
-
 }

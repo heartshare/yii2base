@@ -222,78 +222,94 @@ class BaseHelper
 		return false;
     }
 
-    /*
-    * Get all roles by tenant
-    */
-	public static function getRolesByTenant($tenantId, $tenantStore)
+    /**
+	 * Get all roles by tenant
+	 * @param  [array] $regions [Regions of Module]
+	 * @return [array]          [Roles Array by Tenant]
+	 */
+	public static function getRolesByTenant($regions = ['admin', 'site'])
 	{
-		$cacheId = self::getCacheKey('permission', 'role');
-		$roles = Yii::$app->cache->get($cacheId);$roles = false;
-		if ($roles == false) {
-			$arrCondition = [];
-	        if ($tenantStore !== false && $tenantStore != '') {
-				$arrCondition = ['store' => $tenantStore];
-			}
-			$modules = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->all();
-
-			$roles = [];
-		    foreach ($modules as $module) {
-				$where = '@gxc/yii2' . $module->module . '/permissions/';
-				if (is_dir(Yii::getAlias($where))) {
-					$permission_files = FileHelper::findFiles(Yii::getAlias($where), ['only' => ['items_admin.php', 'items_site.php']]);
-					foreach ($permission_files as $file) {
-						$permissions = BaseHelper::fetchArray($file);
-		                if (array_key_exists('roles', $permissions)) {
-							$roles = array_merge($permissions['roles'], $roles);
+		if (!empty($regions)) {
+			$cacheId = self::getCacheKey('permission', 'role');
+			$roles = Yii::$app->cache->get($cacheId);
+			$roles = false;
+			if ($roles == false) {
+				foreach ($regions as $i => $region) {
+					$region = 'items_' . $region . '.php';
+					$regions[$i] = $region;
+				}
+				$roles = [];
+				foreach (\Yii::$app->params['app.include'] as $where) {
+					if (is_dir(Yii::getAlias($where))) {
+						$permissionFiles = FileHelper::findFiles(Yii::getAlias($where), ['only' => $regions]);
+						if (!empty($permissionFiles)) {
+							foreach ($permissionFiles as $file) {
+								$permissions = BaseHelper::fetchArray($file);
+								if (array_key_exists('roles', $permissions)) {
+									$roles = array_merge($permissions['roles'], $roles);
+								}
+							}
+						} else {
+							throw new NotFoundHttpException(\Yii::t('base','Permission files are not initialized.'));
 						}
 					}
 				}
-			}
 
-			Yii::$app->cache->set($cacheId, $roles, self::getCacheKeyTimeExpired('permission', 'role'));
+				Yii::$app->cache->set($cacheId, $roles, self::getCacheKeyTimeExpired('permission', 'role'));
+			}
+			return $roles;
+		} else {
+			throw new NotFoundHttpException(\Yii::t('base','Module Regions are empty.'));
 		}
-		return $roles;
 	}
 
-	/*
-    * Get all roles by tenant
-    */
-	public static function getPermissionsFromFile($tenantId, $tenantStore)
+	/**
+	 * Get Permissions, Roles and Rules
+	 * @param  [array] $regions [Regions of Module]
+	 * @return [array]          [Permission Items]
+	 */
+	public static function getPermissionsFromFile($regions = ['admin', 'site'])
 	{
-        $arrCondition = [];
-        if ($tenantStore !== false && $tenantStore != '') {
-			$arrCondition = ['store' => $tenantStore];
-		}
-		$modules = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->all();
+		if (!empty($regions)) {
+			foreach ($regions as $i => $region) {
+				$region = 'items_' . $region . '.php';
+				$regions[$i] = $region;
+			}
 
-		$items = [];
-	    foreach ($modules as $module) {
-			$where = '@gxc/yii2' . $module->module . '/permissions/';
-			if (is_dir(Yii::getAlias($where))) {
-				$permission_files = FileHelper::findFiles(Yii::getAlias($where), ['only' => ['items_admin.php', 'items_site.php']]);
-				foreach ($permission_files as $region => $file) {
-					$region= ($region == 0) ? 'admin' : 'site';
-					$permissions = BaseHelper::fetchArray($file);
-	                
-	                if (array_key_exists('items', $permissions)) {
-	                	$items[$module->module][$region] = $permissions['items'];
-	                }
+			$items = [];
+		    foreach (\Yii::$app->params['app.include'] as $where) {
+				if (is_dir(Yii::getAlias($where))) {
+					$permissionFiles = FileHelper::findFiles(Yii::getAlias($where), ['only' => $regions]);
+					if (!empty($permissionFiles)) {
+						foreach ($permission_files as $region => $file) {
+							$region = ($region == 0) ? 'admin' : 'site';
+							$permissions = BaseHelper::fetchArray($file);
 
-	                // Get permissions assigned to role
-	                if (array_key_exists('roles', $permissions)) {
-	                	foreach ($permissions['roles'] as $role => $detail) {
-	                		if (isset($detail['children'])) {
-		                		foreach ($detail['children'] as $rolePermission) {
-		                			if (isset($permissions['items'][$rolePermission])) {
-		                				$items[$module->module][$region][$rolePermission]['roles'][] = $role;
-		                			}
-		                		}
-		                	}
-	                	}
-	                }
+							if (array_key_exists('items', $permissions)) {
+								$items[$module->module][$region] = $permissions['items'];
+							}
+
+							// Get permissions assigned to role
+							if (array_key_exists('roles', $permissions)) {
+								foreach ($permissions['roles'] as $role => $detail) {
+			                		if (isset($detail['children'])) {
+				                		foreach ($detail['children'] as $rolePermission) {
+				                			if (isset($permissions['items'][$rolePermission])) {
+												$items[$module->module][$region][$rolePermission]['roles'][] = $role;
+											}
+										}
+									}
+								}
+							}
+						}
+					} else {
+						throw new NotFoundHttpException(\Yii::t('base','Permission files are not initialized.'));
+					}
 				}
 			}
+			return $items;
+		} else {
+			throw new NotFoundHttpException(\Yii::t('base','Module Regions are empty.'));
 		}
-		return $items;
 	}
 }

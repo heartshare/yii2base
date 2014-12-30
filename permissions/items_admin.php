@@ -46,11 +46,17 @@ return [
 		],
 
 		// Sample Rule
-		// 'sample.Rule' => [
-		// 	'description' => 'Sample structure for rule saving',
-		// 	'ruleName' => 'sampleRule',
-		// 	'ruleClass' => 'gxc\yii2base\permissions\rules\SampleRule',
-		// ]
+		'post.*' => [
+			'description' => 'All actions of Post',
+		],
+		'post.add' => [
+			'description' => 'Add a Post',
+		],
+		'post.update' => [
+			'description' => 'Update a Post',
+			'ruleName' => 'isAuthor',
+			'ruleClass' => 'gxc\yii2base\permissions\rules\AuthorRule',
+		]
 	],
 
 	// Permission Roles
@@ -63,6 +69,13 @@ return [
 			'children' => [
 				'tenant.*',
 				'user.*',
+				'post.*',
+			]
+		],
+		'user' => [
+			'description' => 'User',
+			'children' => [
+				'post.*',
 			]
 		]
 	],	
