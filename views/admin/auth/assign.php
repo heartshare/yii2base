@@ -47,7 +47,7 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                             ],
                             [
                                 'label' => '<i class="fa fa-gears"></i> Permissions',
-                                'content' => $this->render('_permission_role', ['tenantId' => $tenantId, 'modules' => $modules, 'roleName' => $roleName, 'rolePermissions' => $rolePermissions]),
+                                'content' => $this->render('_permission_user', ['tenantId' => $tenantId, 'modules' => $modules, 'roleName' => $roleName, 'rolePermissions' => $rolePermissions]),
                                 'active' => true
                             ],
                             [
