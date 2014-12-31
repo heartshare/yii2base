@@ -8,6 +8,7 @@
 namespace gxc\yii2base\helpers;
 
 use \Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * AddressHelper
@@ -60,15 +61,10 @@ class LocalizationHelper {
 
         $countryCode = strtolower($countryCode);
         $country = self::getCountry($countryCode);
-        $result = [];
-        foreach($country['states'] as $k => $state) {
-            if ($renderDropdown === false) {
-                $result[$k] = $state;
-            } else {
-                $result[$k] = $state['name'];
-            }
-        }
-        return $result;
+        if ($renderDropdown === false)
+            return $country['states'];
+        else
+            return ArrayHelper::map($country['states'], 'id', 'name');
     }
 
     /**
@@ -94,15 +90,11 @@ class LocalizationHelper {
     public static function getCountries($renderDropdown = false)
     {
         $countries = self::getLocalization();
-        $result = [];
-        foreach ($countries as $k => $country) {
-            if ($renderDropdown === false) {
-                $result[$k] = $country;
-            } else {
-                $result[$k] = $country['name'];
-            }
+        if ($renderDropdown === false) {
+            return $countries;
+        } else {
+            return ArrayHelper::map($countries, 'id', 'name');
         }
-        return $result;
     }
 
     /**
@@ -129,20 +121,25 @@ class LocalizationHelper {
                 if (!empty($country->states))
                     foreach ($country->states->state as $k => $state) {
                         $states[(string)$state['iso_code']] = [
+                            'id' => (string)$state['iso_code'],
                             'name' => (string)$state['name']
                         ];
                     }
 
                 $countries[basename($xml_file, '.xml')] = [
+                    'id' => basename($xml_file, '.xml'),
                     'name' => (string)$country['name'],
                     'taxes' => [],
                     'states' => $states
                 ];
             }
 
-            return $countries;
-        } else {
-            return Yii::$app->cache->set($cacheId, $keys, BaseHelper::getCacheKeyTimeExpired('general', 'localization'));
+            // set cache
+            Yii::$app->cache->set($cacheId, $countries, BaseHelper::getCacheKeyTimeExpired('general', 'localization'));
+
+            // reload
+            $keys = Yii::$app->cache->get($cacheId);
         }
+        return $keys;
     }
 }

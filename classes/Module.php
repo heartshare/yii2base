@@ -10,7 +10,7 @@ namespace gxc\yii2base\classes;
 use Yii;
 
 /**
- * Base Module for other Modules to inherir
+ * Base Module for other Modules to inherit
  *
  * @author Tuan Nguyen <nganhtuan63@gmail.com>
  * @since 2.0

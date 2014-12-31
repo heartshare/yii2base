@@ -7,7 +7,8 @@ return [
 	'general' => [
 		// Models Class ans Store cache keys
 		'models' => ['ge:models:', 0],
-		'localization' => ['ge:localization', 0]
+		'localization' => ['ge:localization', 0],
+		'modules' => ['ge:modules', 0]
 	],
 
 	'menu' => [

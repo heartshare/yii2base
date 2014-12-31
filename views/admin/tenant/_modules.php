@@ -1,15 +1,28 @@
+<?php
+use \gxc\yii2base\widgets\BaseModal;
+use yii\widgets\ActiveForm;
+use \yii\helpers\Html;
+?>
 <div class="tab-ctn info-wrapper">
     <div class="content-zone">
-
         <div class="info-item">
 
             <div class="info-item-header with-form-control grid-header">
                 <h1><?= Yii::t('base', 'Modules / Manage') ?></h1>
                 <div class="buttons">
-                    <?= \yii\helpers\Html::a(Yii::t('base', 'Add new Module') . ' <i class="fa fa-plus fa-fw"></i>', ['#'], ['class' => 'btn btn-sm btn-warning', 'style' => 'margin:5px;']) ?>
+                    <?= \yii\helpers\Html::a(Yii::t('base', 'Add new Module') . ' <i class="fa fa-plus fa-fw"></i>', ['#addModule'], [
+                        'class' => 'btn btn-sm btn-warning', 'style' => 'margin:5px;',
+                        'data-toggle' => 'modal'
+                    ]) ?>
                 </div>
             </div>
             <div class="row section section-first section-data">
+
+                <?php
+//                echo '<pre>';
+//                var_dump(gxc\yii2base\helpers\ModuleHelper::getModules());
+//                echo '</pre>';
+                ?>
                 <table class="table table-hover tbl-1">
                     <tbody>
                     <tr>
@@ -118,3 +131,11 @@
 
     </div>
 </div>
+
+<?php BaseModal::begin([
+        'id' => 'addModule',
+        'header' =>Yii::t('base', 'Tenant') . ": " . $tenant->name . ' \\ ' . Yii::t('base', 'Add new module')
+    ]);?>
+    <?= $this->render('_module_form', ['model' => $model]) ?>
+
+<?php BaseModal::end();  ?>

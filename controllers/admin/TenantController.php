@@ -292,10 +292,17 @@ class TenantController extends BeController
     public function actionModules($id)
     {
         $model = $this->findModel($id);
+        $tenantModule = Yii::$app->tenant->createModel('TenantModule');
         return $this->render('tabs', [
             'mode' => 'modules',
             'model' => $model,
+            'tenantModule' => $tenantModule
         ]);
+    }
+
+    public function actionSuggestModule($id)
+    {
+        return json_encode(gxc\yii2base\helpers\ModuleHelper::getAvailableModules()[$id]);
     }
 
 }

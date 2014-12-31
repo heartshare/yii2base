@@ -82,7 +82,7 @@
                         ],
                         [
                             'label' => '<i class="fa fa-tasks"></i> Modules',
-                            'content' => $this->render('_modules', ['model' =>  $model]),
+                            'content' => $this->render('_modules', ['model' => $tenantModule, 'tenant' => $model]),
                             'active' => true
                         ]
                     ]

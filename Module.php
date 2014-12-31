@@ -24,7 +24,7 @@ class Module extends \gxc\yii2base\classes\Module
 
 	public $version = '1.0.0-dev';
 
-	public $uniqueId = 'yii2base';
+	public $uniqueId = 'base';
 
 	public $name = 'Base Application Module';
 

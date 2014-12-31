@@ -8,23 +8,21 @@
 namespace gxc\yii2base\models\tenant;
 
 use Yii;
-use yii\helpers\BaseFormatConverter;
-use yii\helpers\Html;
-use yii\i18n\I18N;
-use yii\web\View;
 
 use gxc\yii2base\classes\TbActiveRecord;
-use gxc\yii2base\helpers\BaseHelper;
-use gxc\yii2base\helpers\UtilHelper;
 
 /**
  * This is the model class for table "base_tenant_module".
  *
- * @author  Triet Nguyen <minhtriet1989@gmail.com>
+ * @author  Tung Mang Vien <tungmv7@gmail.com>
  * @since  2.0
  */
 class TenantModule extends TbActiveRecord
 {
+    const EXPIRED_MODE_TIME = 1;
+    const EXPIRED_MODE_SUBSCRIPTION = 2;
+    const EXPIRED_MODE_PARTNER = 3;
+
     /**
      * @inheritdoc
      */
@@ -61,6 +59,15 @@ class TenantModule extends TbActiveRecord
             'expiry_mode' => Yii::t('base', 'Expired Mode'),
             'expired_at' => Yii::t('base', 'Expired At'),
             'status' => Yii::t('base', 'Status'),
+        ];
+    }
+
+    public function getExpiredModes()
+    {
+        return [
+            self::EXPIRED_MODE_TIME => Yii::t('base', 'Expired at a Specific time'),
+            self::EXPIRED_MODE_SUBSCRIPTION => Yii::t('base', 'Expired by Subscription Plan'),
+            self::EXPIRED_MODE_PARTNER => Yii::t('base', 'Expired by Partner Contraction')
         ];
     }
 }
