@@ -14,9 +14,9 @@ $layoutAsset = LayoutAsset::register($this);
         <?= $this->render('../widgets/_notification.php') ?>
         <?php $form = ActiveForm::begin([
                 'id' => $formId,
-                'enableAjaxValidation'=>true,
+                'enableAjaxValidation' => true,
                 'options' => [
-                'validateOnSubmit'=>true,
+                    'validateOnSubmit' => true,
                     // 'class' => 'base-form',
                 ]
             ]);
@@ -27,7 +27,7 @@ $layoutAsset = LayoutAsset::register($this);
 
                     <div class="buttons">
                         <?= \yii\helpers\Html::a(Yii::t('base', 'CANCEL'), ['index'], ['class' => 'btn btn-default']) ?>
-                        <?= \yii\helpers\Html::submitButton(Yii::t('base', 'SAVE'), ['class' => 'btn btn-success']) ?>                                             
+                        <?= \yii\helpers\Html::submitButton(Yii::t('base', 'SAVE'), ['class' => 'btn btn-success']) ?>
                     </div>
                 </div>
 
@@ -72,7 +72,7 @@ $layoutAsset = LayoutAsset::register($this);
                         <div class="inner-form row">
                             <div class="col-md-8">
                                 <label class="control-label"><?= \Yii::t('base', 'This is an account of'); ?></label>
-                                <?= $form->field($model, 'zone', array('template' => '{input}'))->radioList(User::getUserZones(), ['class' => 'zone-radio', 'separator' => '<br>']); ?>
+                                <?= $form->field($model, 'zone', ['template' => '{input}'])->radioList(User::getUserZones(), ['class' => 'zone-radio', 'separator' => '<br>']); ?>
                             </div>
                         </div>
 
@@ -129,13 +129,12 @@ $layoutAsset = LayoutAsset::register($this);
                     </div>
                 </div>
 
-                 <?= $form->field($model, 'store')->hiddenInput() ?>
+                 <?= $form->field($model, 'store', ['template' => '{input}'])->hiddenInput() ?>
 
                 <div class="row section" style="padding:20px 0;">
                     <div class="buttons">
-                        <a class="pull-right btn btn-success"> SAVE </a>
-                        <a class="pull-right btn btn-default "> CANCEL </a>
-                       
+                        <?= \yii\helpers\Html::submitButton(Yii::t('base', 'SAVE'), ['class' => 'pull-right btn btn-success']) ?>
+                        <?= \yii\helpers\Html::a(Yii::t('base', 'CANCEL'), ['index'], ['class' => 'pull-right btn btn-default']) ?>
                     </div>
                 </div>
 
@@ -150,6 +149,36 @@ $layoutAsset = LayoutAsset::register($this);
             pickTime: false,
             format: 'DD/MM/YYYY'
         });
+
+        $('.field-userform-staff_zone').parent().parent().hide();
+        $('.field-userform-guest_zone').parent().parent().hide();
+        var zone = $('input[name=" . '"UserForm[zone]"' . "]:checked').val();
+        zone = zone.split('_');
+        for (i = 0; i < zone.length; i++) {
+            if (zone[i] == 'staff') {
+                $('.field-userform-staff_zone').parent().parent().show();
+                $('.field-userform-staff_zone').parent().parent().show();
+            }
+
+            if (zone[i] == 'guest') {
+                $('.field-userform-guest_zone').parent().parent().show();
+            }
+        }
+
+        $('input[name=" . '"UserForm[zone]"' . "]').change(function(){
+            $('.field-userform-staff_zone').parent().parent().hide();
+            $('.field-userform-guest_zone').parent().parent().hide();
+            var zone = $(this).val().split('_');
+            for (i = 0; i < zone.length; i++) {
+                if (zone[i] == 'staff') {
+                    $('.field-userform-staff_zone').parent().parent().show();
+                }
+
+                if (zone[i] == 'guest') {
+                    $('.field-userform-guest_zone').parent().parent().show();
+                }
+            }
+        })
     ";
     $this->registerJs($script, View::POS_END);
 ?>

@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
 use gxc\yii2base\models\user\User;
 use gxc\yii2base\models\user\UserDisplay;
 use gxc\yii2base\models\user\UserProfile;
+use gxc\yii2base\models\user\UserPermission;
 use gxc\yii2base\models\user\UserSearch;
 use gxc\yii2base\models\user\UserForm;
 use gxc\yii2base\classes\BeController;
@@ -112,7 +113,7 @@ class UserController extends BeController
         // Get model
         $model = \Yii::$app->tenant->createModel('UserForm');
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // Save user info
+            // Save User info
             $user = $this->findModel($id);
             $user->attributes = $model->attributes;
             if ($user->save()) {
@@ -122,32 +123,33 @@ class UserController extends BeController
                 Yii::$app->session->setFlash('message', ['success', Yii::t('base', 'Update User Successfully.')]);
                 // return $this->redirect(['update', 'id' => $user->id]);
             } else {
-                var_dump($user->getErrors());
-                // throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
+                // var_dump($user->getErrors());
+                throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
             }
-                 return $this->render('update', [
-                    'model' => $model,
-                    'staffZoneRoles' => $staffZoneRoles,
-                    'guestZoneRoles' => $guestZoneRoles,
-                ]);
         } else {
-            // load attribute to model
+            // Load attribute to model
             $user = $this->findModel($id);
             if ($user) {
+                if (isset($user->permissionInfo)) {
+                    $userPermission = unserialize($user->permissionInfo->item_name);
+                }
+
                 $model->attributes = $user->attributes;
                 $model->first_name = isset($user->profileInfo->first_name) ? $user->profileInfo->first_name : '';
                 $model->last_name = isset($user->profileInfo->last_name) ? $user->profileInfo->last_name : '';
                 $model->screen_name = isset($user->displayInfo->screen_name) ? $user->displayInfo->screen_name : '';
                 $model->display_name = isset($user->displayInfo->display_name) ? $user->displayInfo->display_name : '';
                 $model->zone = isset($user->identityInfo->zone) ? $user->identityInfo->zone : '';
+                $model->staff_zone = isset($userPermission['staff']) ? $userPermission['staff'] : '';
+                $model->guest_zone = isset($userPermission['guest']) ? $userPermission['guest'] : '';
+            }
+        }
 
-                return $this->render('update', [
+        return $this->render('update', [
                     'model' => $model,
                     'staffZoneRoles' => $staffZoneRoles,
                     'guestZoneRoles' => $guestZoneRoles,
                 ]);
-            }
-        }
     }
 
     /**
@@ -157,15 +159,45 @@ class UserController extends BeController
      */
     protected function afterSaveUserInfo($id, $model)
     {
+        // Assign role for user
+        $userPermission = \Yii::$app->tenant->createModel('UserPermission')->find()->where(['user_id' => $id])->one();
+        if (empty($userPermission)) {
+            $userPermission = \Yii::$app->tenant->createModel('UserPermission');
+        }
+        $assignRole = [];
+        if (isset($model->staff_zone) && !empty($model->staff_zone)) {
+            $assignRole['staff'] = $model->staff_zone;
+        }
+        if (isset($model->guest_zone) && !empty($model->guest_zone)) {
+            $assignRole['guest'] = $model->guest_zone;
+        }
+        $userPermission->store = $model->store;
+        $userPermission->user_id = $id;
+        $userPermission->item_name = serialize($assignRole);
+        $userPermission->date_created = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
+        $userPermission->save();
+
+        // Create - Update UserIdentity
+        $userIdentity = \Yii::$app->tenant->createModel('UserIdentity')->find()->where(['user_id' => $id])->one();
+        if (empty($userIdentity)) {
+            $userIdentity = \Yii::$app->tenant->createModel('UserIdentity');
+        }
+
+        $userIdentity->store = $model->store;
+        $userIdentity->user_id = $id;
+        $userIdentity->zone = $model->zone;
+        $userIdentity->save();
+
         // Create - Update UserProfile
-        $userProfileClass = \Yii::$app->tenant->createModel('UserProfile');
-        $userProfile = $userProfileClass::findOne(['user_id' => $id, 'store' => $model->store, 'zone' => $model->zone]);
+        $userProfile = \Yii::$app->tenant->createModel('UserProfile')->find()->where(['user_id' => $id])->one();
         if (empty($userProfile)) {
             $userProfile = \Yii::$app->tenant->createModel('UserProfile');
         }
 
+        $userProfile->store = $model->store;
         $userProfile->user_id = $id;
         $userProfile->zone = $model->zone;
+        $userProfile->gender = $model->gender;
         $userProfile->first_name = $model->first_name;
         $userProfile->last_name = $model->last_name;
         $userProfile->location = $model->location;
@@ -173,12 +205,12 @@ class UserController extends BeController
         $userProfile->save();
 
         // Create - Update UserDisplay
-        $userDisplayClass = \Yii::$app->tenant->createModel('UserDisplay');
-        $userDisplay = $userDisplayClass::findOne(['user_id' => $id, 'store' => $model->store, 'zone' => $model->zone]);
+        $userDisplay = \Yii::$app->tenant->createModel('UserDisplay')->find()->where(['user_id' => $id])->one();
         if (empty($userDisplay)) {
             $userDisplay = \Yii::$app->tenant->createModel('UserDisplay');
         }
 
+        $userDisplay->store = $model->store;
         $userDisplay->user_id = $id;
         $userDisplay->zone = $model->zone;
         $userDisplay->screen_name = $model->screen_name;

@@ -88,6 +88,12 @@ class User extends TbActiveRecord
         return $this->hasOne(UserProfile::className(), ['user_id' => 'id']);
     }
 
+     public function getPermissionInfo()
+    {
+        // User has_one UserPermission via UserPermission.user_id -> id
+        return $this->hasOne(UserPermission::className(), ['user_id' => 'id']);
+    }
+
     /**
      * Finds user by email
      *

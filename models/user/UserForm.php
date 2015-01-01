@@ -44,7 +44,7 @@ class UserForm extends Model{
         return [
             [['status', 'id', 'gender'], 'integer'],
             [['first_name', 'last_name', 'display_name', 'screen_name'], 'string', 'max' => 128],
-            [['store' ,'location'], 'string', 'max' => 64],
+            [['store' ,'location', 'zone', 'staff_zone', 'guest_zone'], 'string', 'max' => 64],
             [['email', 'status', 'zone'], 'required'],
             [['email'], 'email'],
             [['store'], 'required', 'on' => 'update']

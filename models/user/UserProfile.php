@@ -16,7 +16,7 @@ use gxc\yii2base\classes\TbActiveRecord;
  * @property string $id
  * @property string $store
  * @property string $zone
- * @property string $user_id
+ * @property integer $user_id
  * @property string $first_name
  * @property string $last_name
  * @property integer $gender

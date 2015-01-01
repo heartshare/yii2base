@@ -60,6 +60,10 @@ return [
 		'class' => 'gxc\yii2base\models\user\UserProfile',
 		'store' => 'content_store'
 	],
+	'UserPermission' => [
+		'class' => 'gxc\yii2base\models\user\UserPermission',
+		'store' => 'content_store'
+	],
 	'UserGroup' => [
 		'class' => 'gxc\yii2base\models\user\UserGroup',
 		'store' => 'content_store'
