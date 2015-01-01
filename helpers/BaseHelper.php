@@ -92,7 +92,7 @@ class BaseHelper
 	 */
 	public static function getModel($id = false, $type = false)
 	{
-		$keys = self::getModels();		
+		$keys = self::getModels();
 		$result = false;
 		if ($id && isset($keys[$id])) {			
 			switch ($type) {
@@ -223,11 +223,11 @@ class BaseHelper
     }
 
     /**
-	 * Get all roles by tenant
+	 * Get all roles
 	 * @param  [array] $regions [Regions of Module]
 	 * @return [array]          [Roles Array by Tenant]
 	 */
-	public static function getRolesByTenant($regions = ['admin', 'site'])
+	public static function getRolesFromFile($regions = array('admin', 'site'))
 	{
 		if (!empty($regions)) {
 			$cacheId = self::getCacheKey('permission', 'role');
@@ -268,7 +268,7 @@ class BaseHelper
 	 * @param  [array] $regions [Regions of Module]
 	 * @return [array]          [Permission Items]
 	 */
-	public static function getPermissionsFromFile($regions = ['admin', 'site'])
+	public static function getPermissionsFromFile($regions = array('admin', 'site'))
 	{
 		if (!empty($regions)) {
 			foreach ($regions as $i => $region) {

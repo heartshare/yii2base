@@ -50,7 +50,7 @@ class AuthController extends BeController
             $store = \Yii::$app->tenant->getModel('TenantModule', 'store');
 
             // Load all roles from permission file
-            $roles = BaseHelper::getRolesByTenant();
+            $roles = BaseHelper::getRolesFromFile();
 
             // Find the Module which is from current Tenant
             $arrCondition = ['store' => $tenant->$store, 'module' => $moduleId];
@@ -116,7 +116,7 @@ class AuthController extends BeController
                 }
 
                 // Get role detail
-                $roles = BaseHelper::getRolesByTenant();
+                $roles = BaseHelper::getRolesFromFile();
                 $roleName = isset($roles[$role]['description']) ? $roles[$role]['description'] : '';
 
                 if (isset($_POST['permissionStatus']) && !empty($_POST['permissionStatus'])) {

@@ -28,6 +28,7 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
         </div>
     </header>
 </div>
+
 <div class="row">
     <section class="main-ctn">
         <div class="inner">

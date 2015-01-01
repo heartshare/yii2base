@@ -23,6 +23,19 @@ use gxc\yii2base\classes\TbActiveRecord;
  */
 class User extends TbActiveRecord
 {
+    // Define user status constant
+    const USER_STATUS_INACTIVE = 0;
+    const USER_STATUS_ACTIVE = 1;
+
+    // Define user gender constant
+    const USER_GENDER_MALE = 1;
+    const USER_GENDER_FEMALE = 2;
+
+    // Define user zone constant
+    const USER_ZONE_STAFF = 'staff';
+    const USER_ZONE_GUEST = 'guest';
+    const USER_ZONE_ALL = 'staff_guest';
+
     /**
      * @inheritdoc
      */
@@ -57,6 +70,24 @@ class User extends TbActiveRecord
         ];
     }
 
+    public function getIdentityInfo()
+    {
+        // User has_one UserIdentity via UserIdentity.user_id -> id
+        return $this->hasOne(UserIdentity::className(), ['user_id' => 'id']);
+    }
+
+    public function getDisplayInfo()
+    {
+        // User has_one UserDisplay via UserDisplay.user_id -> id
+        return $this->hasOne(UserDisplay::className(), ['user_id' => 'id']);
+    }
+
+    public function getProfileInfo()
+    {
+        // User has_one UserProfile via UserProfile.user_id -> id
+        return $this->hasOne(UserProfile::className(), ['user_id' => 'id']);
+    }
+
     /**
      * Finds user by email
      *
@@ -68,4 +99,43 @@ class User extends TbActiveRecord
         return static::findOne(['email' => $email]);
     }
 
+    /**
+     * Get User Statuses
+     *
+     * @return array
+     */
+    public static function getUserStatuses()
+    {
+        return [
+            self::USER_STATUS_ACTIVE => Yii::t('base', 'Active'),
+            self::USER_STATUS_INACTIVE => Yii::t('base', 'Inactive'),
+        ];
+    }
+
+     /**
+     * Get User Zones
+     *
+     * @return array
+     */
+    public static function getUserZones()
+    {
+        return [
+            self::USER_ZONE_STAFF => Yii::t('base', 'Staff Zone'),
+            self::USER_ZONE_GUEST => Yii::t('base', 'Guest Zone'),
+            self::USER_ZONE_ALL => Yii::t('base', 'Both Staff and Guest'),
+        ];
+    }
+
+    /**
+     * Get User Genders
+     *
+     * @return array
+     */
+    public static function getUserGenders()
+    {
+        return [
+            self::USER_GENDER_MALE => Yii::t('base', 'Male'),
+            self::USER_GENDER_FEMALE => Yii::t('base', 'Female'),
+        ];
+    }
 }

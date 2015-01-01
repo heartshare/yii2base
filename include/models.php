@@ -55,7 +55,11 @@ return [
 	'UserDisplay' => [
 		'class' => 'gxc\yii2base\models\user\UserDisplay',
 		'store' => 'content_store'
-	],	
+	],
+	'UserProfile' => [
+		'class' => 'gxc\yii2base\models\user\UserProfile',
+		'store' => 'content_store'
+	],
 	'UserGroup' => [
 		'class' => 'gxc\yii2base\models\user\UserGroup',
 		'store' => 'content_store'
@@ -63,7 +67,11 @@ return [
 	'UserGroupAssign' => [
 		'class' => 'gxc\yii2base\models\user\UserGroupAssign',
 		'store' => 'content_store'
-	],	
+	],
+	'UserForm' => [
+		'class' => 'gxc\yii2base\models\user\UserForm',
+		'store' => 'content_store'
+	],
 	'BackendLoginForm' => [
 		'class' => 'gxc\yii2base\models\user\BackendLoginForm',
 		'store' => ''

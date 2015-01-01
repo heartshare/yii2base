@@ -8,7 +8,7 @@ use yii\helpers\Url;
             <div class="row">
                 <div class="col-md-6">
                     <div class="info-item-header with-form-control grid-header">
-                        <h1>Permissions / Roles</h1>
+                        <h1><?= \Yii::t('base', 'Permissions'); ?> / <?= \Yii::t('base', 'Roles'); ?></h1>
                     </div>
                     <div class="row section section-first section-data">
                         <div class="table-responsive" style="margin-top: 10px;">

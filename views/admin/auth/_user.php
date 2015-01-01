@@ -7,7 +7,7 @@ use yii\helpers\Url;
     <div class="content-zone">
         <div class="info-item">
             <div class="info-item-header with-form-control grid-header">
-                <h1>Users</h1>
+                <h1><?= \Yii::t('base', 'Users'); ?></h1>
                 <div class="buttons-with-filters">
                     <form id="tenant-search-form" class="form-inline"
                           action="/base/admin/tenant/index" method="get">
@@ -73,8 +73,8 @@ use yii\helpers\Url;
                                 <td><span class="label label-danger">Owner</span></td>
                                 <td>
                                     <div class="btn-group pull-right grid-action-buttons">
-                                        <a class="pull-left btn btn-xs btn-default" href="/base/admin/tenant/update?id=1" title="Update" data-pjax="0"><span class="fa fa-pencil"></span>Update</a>
-                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['assign', 'type' => 'user', 'id' => 1, 'module' => isset($currentModule->module) ? $currentModule->module : 'app', 'tenant' => $tenantId]) ?>" title="Update" data-pjax="0"><span class="fa fa-tasks"></span>Permissions</a>
+                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/user/update', 'id' => 4]) ?>" title="Update" data-pjax="0"><span class="fa fa-pencil"></span>Update</a>
+                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['assign', 'type' => 'user', 'id' => 4, 'module' => isset($currentModule->module) ? $currentModule->module : 'app', 'tenant' => $tenantId]) ?>" title="Update" data-pjax="0"><span class="fa fa-tasks"></span>Permissions</a>
                                         <a class="pull-left btn btn-xs btn-default" href="/base/admin/tenant/delete?id=1" title="Delete" data-confirm="Are you sure you want to delete this item?" data-method="post" data-pjax="0"><span class="fa fa-trash-o"></span> Delete</a>
                                     </div>
                                 </td>
