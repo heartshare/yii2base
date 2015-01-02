@@ -153,14 +153,18 @@ $layoutAsset = LayoutAsset::register($this);
 
         $('.field-userform-staff_zone').parent().parent().hide();
         $('.field-userform-guest_zone').parent().parent().hide();
+        $('#userform-staff_zone').attr('disabled', true);
+        $('#userform-guest_zone').attr('disabled', true);
         var zone = $('input[name=" . '"UserForm[zone]"' . "]:checked').val();
         zone = zone.split('_');
         for (i = 0; i < zone.length; i++) {
             if (zone[i] == 'staff') {
+                $('#userform-staff_zone').removeAttr('disabled');
                 $('.field-userform-staff_zone').parent().parent().show();
             }
 
             if (zone[i] == 'guest') {
+                $('#userform-guest_zone').removeAttr('disabled');
                 $('.field-userform-guest_zone').parent().parent().show();
             }
         }
@@ -168,13 +172,17 @@ $layoutAsset = LayoutAsset::register($this);
         $('input[name=" . '"UserForm[zone]"' . "]').change(function(){
             $('.field-userform-staff_zone').parent().parent().hide();
             $('.field-userform-guest_zone').parent().parent().hide();
+            $('#userform-staff_zone').attr('disabled', true);
+            $('#userform-guest_zone').attr('disabled', true);
             var zone = $(this).val().split('_');
             for (i = 0; i < zone.length; i++) {
                 if (zone[i] == 'staff') {
+                    $('#userform-staff_zone').removeAttr('disabled');
                     $('.field-userform-staff_zone').parent().parent().show();
                 }
 
                 if (zone[i] == 'guest') {
+                    $('#userform-guest_zone').removeAttr('disabled');
                     $('.field-userform-guest_zone').parent().parent().show();
                 }
             }
