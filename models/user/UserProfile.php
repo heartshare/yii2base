@@ -67,6 +67,7 @@ class UserProfile extends TbActiveRecord
             'gender' => Yii::t('base', 'Gender'),
             'location' => Yii::t('base', 'Location'),
             'company' => Yii::t('base', 'Company'),
+            'birthday' => Yii::t('base', 'Birthday'),
             'bio' => Yii::t('base', 'Bio'),
         ];
     }

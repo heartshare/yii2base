@@ -45,6 +45,8 @@ class UserForm extends Model{
             [['status', 'id', 'gender'], 'integer'],
             [['first_name', 'last_name', 'display_name', 'screen_name'], 'string', 'max' => 128],
             [['store' ,'location', 'zone', 'staff_zone', 'guest_zone'], 'string', 'max' => 64],
+            [['birthdate'], 'date', 'message' => '{attribute}: is not a date!', 'format' => 'dd-MM-yyyy'],
+            [['bio'], 'string'],
             [['email', 'status', 'zone'], 'required'],
             [['email'], 'email'],
             [['store'], 'required', 'on' => 'update']

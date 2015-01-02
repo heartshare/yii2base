@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\web\View;
 
@@ -26,7 +27,7 @@ $layoutAsset = LayoutAsset::register($this);
                     <h1><?= \Yii::t('base', 'User'); ?> / <?= \Yii::t('base', 'Add new User'); ?></h1>
 
                     <div class="buttons">
-                        <?= \yii\helpers\Html::a(Yii::t('base', 'CANCEL'), ['index'], ['class' => 'btn btn-default']) ?>
+                        <?= \yii\helpers\Html::a(Yii::t('base', 'CANCEL'), Url::toRoute(['admin/auth/', 'type' => 'user']), ['class' => 'btn btn-default']) ?>
                         <?= \yii\helpers\Html::submitButton(Yii::t('base', 'SAVE'), ['class' => 'btn btn-success']) ?>
                     </div>
                 </div>
@@ -147,7 +148,7 @@ $layoutAsset = LayoutAsset::register($this);
     $script = "
         $('#userform-birthdate').datetimepicker({
             pickTime: false,
-            format: 'DD/MM/YYYY'
+            format: 'DD-MM-YYYY'
         });
 
         $('.field-userform-staff_zone').parent().parent().hide();
@@ -156,7 +157,6 @@ $layoutAsset = LayoutAsset::register($this);
         zone = zone.split('_');
         for (i = 0; i < zone.length; i++) {
             if (zone[i] == 'staff') {
-                $('.field-userform-staff_zone').parent().parent().show();
                 $('.field-userform-staff_zone').parent().parent().show();
             }
 

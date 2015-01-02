@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
         <div class="content-zone">
             <div class="info-item">
                 <div class="info-item-header with-form-control grid-header">
-                    <h1><a href="<?= Url::toRoute(['index']) ?>" style="text-decoration:none;color:#333;font-size:18px;font-weight:bold;">Permissions</a> / Assignment / <?= $roleName ?> <label class="label label-success"><?= isset($_GET['type']) ? ucfirst($_GET['type']) : '' ?></label></h1>
+                    <h1><a href="<?= Url::toRoute(['index']) ?>" style="text-decoration:none;color:#333;font-size:18px;font-weight:bold;">Permissions</a> / Assignment / <?= $userName ?> <label class="label label-success"><?= isset($_GET['type']) ? ucfirst($_GET['type']) : '' ?></label></h1>
                     <div class="btn-group btn-permissions">
                         <?php foreach ($modules as $k => $module): ?>
                             <?php

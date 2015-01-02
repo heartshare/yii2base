@@ -278,15 +278,19 @@ class BaseHelper
 
 			$items = [];
 		    foreach (\Yii::$app->params['app.include'] as $where) {
+				$module = 'base';
+				if ($where == '@common/') {
+					$module = 'app';
+				}
 				if (is_dir(Yii::getAlias($where))) {
 					$permissionFiles = FileHelper::findFiles(Yii::getAlias($where), ['only' => $regions]);
 					if (!empty($permissionFiles)) {
-						foreach ($permission_files as $region => $file) {
+						foreach ($permissionFiles as $region => $file) {
 							$region = ($region == 0) ? 'admin' : 'site';
 							$permissions = BaseHelper::fetchArray($file);
 
 							if (array_key_exists('items', $permissions)) {
-								$items[$module->module][$region] = $permissions['items'];
+								$items[$module][$region] = $permissions['items'];
 							}
 
 							// Get permissions assigned to role
@@ -295,7 +299,7 @@ class BaseHelper
 			                		if (isset($detail['children'])) {
 				                		foreach ($detail['children'] as $rolePermission) {
 				                			if (isset($permissions['items'][$rolePermission])) {
-												$items[$module->module][$region][$rolePermission]['roles'][] = $role;
+												$items[$module][$region][$rolePermission]['roles'][] = $role;
 											}
 										}
 									}

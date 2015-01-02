@@ -115,6 +115,7 @@ class UserController extends BeController
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             // Save User info
             $user = $this->findModel($id);
+            // var_dump($model);
             $user->attributes = $model->attributes;
             if ($user->save()) {
                 // Save additional information
@@ -137,6 +138,9 @@ class UserController extends BeController
                 $model->attributes = $user->attributes;
                 $model->first_name = isset($user->profileInfo->first_name) ? $user->profileInfo->first_name : '';
                 $model->last_name = isset($user->profileInfo->last_name) ? $user->profileInfo->last_name : '';
+                $model->location = isset($user->profileInfo->location) ? $user->profileInfo->location : '';
+                $model->birthdate = isset($user->profileInfo->birthday) ? $user->profileInfo->birthday : '';
+                $model->bio = isset($user->profileInfo->bio) ? $user->profileInfo->bio : '';
                 $model->screen_name = isset($user->displayInfo->screen_name) ? $user->displayInfo->screen_name : '';
                 $model->display_name = isset($user->displayInfo->display_name) ? $user->displayInfo->display_name : '';
                 $model->zone = isset($user->identityInfo->zone) ? $user->identityInfo->zone : '';
@@ -201,7 +205,8 @@ class UserController extends BeController
         $userProfile->first_name = $model->first_name;
         $userProfile->last_name = $model->last_name;
         $userProfile->location = $model->location;
-        $userProfile->birthday = $model->birthdate;
+        $userProfile->birthday = \Yii::$app->locale->toUTCTime($model->birthdate, 'd-m-Y', 'Y-m-d');
+        $userProfile->bio = $model->bio;
         $userProfile->save();
 
         // Create - Update UserDisplay
