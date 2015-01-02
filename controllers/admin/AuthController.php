@@ -69,15 +69,6 @@ class AuthController extends BeController
         }
     }
 
-    public function replaceKey($arr, $oldKey, $newKey)
-    {
-        if (isset($arr[$oldKey])) {
-            $arr[$newKey] = $arr[$oldKey];
-            unset($arr[$oldKey]);
-        }
-        return $arr;
-    }
-
     /**
      * Assign Permissions to specific Role or User
      * 
@@ -272,13 +263,12 @@ class AuthController extends BeController
         }
     }
 
-    /**
-     * Build Module Permission
-     * 
-     * @return mixed
-     */
-    public function actionBuild()
+    public function replaceKey($arr, $oldKey, $newKey)
     {
-        
+        if (isset($arr[$oldKey])) {
+            $arr[$newKey] = $arr[$oldKey];
+            unset($arr[$oldKey]);
+        }
+        return $arr;
     }
 }
