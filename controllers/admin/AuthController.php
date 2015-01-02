@@ -25,8 +25,7 @@ use gxc\yii2base\helpers\BaseHelper;
  * @since  2.0
  */
 class AuthController extends BeController
-{      
-
+{
     /**
      * List all Roles of Tenant
      * If Tenant id is empty, get Tenant root
@@ -70,6 +69,15 @@ class AuthController extends BeController
         }
     }
 
+    public function replaceKey($arr, $oldKey, $newKey)
+    {
+        if (isset($arr[$oldKey])) {
+            $arr[$newKey] = $arr[$oldKey];
+            unset($arr[$oldKey]);
+        }
+        return $arr;
+    }
+
     /**
      * Assign Permissions to specific Role or User
      * 
@@ -88,7 +96,8 @@ class AuthController extends BeController
                 $userPermissionModel = \Yii::$app->tenant->createModel('UserPermission')->findOne(['user_id' => $_GET['id']]);
                 if (isset($userPermissionModel->item_name) && $userPermissionModel->item_name) {
                     $userPermission = unserialize($userPermissionModel->item_name);
-                    $userPermission = array_combine(['admin', 'site'], array_values($userPermission));
+                    $userPermission = self::replaceKey($userPermission, 'staff', 'admin');
+                    $userPermission = self::replaceKey($userPermission, 'guest', 'site');
                 }
             }
 
@@ -125,6 +134,14 @@ class AuthController extends BeController
                 } else {
                     $permissions = BaseHelper::getPermissionsFromFile();
                     $rolePermissions = isset($permissions[$moduleId]) ? $permissions[$moduleId] : [];
+                }
+
+                if ($type == 'user') {
+                    foreach ($rolePermissions as $region => $itemPermissions) {
+                        if (!isset($userPermission[$region])) {
+                            unset($rolePermissions[$region]);
+                        }
+                    }
                 }
 
                 // Get role name or user name
@@ -209,10 +226,6 @@ class AuthController extends BeController
                     }
                 }
 
-                echo '<pre>';
-                var_dump($rolePermissions);
-                echo '</pre>';
-
                 // Get additional information permission items
                 foreach ($rolePermissions as $region => $itemPermissions) {
                     // In case permissions are assigned to user, get corresponding role
@@ -238,6 +251,10 @@ class AuthController extends BeController
                     }
                     $rolePermissions[$region] = $itemPermissions;
                 }
+
+                // echo '<pre>';
+                // var_dump($rolePermissions);
+                // echo '</pre>';
 
                 return $this->render('assign', [
                     'tenantId' => $tenantId,

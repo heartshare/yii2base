@@ -139,7 +139,7 @@ class UserController extends BeController
                 $model->first_name = isset($user->profileInfo->first_name) ? $user->profileInfo->first_name : '';
                 $model->last_name = isset($user->profileInfo->last_name) ? $user->profileInfo->last_name : '';
                 $model->location = isset($user->profileInfo->location) ? $user->profileInfo->location : '';
-                $model->birthdate = isset($user->profileInfo->birthday) ? $user->profileInfo->birthday : '';
+                $model->birthdate = isset($user->profileInfo->birthday) ? \Yii::$app->locale->toUTCTime($user->profileInfo->birthday, 'Y-m-d', 'd-m-Y') : '';
                 $model->bio = isset($user->profileInfo->bio) ? $user->profileInfo->bio : '';
                 $model->screen_name = isset($user->displayInfo->screen_name) ? $user->displayInfo->screen_name : '';
                 $model->display_name = isset($user->displayInfo->display_name) ? $user->displayInfo->display_name : '';
@@ -164,7 +164,7 @@ class UserController extends BeController
     protected function afterSaveUserInfo($id, $model)
     {
         // Assign role for user
-        $userPermission = \Yii::$app->tenant->createModel('UserPermission')->find()->where(['user_id' => $id])->one();
+        $userPermission = \Yii::$app->tenant->createModel('UserPermission')->findOne(['user_id' => $id]);
         if (empty($userPermission)) {
             $userPermission = \Yii::$app->tenant->createModel('UserPermission');
         }
@@ -182,7 +182,7 @@ class UserController extends BeController
         $userPermission->save();
 
         // Create - Update UserIdentity
-        $userIdentity = \Yii::$app->tenant->createModel('UserIdentity')->find()->where(['user_id' => $id])->one();
+        $userIdentity = \Yii::$app->tenant->createModel('UserIdentity')->findOne(['user_id' => $id]);
         if (empty($userIdentity)) {
             $userIdentity = \Yii::$app->tenant->createModel('UserIdentity');
         }
@@ -193,7 +193,7 @@ class UserController extends BeController
         $userIdentity->save();
 
         // Create - Update UserProfile
-        $userProfile = \Yii::$app->tenant->createModel('UserProfile')->find()->where(['user_id' => $id])->one();
+        $userProfile = \Yii::$app->tenant->createModel('UserProfile')->findOne(['user_id' => $id]);
         if (empty($userProfile)) {
             $userProfile = \Yii::$app->tenant->createModel('UserProfile');
         }
@@ -210,7 +210,7 @@ class UserController extends BeController
         $userProfile->save();
 
         // Create - Update UserDisplay
-        $userDisplay = \Yii::$app->tenant->createModel('UserDisplay')->find()->where(['user_id' => $id])->one();
+        $userDisplay = \Yii::$app->tenant->createModel('UserDisplay')->findOne(['user_id' => $id]);
         if (empty($userDisplay)) {
             $userDisplay = \Yii::$app->tenant->createModel('UserDisplay');
         }
