@@ -36,6 +36,7 @@ class LayoutAsset extends AssetBundle
 
 	public $js = [
 		'js/moment.js',
+		'js/moment-timezone-with-data.min.js',
 		'js/bootstrap-datetimepicker.min.js',
 		'js/bootstrap-tabdrop.js',
 		'js/bootstrap-switch.min.js',

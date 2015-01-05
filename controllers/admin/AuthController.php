@@ -93,7 +93,7 @@ class AuthController extends BeController
             }
 
             $moduleId = isset($_GET['module']) ? $_GET['module'] : 'app';       
-            $tenantId = isset($_GET['tenant']) ? $_GET['tenant'] : \Yii::$app->tenant->current['id'];     
+            $tenantId = isset($_GET['tenant']) ? $_GET['tenant'] : \Yii::$app->tenant->current['id'];
 
             $tenant = false;
             $currentModule = false;

@@ -114,7 +114,7 @@ $layoutAsset = LayoutAsset::register($this);
                         </div>
                         <div class="inner-form row">
                             <div class="col-md-8">
-                                <?= $form->field($model, 'timezone')->textInput(['maxlength' => 64]) ?>
+                                <?= $form->field($model, 'timezone')->dropDownList([], ['class' => 'form-control']); ?>
                             </div>
                         </div>
                         <div class="inner-form row">
@@ -188,6 +188,8 @@ $layoutAsset = LayoutAsset::register($this);
                 }
             }
         })
+
+        $('#userform-timezone').timezones();
     ";
     $this->registerJs($script, View::POS_END);
 ?>

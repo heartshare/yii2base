@@ -91,13 +91,15 @@ class UserController extends BeController
             $guestZoneRoles[$role] = $detail['description'];
         }
 
+        $tenantId = isset($_GET['tenant']) ? $_GET['tenant'] : \Yii::$app->tenant->current['id'];
+
         // Get model
         $model = \Yii::$app->tenant->createModel('UserForm');
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             // Save User info
             $user = \Yii::$app->tenant->createModel('User');
-            // var_dump($model);
             $user->attributes = $model->attributes;
+            $user->registered_at = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
             if ($user->save()) {
                 // Save additional information
                 $this->afterSaveUserInfo($user->id, $model);
@@ -112,6 +114,7 @@ class UserController extends BeController
 
         return $this->render('create', [
                     'model' => $model,
+                    'tenantId' => $tenantId,
                     'staffZoneRoles' => $staffZoneRoles,
                     'guestZoneRoles' => $guestZoneRoles,
                 ]);
@@ -140,6 +143,8 @@ class UserController extends BeController
             $guestZoneRoles[$role] = $detail['description'];
         }
 
+        $tenantId = isset($_GET['tenant']) ? $_GET['tenant'] : \Yii::$app->tenant->current['id'];
+
         // Get model
         $model = \Yii::$app->tenant->createModel('UserForm');
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -152,7 +157,6 @@ class UserController extends BeController
                 $this->afterSaveUserInfo($user->id, $model);
 
                 Yii::$app->session->setFlash('message', ['success', Yii::t('base', 'Update User Successfully.')]);
-                // return $this->redirect(['update', 'id' => $user->id]);
             } else {
                 // var_dump($user->getErrors());
                 throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
@@ -174,6 +178,7 @@ class UserController extends BeController
                 $model->screen_name = isset($user->displayInfo->screen_name) ? $user->displayInfo->screen_name : '';
                 $model->display_name = isset($user->displayInfo->display_name) ? $user->displayInfo->display_name : '';
                 $model->zone = isset($user->identityInfo->zone) ? $user->identityInfo->zone : '';
+                $model->password = isset($user->identityInfo->password_hash) ? $user->identityInfo->password_hash : '';
                 $model->staff_zone = isset($userPermission['staff']) ? $userPermission['staff'] : '';
                 $model->guest_zone = isset($userPermission['guest']) ? $userPermission['guest'] : '';
             }
@@ -181,6 +186,7 @@ class UserController extends BeController
 
         return $this->render('update', [
                     'model' => $model,
+                    'tenantId' => $tenantId,
                     'staffZoneRoles' => $staffZoneRoles,
                     'guestZoneRoles' => $guestZoneRoles,
                 ]);
@@ -253,6 +259,8 @@ class UserController extends BeController
         $userIdentity->store = $model->store;
         $userIdentity->user_id = $id;
         $userIdentity->zone = $model->zone;
+        $userIdentity->setPassword($model->password);
+        $userIdentity->generateAuthKey();
         $userIdentity->save();
 
         // Create - Update UserProfile

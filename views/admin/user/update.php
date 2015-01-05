@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = Yii::t('base', 'Update');
                     'items' => [
                         [
                             'label' => '<i class="fa fa-dashboard"></i> General',
-                            // 'link' => ['view', 'id' => $tenant->id],
+                            'link' => ['view', 'id' => $tenantId],
                         ],
                         [
                             'label' => '<i class="fa fa-users"></i> Users',
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = Yii::t('base', 'Update');
                         ],
                         [
                             'label' => '<i class="fa fa-gears"></i> Permissions',
-                            // 'link' => ['index', 'id' => $tenant->id],
+                            'link' => ['admin/auth/index', 'id' => $tenantId],
                         ],
                         [
                             'label' => '<i class="fa fa-tasks"></i> Modules',
