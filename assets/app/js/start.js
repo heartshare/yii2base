@@ -100,6 +100,9 @@ var Timezone = {
 
 		return $(select);
 	},
+	getCurrentTimezoneKey : function(){
+		return moment().format('Z');
+	},
 };
 
 $.fn.timezones = function() {

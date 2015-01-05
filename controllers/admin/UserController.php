@@ -99,7 +99,6 @@ class UserController extends BeController
             // Save User info
             $user = \Yii::$app->tenant->createModel('User');
             $user->attributes = $model->attributes;
-            $user->registered_at = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
             if ($user->save()) {
                 // Save additional information
                 $this->afterSaveUserInfo($user->id, $model);
@@ -267,6 +266,7 @@ class UserController extends BeController
         $userProfile = \Yii::$app->tenant->createModel('UserProfile')->findOne(['user_id' => $id]);
         if (empty($userProfile)) {
             $userProfile = \Yii::$app->tenant->createModel('UserProfile');
+            $userProfile->registered_at = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
         }
 
         $userProfile->store = $model->store;

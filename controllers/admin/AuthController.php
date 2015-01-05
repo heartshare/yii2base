@@ -56,7 +56,7 @@ class AuthController extends BeController
             $currentModule = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->one();
 
             // Get all users
-            $users = \Yii::$app->tenant->createModel('User')->find()->all();
+            $users = \Yii::$app->tenant->createModel('User')->find()->orderBy('id DESC')->all();
 
             return $this->render('index', [
                 'currentModule' => $currentModule,
