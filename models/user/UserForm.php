@@ -49,7 +49,8 @@ class UserForm extends Model{
             [['bio'], 'string'],
             [['email', 'status', 'zone'], 'required'],
             [['email'], 'email'],
-            [['store'], 'required', 'on' => 'update']
+            // [['store'], 'required', 'on' => 'update']
+            [['store'], 'safe']
         ];
     }
 

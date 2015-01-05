@@ -50,11 +50,12 @@ class User extends TbActiveRecord
     public function rules()
     {
         return [
-            [['store', 'email'], 'required'],
+            [['email'], 'required'],
             [['store'], 'string', 'max' => 64],
             [['email'], 'email'],
             [['email'], 'string', 'max' => 128],
-            [['store', 'email'], 'unique', 'targetAttribute' => ['store', 'email'], 'message' => \Yii::t('base','Email has already been taken.')]
+            [['store', 'email'], 'unique', 'targetAttribute' => ['store', 'email'], 'message' => \Yii::t('base','Email has already been taken.')],
+            [['store'], 'safe']
         ];
     }
 

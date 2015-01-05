@@ -48,7 +48,8 @@ class UserProfile extends TbActiveRecord
             [['user_id', 'gender'], 'integer'],
             [['store', 'zone'], 'string', 'max' => 64],
             [['first_name', 'last_name'], 'string', 'max' => 128],
-            [['store', 'user_id', 'zone'], 'unique', 'targetAttribute' => ['store', 'user_id', 'zone'], 'message' => 'The combination of Store, Zone and User ID has already been taken.']
+            [['store', 'user_id', 'zone'], 'unique', 'targetAttribute' => ['store', 'user_id', 'zone'], 'message' => 'The combination of Store, Zone and User ID has already been taken.'],
+            [['birthday'], 'safe']
         ];
     }
 

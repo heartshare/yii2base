@@ -76,15 +76,45 @@ class UserController extends BeController
      */
     public function actionCreate()
     {        
-        $model = new User();
+        // Get zone roles
+        $adminRoles = BaseHelper::getRolesFromFile(array('admin'));
+        $siteRoles = BaseHelper::getRolesFromFile(array('site'));
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        $staffZoneRoles = [];
+        $guestZoneRoles = [];
+
+        foreach ($adminRoles as $role => $detail) {
+            $staffZoneRoles[$role] = $detail['description'];
         }
+        
+        foreach ($siteRoles as $role => $detail) {
+            $guestZoneRoles[$role] = $detail['description'];
+        }
+
+        // Get model
+        $model = \Yii::$app->tenant->createModel('UserForm');
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // Save User info
+            $user = \Yii::$app->tenant->createModel('User');
+            // var_dump($model);
+            $user->attributes = $model->attributes;
+            if ($user->save()) {
+                // Save additional information
+                $this->afterSaveUserInfo($user->id, $model);
+
+                Yii::$app->session->setFlash('message', ['success', Yii::t('base', 'Create User Successfully.')]);
+                return $this->redirect(['update', 'id' => $user->id]);
+            } else {
+                var_dump($user->getErrors());
+                // throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
+            }
+        }
+
+        return $this->render('create', [
+                    'model' => $model,
+                    'staffZoneRoles' => $staffZoneRoles,
+                    'guestZoneRoles' => $guestZoneRoles,
+                ]);
     }
 
     /**
@@ -115,7 +145,7 @@ class UserController extends BeController
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             // Save User info
             $user = $this->findModel($id);
-            // var_dump($model);
+
             $user->attributes = $model->attributes;
             if ($user->save()) {
                 // Save additional information
@@ -154,6 +184,39 @@ class UserController extends BeController
                     'staffZoneRoles' => $staffZoneRoles,
                     'guestZoneRoles' => $guestZoneRoles,
                 ]);
+    }
+
+    /**
+     * Deletes an existing User model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
+        // Delete relational user information
+        $this->afterDeleteUserInfo($id);
+
+        return $this->redirect(['admin/auth/index', 'type' => 'user']);
+    }
+
+    /**
+     * Finds the User model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return User the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        $modelClass = \Yii::$app->tenant->getModel('User', 'class');
+        if (($model = $modelClass::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     /**
@@ -205,7 +268,7 @@ class UserController extends BeController
         $userProfile->first_name = $model->first_name;
         $userProfile->last_name = $model->last_name;
         $userProfile->location = $model->location;
-        $userProfile->birthday = \Yii::$app->locale->toUTCTime($model->birthdate, 'd-m-Y', 'Y-m-d');
+        $userProfile->birthday = !empty($model->birthdate) ? \Yii::$app->locale->toUTCTime($model->birthdate, 'd-m-Y', 'Y-m-d') : null;
         $userProfile->bio = $model->bio;
         $userProfile->save();
 
@@ -224,32 +287,34 @@ class UserController extends BeController
     }
 
     /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
+     * Delete relational user information
+     *
+     * @param $model
      */
-    public function actionDelete($id)
+    protected function afterDeleteUserInfo($id)
     {
-        $this->findModel($id)->delete();
+        // Delete User Permission
+        $userPermission = \Yii::$app->tenant->createModel('UserPermission')->findOne(['user_id' => $id]);
+        if (!empty($userPermission)) {
+            $userPermission->delete();
+        }
 
-        return $this->redirect(['index']);
-    }
+        // Delete UserIdentity
+        $userIdentity = \Yii::$app->tenant->createModel('UserIdentity')->findOne(['user_id' => $id]);
+        if (!empty($userIdentity)) {
+            $userIdentity->delete();
+        }
 
-    /**
-     * Finds the User model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return User the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        $modelClass = \Yii::$app->tenant->getModel('User', 'class');
-        if (($model = $modelClass::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+        // Delete UserProfile
+        $userProfile = \Yii::$app->tenant->createModel('UserProfile')->findOne(['user_id' => $id]);
+        if (!empty($userProfile)) {
+            $userProfile->delete();
+        }
+
+        // Delete UserDisplay
+        $userDisplay = \Yii::$app->tenant->createModel('UserDisplay')->findOne(['user_id' => $id]);
+        if (!empty($userDisplay)) {
+            $userDisplay->delete();
         }
     }
 }
