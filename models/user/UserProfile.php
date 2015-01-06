@@ -21,6 +21,8 @@ use gxc\yii2base\classes\TbActiveRecord;
  * @property string $last_name
  * @property integer $gender
  * @property string $location
+ * @property string $timezone
+ * @property date $birthday
  * @property string $company
  * @property string $bio
  * @property datetime $registered_at
@@ -49,7 +51,7 @@ class UserProfile extends TbActiveRecord
             [['store', 'zone'], 'string', 'max' => 64],
             [['first_name', 'last_name'], 'string', 'max' => 128],
             [['store', 'user_id', 'zone'], 'unique', 'targetAttribute' => ['store', 'user_id', 'zone'], 'message' => 'The combination of Store, Zone and User ID has already been taken.'],
-            [['birthday'], 'safe']
+            [['birthday', 'timezone'], 'safe']
         ];
     }
 
@@ -68,6 +70,7 @@ class UserProfile extends TbActiveRecord
             'gender' => Yii::t('base', 'Gender'),
             'location' => Yii::t('base', 'Location'),
             'company' => Yii::t('base', 'Company'),
+            'timezone' => Yii::t('base', 'Timezone'),
             'birthday' => Yii::t('base', 'Birthday'),
             'bio' => Yii::t('base', 'Bio'),
         ];

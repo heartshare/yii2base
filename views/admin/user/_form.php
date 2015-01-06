@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 use yii\web\View;
 
 use gxc\yii2base\models\user\User;
+use gxc\yii2base\models\user\UserIdentity;
 use gxc\yii2base\assets\app\LayoutAsset;
 $layoutAsset = LayoutAsset::register($this);
 ?>
@@ -91,7 +92,7 @@ $layoutAsset = LayoutAsset::register($this);
 
                         <div class="inner-form row">
                             <div class="col-md-4">
-                                <?= $form->field($model, 'status')->dropDownList(User::getUserStatuses(), ['class' => 'form-control']); ?>
+                                <?= $form->field($model, 'status')->dropDownList(UserIdentity::getUserStatuses(), ['class' => 'form-control']); ?>
                             </div>
                         </div>
                     </div>
@@ -115,6 +116,7 @@ $layoutAsset = LayoutAsset::register($this);
                         <div class="inner-form row">
                             <div class="col-md-8">
                                 <?= $form->field($model, 'timezone')->dropDownList([], ['class' => 'form-control']); ?>
+                                <input type="hidden" class="timezone_value" value="<?= isset($model->timezone) ? $model->timezone : '' ?>" />
                             </div>
                         </div>
                         <div class="inner-form row">
@@ -190,6 +192,9 @@ $layoutAsset = LayoutAsset::register($this);
         })
 
         $('#userform-timezone').timezones();
+        if ($('.timezone_value').val() != '') {
+            $('#userform-timezone').val($('.timezone_value').val());
+        }
     ";
     $this->registerJs($script, View::POS_END);
 ?>

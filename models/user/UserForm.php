@@ -50,7 +50,7 @@ class UserForm extends Model{
             [['email', 'status', 'zone'], 'required'],
             [['email'], 'email'],
             // [['store'], 'required', 'on' => 'update']
-            [['store', 'password'], 'safe']
+            [['store', 'password', 'timezone'], 'safe']
         ];
     }
 

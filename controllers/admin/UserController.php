@@ -172,12 +172,14 @@ class UserController extends BeController
                 $model->first_name = isset($user->profileInfo->first_name) ? $user->profileInfo->first_name : '';
                 $model->last_name = isset($user->profileInfo->last_name) ? $user->profileInfo->last_name : '';
                 $model->location = isset($user->profileInfo->location) ? $user->profileInfo->location : '';
+                $model->timezone = isset($user->profileInfo->timezone) ? $user->profileInfo->timezone : '';
                 $model->birthdate = isset($user->profileInfo->birthday) ? \Yii::$app->locale->toUTCTime($user->profileInfo->birthday, 'Y-m-d', 'd-m-Y') : '';
                 $model->bio = isset($user->profileInfo->bio) ? $user->profileInfo->bio : '';
                 $model->screen_name = isset($user->displayInfo->screen_name) ? $user->displayInfo->screen_name : '';
                 $model->display_name = isset($user->displayInfo->display_name) ? $user->displayInfo->display_name : '';
                 $model->zone = isset($user->identityInfo->zone) ? $user->identityInfo->zone : '';
                 $model->password = isset($user->identityInfo->password_hash) ? $user->identityInfo->password_hash : '';
+                $model->status = isset($user->identityInfo->status) ? $user->identityInfo->status : '';
                 $model->staff_zone = isset($userPermission['staff']) ? $userPermission['staff'] : '';
                 $model->guest_zone = isset($userPermission['guest']) ? $userPermission['guest'] : '';
             }
@@ -254,12 +256,13 @@ class UserController extends BeController
         if (empty($userIdentity)) {
             $userIdentity = \Yii::$app->tenant->createModel('UserIdentity');
         }
-
+var_dump($model->status);
         $userIdentity->store = $model->store;
         $userIdentity->user_id = $id;
         $userIdentity->zone = $model->zone;
         $userIdentity->setPassword($model->password);
         $userIdentity->generateAuthKey();
+        $userIdentity->status = $model->status;
         $userIdentity->save();
 
         // Create - Update UserProfile
@@ -276,6 +279,7 @@ class UserController extends BeController
         $userProfile->first_name = $model->first_name;
         $userProfile->last_name = $model->last_name;
         $userProfile->location = $model->location;
+        $userProfile->timezone = $model->timezone;
         $userProfile->birthday = !empty($model->birthdate) ? \Yii::$app->locale->toUTCTime($model->birthdate, 'd-m-Y', 'Y-m-d') : null;
         $userProfile->bio = $model->bio;
         $userProfile->save();

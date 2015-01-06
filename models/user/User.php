@@ -23,10 +23,6 @@ use gxc\yii2base\classes\TbActiveRecord;
  */
 class User extends TbActiveRecord
 {
-    // Define user status constant
-    const USER_STATUS_INACTIVE = 0;
-    const USER_STATUS_ACTIVE = 1;
-
     // Define user gender constant
     const USER_GENDER_MALE = 1;
     const USER_GENDER_FEMALE = 2;
@@ -104,19 +100,6 @@ class User extends TbActiveRecord
     public static function findByEmail($email)
     {
         return static::findOne(['email' => $email]);
-    }
-
-    /**
-     * Get User Statuses
-     *
-     * @return array
-     */
-    public static function getUserStatuses()
-    {
-        return [
-            self::USER_STATUS_ACTIVE => Yii::t('base', 'Active'),
-            self::USER_STATUS_INACTIVE => Yii::t('base', 'Inactive'),
-        ];
     }
 
      /**
