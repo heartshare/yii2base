@@ -309,6 +309,10 @@ h1.pageTitle {font-size:16px;font-weight: bold !important;color: #333;text-shado
 .modal-header h4{font-size: 16px;}
 .modal-header .breadcrumb {padding-left: 5px;}
 
+#userform-zone label{font-weight:normal;margin:0px 10px 6px;}
+#userform-zone label:last-child{margin-bottom:0;}
+#userform-zone input[type="radio"]{margin-right:10px;}
+
 /*base alert wrapper */
 .alert-base{border-radius:0; margin:10px 0; padding:10px 30px; clear:both;}
 

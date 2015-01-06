@@ -28,6 +28,7 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
         </div>
     </header>
 </div>
+
 <div class="row">
     <section class="main-ctn">
         <div class="inner">
@@ -41,7 +42,7 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                             ],
                             [
                                 'label' => '<i class="fa fa-users"></i> Users',
-                                'content' => $this->render('_user', ['tenantId' => $tenant->id, 'roles' => $roles]),
+                                'content' => $this->render('_user', ['tenantId' => $tenant->id, 'roles' => $roles, 'users' => $users]),
                                 'active' => true
                             ],
                             [
@@ -63,7 +64,7 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                             ],
                             [
                                 'label' => '<i class="fa fa-users"></i> Users',
-                                'link' => ['index', 'type' => 'user'],
+                                'link' => ['', 'type' => 'user'],
                             ],
                             [
                                 'label' => '<i class="fa fa-gears"></i> Permissions',

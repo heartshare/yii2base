@@ -23,7 +23,7 @@ use gxc\yii2base\classes\TbActiveRecord;
  * @property string $avatar
  * 
  * 
- * @author  Tuan Nguyen <nganhtuan63@gmail.com>
+ * @author  Triet Nguyen <minhtriet1989@gmail.com>
  * @since  2.0
  */
 class UserDisplay extends TbActiveRecord

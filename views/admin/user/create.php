@@ -2,30 +2,59 @@
 
 use yii\helpers\Html;
 
-$this->title = Yii::t('base', 'Create {modelClass}', [
+$this->title = Yii::t('base', 'Create {modelClass}: ', [
     'modelClass' => 'User',
-]);
+]) . ' ' . $model->id;
+$this->params['formId'] = 'user-create-form';
 $this->params['breadcrumbs'][] = ['label' => Yii::t('base', 'Users'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = Yii::t('base', 'Update');
 ?>
 
-<div class="header-row">
-<div class="header-row-wrapper">
-  <header class="header-1">
-    <h1 class="header-main" id="page-header" rel=""> 
-		<i class="fa fa-users"></i> 
-		<span class="breadcrumb"><a href="#">User</a> \</span> Add New User
-	</h1>
-    <div class="header-right pull-right"> 
-		<a class="btn btn-default" href="#">Cancel</a> 
-		<a class="btn btn-primary" href="javascript:void(0)" onclick="$('#myform').submit();"> CREATE </a> 
-	</div>
-  </header>
-</div>
+<div class="row">
+    <header class="header-ctn col-md-12">
+        <div class="brand-view">
+            <h1>Tenant: GXCSOFT</h1>
+
+            <p>http://gxcsoft.com</p>
+        </div>
+        <div class="summary-view">
+            <ul>
+                <li><a href="javascript:;">25</a><br/>Users</li>
+                <li><a href="javascript:;">345 days</a><br/>Active</li>
+                <li><a href="javascript:;">$234</a><br/>Contribution</li>
+            </ul>
+        </div>
+    </header>
 </div>
 
-<div class="user-create">    
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+<div class="row">
+    <section class="main-ctn">
+        <div class="inner">
+            <?php
+                
+                echo \gxc\yii2base\widgets\BaseTabs::widget([
+                    'items' => [
+                        [
+                            'label' => '<i class="fa fa-dashboard"></i> General',
+                            'link' => ['view', 'id' => $tenantId],
+                        ],
+                        [
+                            'label' => '<i class="fa fa-users"></i> Users',
+                            'content' => $this->render('_form', ['model' => $model, 'staffZoneRoles' => $staffZoneRoles, 'guestZoneRoles' => $guestZoneRoles, 'formId' => $this->params['formId']]),
+                            'active' => true
+                        ],
+                        [
+                            'label' => '<i class="fa fa-gears"></i> Permissions',
+                            'link' => ['admin/auth/index', 'id' => $tenantId],
+                        ],
+                        [
+                            'label' => '<i class="fa fa-tasks"></i> Modules',
+                            'link' => ['auth/index/assign'],
+                        ]
+                    ]
+                ]);
+            ?>
+        </div>
+    </section>
 </div>

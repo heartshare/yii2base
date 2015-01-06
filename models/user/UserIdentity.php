@@ -16,7 +16,7 @@ use gxc\yii2base\classes\TbActiveRecord;
  *
  * @property string $id
  * @property string $store
- * @property string $user_id
+ * @property integer $user_id
  * @property string $zone
  * @property string $auth_provider
  * @property string $auth_provider_uid
@@ -50,7 +50,8 @@ class UserIdentity extends TbActiveRecord implements IdentityInterface
     {
         return [            
             [['recent_password_change', 'auth_key', 'password_hash'], 'safe'],
-            [['user_id', 'status', 'recent_password_change'], 'integer'],
+            // [['user_id', 'status', 'recent_password_change'], 'integer'],
+            [['user_id', 'status'], 'integer'],
             [['auth_params'], 'string'],            
             [['store', 'zone'], 'string', 'max' => 64],            
             [['store', 'user_id', 'zone'], 'unique', 'targetAttribute' => ['store', 'user_id', 'zone'], 'message' => 'User ID and Zone have already been taken.'],
