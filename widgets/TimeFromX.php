@@ -13,6 +13,27 @@ use yii\helpers\Html;
 /**
  * TimeFromX
  *
+ * Example:
+ *
+ * gxc\yii2base\widgets\TimeFromX::widget([
+ *      'view' => $view, // can be null if call on view
+ *      'name' => 'registered_time_ago', // required
+ *      'value' => $duration, // required
+ *      'options' => ['class' => 'join-des'],
+ *      'template' => Yii::t('base', 'Registered') . ' {time} '
+ * ]);
+ *
+ * OR
+ *
+ * gxc\yii2base\widgets\TimeFromX::widget([
+ *      'view' => $view, // can be null if call on view
+ *      'model' => $model', // required
+ *      'attribute' => 'registered_at, // required
+ *      'options' => ['class' => 'join-des'],
+ *      'template' => Yii::t('base', 'Registered') . ' {time} '
+ * ]);
+ *
+ *
  * @author Tung Mang Vien <tungmv7@gmail.com>
  * @since 2.0
  */
