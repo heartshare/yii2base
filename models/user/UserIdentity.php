@@ -164,5 +164,19 @@ class UserIdentity extends TbActiveRecord implements IdentityInterface
     public function generateAuthKey()
     {
         $this->auth_key = Yii::$app->security->generateRandomString();
-    }    
+    }
+
+
+    /**
+     * Get User Status
+     *
+     * @return array
+     */
+    public static function getUserStatuses()
+    {
+        return [
+            self::STATUS_DISABLED => Yii::t('base', 'Disabled'),
+            self::STATUS_ACTIVE => Yii::t('base', 'Active'),
+        ];
+    }
 }

@@ -278,10 +278,6 @@ class BaseHelper
 
 			$items = [];
 		    foreach (\Yii::$app->params['app.include'] as $where) {
-				$module = 'base';
-				if ($where == '@common/') {
-					$module = 'app';
-				}
 				if (is_dir(Yii::getAlias($where))) {
 					$permissionFiles = FileHelper::findFiles(Yii::getAlias($where), ['only' => $regions]);
 					if (!empty($permissionFiles)) {
@@ -289,21 +285,27 @@ class BaseHelper
 							$region = ($region == 0) ? 'admin' : 'site';
 							$permissions = BaseHelper::fetchArray($file);
 
-							if (array_key_exists('items', $permissions)) {
-								$items[$module][$region] = $permissions['items'];
-							}
+							if (array_key_exists('moduleUniqueId', $permissions)) {
+								$module = $permissions['moduleUniqueId'];
 
-							// Get permissions assigned to role
-							if (array_key_exists('roles', $permissions)) {
-								foreach ($permissions['roles'] as $role => $detail) {
-			                		if (isset($detail['children'])) {
-				                		foreach ($detail['children'] as $rolePermission) {
-				                			if (isset($permissions['items'][$rolePermission])) {
-												$items[$module][$region][$rolePermission]['roles'][] = $role;
+								if (array_key_exists('items', $permissions)) {
+									$items[$module][$region] = $permissions['items'];
+								}
+
+								// Get permissions assigned to role
+								if (array_key_exists('roles', $permissions)) {
+									foreach ($permissions['roles'] as $role => $detail) {
+				                		if (isset($detail['children'])) {
+					                		foreach ($detail['children'] as $rolePermission) {
+					                			if (isset($permissions['items'][$rolePermission])) {
+													$items[$module][$region][$rolePermission]['roles'][] = $role;
+												}
 											}
 										}
 									}
 								}
+							} else {
+								throw new NotFoundHttpException(\Yii::t('base','Module Uniqueid is not defined.'));		
 							}
 						}
 					} else {

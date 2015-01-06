@@ -1,7 +1,16 @@
 <?php
+// Base Module Admin Permissions
+return [	
+	'moduleUniqueId' => 'base',
 
-// Base Module Site Permissions
-$permissions = [	
+	// Permission Items
+	'items' => [		
+
+	],
+
+	// Permission Roles
+	'roles' => [		
+
+	],	
 ];
 
-return $permissions;
