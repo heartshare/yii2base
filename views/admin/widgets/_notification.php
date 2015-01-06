@@ -3,6 +3,13 @@ if (Yii::$app->session->hasFlash('message')):
     $message = Yii::$app->session->getFlash('message');
     if (is_array($message) && count($message) == 2) {
 
+        $alertOptions = \yii\helpers\ArrayHelper::merge(
+            [
+                'class' => 'alert-base'
+            ],
+            isset($options) ? $options : []
+        );
+
         if($message[0] == 'error')
             $message[0] = 'danger';
 
@@ -29,18 +36,21 @@ if (Yii::$app->session->hasFlash('message')):
                 break;
         }
 
+        $alertOptions['class'] .= ' alert-flash alert-' . $message[0];
+
         echo \yii\bootstrap\Alert::widget([
-            'options' => [
-                'class' => 'alert-flash alert-' . $message[0],
-                'style' => 'border-radius:0; margin:10px 0; padding:10px 30px; clear:both;'
-            ],
+            'options' => $alertOptions,
             'body' => $body,
         ]);
     } elseif (is_string($message)) {
-        echo \yii\bootstrap\Alert::widget([
-            'options' => [
-                'class' => 'alert-info alert-flash',
+        $alertOptions = \yii\helpers\ArrayHelper::merge(
+            [
+                'class' => ' alert-info alert-flash',
             ],
+            isset($options) ? $options : []
+        );
+        echo \yii\bootstrap\Alert::widget([
+            'options' => $alertOptions,
             'body' => '<span class="fa fa-alert fa-info-circle"></span> <span>' . $message . '</span>',
         ]);
     }

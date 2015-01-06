@@ -18,6 +18,13 @@ jQuery(document).ready(function($){
 			$(this).remove();
 		});
 	}, 5000);
+
+	// remove cache data on hide modal
+	$('body').on('hidden.bs.modal', '.modal', function () {
+		$(this).removeData('bs.modal');
+		$('.modal-content', this).empty();
+	});
+
 });
 function openPopup(id) {
 	$("#"+id).fadeIn(100);	 

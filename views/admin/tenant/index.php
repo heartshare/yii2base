@@ -25,6 +25,7 @@ $this->params['html'] = $this->render('_search', ['model' => $searchModel]);
             <?= \gxc\yii2base\widgets\BaseGridView::widget([
                 'dataProvider' => $dataProvider,
                 'showHeader' => false,
+                'summaryOptions' => ['style' => 'padding-left:23px'],
                 'options' => ['class' => 'table-responsive section-data full-data'],
                 'tableOptions' => ['class' => 'table table-hover tbl-grid'],
                 'columns' => [

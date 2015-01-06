@@ -3,7 +3,7 @@
     <header class="header-ctn col-md-12">
         <div class="brand-view">
             <h1>
-                <?= Yii::t('base', 'Tenant') . ": " . $model->name;?>
+                <?= Yii::t('base', 'Tenant') . ": " . $model->name ?>
                 <?= \gxc\yii2base\models\tenant\Tenant::renderTenantStatus($model->status); ?>
             </h1>
             <p><?= $model->domain ?></p>
@@ -82,7 +82,7 @@
                         ],
                         [
                             'label' => '<i class="fa fa-tasks"></i> Modules',
-                            'content' => $this->render('_modules', ['model' => $tenantModule, 'tenant' => $model]),
+                            'content' => $this->render('_modules', ['tenant' => $model, 'modules' => $modules]),
                             'active' => true
                         ]
                     ]

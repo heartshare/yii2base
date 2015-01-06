@@ -30,6 +30,9 @@ return [
 		'class' => 'gxc\yii2base\models\tenant\TenantModule',
 		'store' => 'content_store'
 	],
+	'TenantModuleSearch' => [
+		'class' => 'gxc\yii2base\models\tenant\TenantModuleSearch',
+	],
 
 	// User Models
 	'User' => [

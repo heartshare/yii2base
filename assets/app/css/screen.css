@@ -309,6 +309,14 @@ h1.pageTitle {font-size:16px;font-weight: bold !important;color: #333;text-shado
 .modal-header h4{font-size: 16px;}
 .modal-header .breadcrumb {padding-left: 5px;}
 
+/*base alert wrapper */
+.alert-base{border-radius:0; margin:10px 0; padding:10px 30px; clear:both;}
+
+/*tenant module info on popup*/
+.module-info img {display: inline-block; float: left; width: 64px; height: 64px; margin-right: 10px;}
+.module-info h4, .module-info p, .module-info a {margin: 0; padding: 0 0 5px 0;}
+.module-info h4 {font-size: 14px; font-weight: 600;}
+.module-info p, .module-info a {font-size: 12px;}
 
 @media screen and (max-width: 1000px) {
 	.main-nav ul li.hide-t { display: none;}

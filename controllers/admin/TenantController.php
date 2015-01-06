@@ -7,11 +7,14 @@
 
 namespace gxc\yii2base\controllers\admin;
 
+use gxc\yii2base\models\tenant\TenantModule;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 use gxc\yii2base\classes\BeController;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * Tenant Controller of Base Module
@@ -289,20 +292,84 @@ class TenantController extends BeController
         ]);
     }
 
+    /**
+     * list all modules of tenant
+     *
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionModules($id)
     {
-        $model = $this->findModel($id);
-        $tenantModule = Yii::$app->tenant->createModel('TenantModule');
+
+        $tenant = $this->findModel($id);
+        $modules = Yii::$app->tenant->createModel('TenantModuleSearch')->search(Yii::$app->request->queryParams);
         return $this->render('tabs', [
             'mode' => 'modules',
-            'model' => $model,
-            'tenantModule' => $tenantModule
+            'model' => $tenant,
+            'modules' => $modules
         ]);
     }
 
+    /**
+     * CRUD tenant module belongs to tenant id and module id
+     * if module id is empty, it means add new module to tenant
+     * else update current relationship information between module and tenant
+     *
+     * @param $tid
+     * @param $mid
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionModuleForm($tid, $mid)
+    {
+        $tenant = $this->findModel($tid);
+        $modelClass = Yii::$app->tenant->createModel('TenantModule');
+        $model = !empty($mid) ? $modelClass::findOne(['id' => $mid]) : $modelClass;
+        $title = !empty($mid) ? Yii::t('base', 'Update Module') . ' #' . $model->id : Yii::t('base', 'Add new module');
+
+        if (!Yii::$app->request->isPjax && Yii::$app->request->isAjax && $model->load(Yii::$app->request->post()))
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if(Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->validate()){
+
+            // set base values
+            $model->updated_by = Yii::$app->user->id;
+            $model->updated_mode = $modelClass::UPDATE_MODE_MANUAL;
+            $model->store = $tenant->app_store;
+            $model->status = TenantModule::STATUS_ACTIVE;
+
+            if($model->save())
+                Yii::$app->session->setFlash('message', ['success', 'Update Tenant Module Successfully.']);
+            else
+                Yii::$app->session->setFlash('error', ['success', 'Error when update Tenant Module.']);
+        }
+
+        return $this->renderAjax('module_form', [
+            'model' => $model,
+            'title' => Yii::t('base', 'Tenant') . ": " . $tenant->name . ' \ ' . $title,
+            'action' => ['module-form', 'tid' => $tenant->id, 'mid' => $mid]
+        ]);
+    }
+
+    /**
+     * get module information by module id from ajax request
+     *
+     * @param $id
+     * @return string
+     */
     public function actionSuggestModule($id)
     {
-        return json_encode(gxc\yii2base\helpers\ModuleHelper::getAvailableModules()[$id]);
+        if(Yii::$app->request->isAjax) {
+
+            $tenantModuleClass = Yii::$app->tenant->createModel("TenantModule");
+            $moduleInfo = $tenantModuleClass::getModuleExtraInfo($id);
+
+            return json_encode(['module' => $moduleInfo[0], 'plans' => $moduleInfo[1]]);
+        }
     }
 
 }
