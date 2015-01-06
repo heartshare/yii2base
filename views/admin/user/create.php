@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->title = Yii::t('base', 'Create {modelClass}: ', [
+$this->title = Yii::t('base', 'Create {modelClass}', [
     'modelClass' => 'User',
 ]) . ' ' . $model->id;
 $this->params['formId'] = 'user-create-form';
