@@ -151,17 +151,10 @@ class AuthController extends BeController
 
                 if (isset($_POST['permissionStatus']) && !empty($_POST['permissionStatus'])) {
                     foreach ($_POST['permissionStatus'] as $region => $postPermissions) {
-                        // In case permissions are assigned to user, get corresponding role
-                        if ($type == 'user' && !empty($userPermission)) {
-                            $role = isset($userPermission[$region]) ? $userPermission[$region] : $role;
-                        }
-
                         foreach ($postPermissions as $itemName => $status) {
                             if ($type == 'user') {
                                 if ((isset($rolePermissions[$region][$itemName]['users']) && !in_array($_GET['id'], $rolePermissions[$region][$itemName]['users'])) || !isset($rolePermissions[$region][$itemName]['users'])) {
-                                    if ((isset($rolePermissions[$region][$itemName]['roles']) && !in_array($role, $rolePermissions[$region][$itemName]['roles'])) || !isset($rolePermissions[$region][$itemName]['roles'])) {
-                                        $rolePermissions[$region][$itemName]['users'][] = $_GET['id'];
-                                    }
+                                    $rolePermissions[$region][$itemName]['users'][] = $_GET['id'];
                                 }
                             }
 
@@ -219,11 +212,6 @@ class AuthController extends BeController
 
                 // Get additional information permission items
                 foreach ($rolePermissions as $region => $itemPermissions) {
-                    // In case permissions are assigned to user, get corresponding role
-                    if ($type == 'user' && !empty($userPermission)) {
-                        $role = isset($userPermission[$region]) ? $userPermission[$region] : $role;
-                    }
-
                     foreach ($itemPermissions as $itemName => $detail) {
                         // Get controller of action
                         $temp = explode('.', $itemName);
@@ -241,11 +229,11 @@ class AuthController extends BeController
                         $itemPermissions[$itemName] = $detail;
                     }
                     $rolePermissions[$region] = $itemPermissions;
-                }
 
-                // echo '<pre>';
-                // var_dump($rolePermissions);
-                // echo '</pre>';
+                    if ($type == 'user' && !empty($userPermission)) {
+                        $role = isset($userPermission[$region]) ? $userPermission[$region] : $role;var_dump($userPermission);
+                    }
+                }
 
                 return $this->render('assign', [
                     'tenantId' => $tenantId,

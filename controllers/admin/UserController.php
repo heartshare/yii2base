@@ -130,67 +130,64 @@ class UserController extends BeController
         // Get zone roles
         $adminRoles = BaseHelper::getRolesFromFile(array('admin'));
         $siteRoles = BaseHelper::getRolesFromFile(array('site'));
-
         $staffZoneRoles = [];
         $guestZoneRoles = [];
-
         foreach ($adminRoles as $role => $detail) {
             $staffZoneRoles[$role] = $detail['description'];
         }
-        
         foreach ($siteRoles as $role => $detail) {
             $guestZoneRoles[$role] = $detail['description'];
         }
 
         $tenantId = isset($_GET['tenant']) ? $_GET['tenant'] : \Yii::$app->tenant->current['id'];
 
-        // Get model
-        $model = \Yii::$app->tenant->createModel('UserForm');
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // Save User info
+        $identity = isset($_GET['identity']) ? $_GET['identity'] : null;
+        if ($identity && in_array($identity, ['staff', 'guest'])) {
+            // Get model
+            $model = \Yii::$app->tenant->createModel('UserForm');
             $user = $this->findModel($id);
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                if ($model->zone == $user->identityInfo->zone) {
+                    $user->attributes = $model->attributes;
+                    if ($user->save()) {
+                        // Save additional information
+                        $this->afterSaveUserInfo($user->id, $model, $model->zone);
 
-            $user->attributes = $model->attributes;
-            if ($user->save()) {
-                // Save additional information
-                $this->afterSaveUserInfo($user->id, $model);
-
-                Yii::$app->session->setFlash('message', ['success', Yii::t('base', 'Update User Successfully.')]);
-            } else {
-                // var_dump($user->getErrors());
-                throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
-            }
-        } else {
-            // Load attribute to model
-            $user = $this->findModel($id);
-            if ($user) {
-                if (isset($user->permissionInfo)) {
-                    $userPermission = unserialize($user->permissionInfo->item_name);
+                        Yii::$app->session->setFlash('message', ['success', Yii::t('base', 'Update User Successfully.')]);
+                    } else {
+                        // var_dump($user->getErrors());
+                        throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
+                    }
                 }
-
-                $model->attributes = $user->attributes;
-                $model->first_name = isset($user->profileInfo->first_name) ? $user->profileInfo->first_name : '';
-                $model->last_name = isset($user->profileInfo->last_name) ? $user->profileInfo->last_name : '';
-                $model->location = isset($user->profileInfo->location) ? $user->profileInfo->location : '';
-                $model->timezone = isset($user->profileInfo->timezone) ? $user->profileInfo->timezone : '';
-                $model->birthdate = isset($user->profileInfo->birthday) ? \Yii::$app->locale->toUTCTime($user->profileInfo->birthday, 'Y-m-d', 'd-m-Y') : '';
-                $model->bio = isset($user->profileInfo->bio) ? $user->profileInfo->bio : '';
-                $model->screen_name = isset($user->displayInfo->screen_name) ? $user->displayInfo->screen_name : '';
-                $model->display_name = isset($user->displayInfo->display_name) ? $user->displayInfo->display_name : '';
-                $model->zone = isset($user->identityInfo->zone) ? $user->identityInfo->zone : '';
-                $model->password = isset($user->identityInfo->password_hash) ? $user->identityInfo->password_hash : '';
-                $model->status = isset($user->identityInfo->status) ? $user->identityInfo->status : '';
-                $model->staff_zone = isset($userPermission['staff']) ? $userPermission['staff'] : '';
-                $model->guest_zone = isset($userPermission['guest']) ? $userPermission['guest'] : '';
+            } else {
+                // Load attribute to model
+                if ($user) {
+                    $model->attributes = $user->attributes;
+                    $model->first_name = isset($user->profileInfo->first_name) ? $user->profileInfo->first_name : '';
+                    $model->last_name = isset($user->profileInfo->last_name) ? $user->profileInfo->last_name : '';
+                    $model->location = isset($user->profileInfo->location) ? $user->profileInfo->location : '';
+                    $model->timezone = isset($user->profileInfo->timezone) ? $user->profileInfo->timezone : '';
+                    $model->birthdate = isset($user->profileInfo->birthday) ? \Yii::$app->locale->toUTCTime($user->profileInfo->birthday, 'Y-m-d', 'd-m-Y') : '';
+                    $model->bio = isset($user->profileInfo->bio) ? $user->profileInfo->bio : '';
+                    $model->screen_name = isset($user->displayInfo->screen_name) ? $user->displayInfo->screen_name : '';
+                    $model->display_name = isset($user->displayInfo->display_name) ? $user->displayInfo->display_name : '';
+                    $model->password = isset($user->identityInfo->password_hash) ? $user->identityInfo->password_hash : '';
+                    $model->status = isset($user->identityInfo->status) ? $user->identityInfo->status : '';
+                    $model->zone = isset($user->identityInfo->zone) ? $user->identityInfo->zone : '';
+                    $identity .= '_zone';
+                    $model->$identity = isset($user->permissionInfo->item_name) ? $user->permissionInfo->item_name : '';
+                }
             }
-        }
 
-        return $this->render('update', [
-                    'model' => $model,
-                    'tenantId' => $tenantId,
-                    'staffZoneRoles' => $staffZoneRoles,
-                    'guestZoneRoles' => $guestZoneRoles,
-                ]);
+            return $this->render('update', [
+                        'model' => $model,
+                        'tenantId' => $tenantId,
+                        'staffZoneRoles' => $staffZoneRoles,
+                        'guestZoneRoles' => $guestZoneRoles,
+                    ]);
+        } else {
+            throw new NotFoundHttpException(Yii::t('base', 'User Identity is not existed.'));
+        }
     }
 
     /**
@@ -231,32 +228,28 @@ class UserController extends BeController
      *
      * @param $model
      */
-    protected function afterSaveUserInfo($id, $model)
+    protected function afterSaveUserInfo($id, $model, $zone)
     {
         // Assign role for user
-        $userPermission = \Yii::$app->tenant->createModel('UserPermission')->findOne(['user_id' => $id]);
-        if (empty($userPermission)) {
-            $userPermission = \Yii::$app->tenant->createModel('UserPermission');
+        $elementZone = $zone . '_zone';
+        if (isset($model->$elementZone)) {
+            $userPermission = \Yii::$app->tenant->createModel('UserPermission')->findOne(['user_id' => $id]);
+            if (empty($userPermission)) {
+                $userPermission = \Yii::$app->tenant->createModel('UserPermission');
+            }
+            $userPermission->store = $model->store;
+            $userPermission->user_id = $id;
+            $userPermission->item_name = $model->$elementZone;
+            $userPermission->date_created = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
+            $userPermission->save();
         }
-        $assignRole = [];
-        if (isset($model->staff_zone) && !empty($model->staff_zone)) {
-            $assignRole['staff'] = $model->staff_zone;
-        }
-        if (isset($model->guest_zone) && !empty($model->guest_zone)) {
-            $assignRole['guest'] = $model->guest_zone;
-        }
-        $userPermission->store = $model->store;
-        $userPermission->user_id = $id;
-        $userPermission->item_name = serialize($assignRole);
-        $userPermission->date_created = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
-        $userPermission->save();
 
         // Create - Update UserIdentity
         $userIdentity = \Yii::$app->tenant->createModel('UserIdentity')->findOne(['user_id' => $id]);
         if (empty($userIdentity)) {
             $userIdentity = \Yii::$app->tenant->createModel('UserIdentity');
         }
-var_dump($model->status);
+
         $userIdentity->store = $model->store;
         $userIdentity->user_id = $id;
         $userIdentity->zone = $model->zone;

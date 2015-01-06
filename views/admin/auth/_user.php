@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Url;
+use gxc\yii2base\models\user\UserIdentity;
 ?>
 
 <div class="tab-ctn info-wrapper">
@@ -68,12 +69,18 @@ use yii\helpers\Url;
                                 </td>
                                 <td><?= $user->email ?></td>
                                 <td style="width:20%;"  class="info-small">21/01/2014 02:02 PM</td>
-                                <td><span class="statusDot statusDot-success"></span></td>
+                                <td>
+                                    <?php if (isset($user->identityInfo->status) && $user->identityInfo->status == UserIdentity::STATUS_ACTIVE): ?>
+                                    <span class="statusDot statusDot-success"></span>
+                                    <?php else: ?>
+                                    <span class="statusDot statusDot-danger"></span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><span class="label label-danger">Owner</span></td>
                                 <td>
                                     <div class="btn-group pull-right grid-action-buttons">
-                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/user/update', 'id' => $user->id]) ?>" title="Update" data-pjax="0"><span class="fa fa-pencil"></span>Update</a>
-                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/auth/assign', 'id' => $user->id, 'type' => 'user', 'module' => isset($currentModule->module) ? $currentModule->module : 'app', 'tenant' => $tenantId]) ?>" title="Update" data-pjax="0"><span class="fa fa-tasks"></span>Permissions</a>
+                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/user/update', 'id' => $user->id, 'identity' => $user->identityInfo->zone]) ?>" title="Update" data-pjax="0"><span class="fa fa-pencil"></span>Update</a>
+                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/auth/assign', 'id' => $user->id, 'identity' => $user->identityInfo->zone, 'type' => 'user', 'module' => isset($currentModule->module) ? $currentModule->module : 'app', 'tenant' => $tenantId]) ?>" title="Update" data-pjax="0"><span class="fa fa-tasks"></span>Permissions</a>
                                         <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/user/delete', 'id' => $user->id]) ?>" title="Delete" data-confirm="Are you sure you want to delete this item?" data-method="post" data-pjax="0"><span class="fa fa-trash-o"></span> Delete</a>
                                     </div>
                                 </td>

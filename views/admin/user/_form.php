@@ -19,13 +19,22 @@ $layoutAsset = LayoutAsset::register($this);
                 'enableAjaxValidation' => true,
                 'options' => [
                     'validateOnSubmit' => true,
-                    // 'class' => 'base-form',
                 ]
             ]);
         ?>
             <div class="info-item">
                 <div class="info-item-header with-form-control form-header">
-                    <h1><?= \Yii::t('base', 'User'); ?> / <?= \Yii::t('base', 'Add new User'); ?></h1>
+                    <h1>
+                    <?php foreach ($breadcrumbs as $k => $item): ?>
+                        <?php if (isset($item['url'])): ?>
+                            <a href="<?= $item['url'] ?>"><?= $item['label'] ?></a>
+                        <?php else: ?>
+                            <?= $item['label'] ?>
+                        <?php endif; ?>
+
+                        <?php if ($k < count($breadcrumbs) - 1): ?> / <?php endif; ?>
+                    <?php endforeach; ?>
+                    </h1>
 
                     <div class="buttons">
                         <?= \yii\helpers\Html::a(Yii::t('base', 'CANCEL'), Url::toRoute(['admin/auth/', 'type' => 'user']), ['class' => 'btn btn-default']) ?>
@@ -71,7 +80,7 @@ $layoutAsset = LayoutAsset::register($this);
                             </div>
                         </div>
 
-                        <div class="inner-form row">
+                        <div class="inner-form row" <?= isset($_GET['id']) ? 'style="display:none"' : '' ?>>
                             <div class="col-md-8">
                                 <label class="control-label"><?= \Yii::t('base', 'This is an account of'); ?></label>
                                 <?= $form->field($model, 'zone', ['template' => '{input}'])->radioList(User::getUserZones(), ['class' => 'zone-radio', 'separator' => '<br>']); ?>
