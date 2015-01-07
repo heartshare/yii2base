@@ -13,7 +13,7 @@ $layoutAsset = LayoutAsset::register($this);
 
 <div class="tab-ctn info-wrapper">
     <div class="content-zone">
-        <?= $this->render('../widgets/_notification.php') ?>
+        <?= $this->render('../widgets/_notifications.php') ?>
         <?php $form = ActiveForm::begin([
                 'id' => $formId,
                 'enableAjaxValidation' => true,

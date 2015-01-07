@@ -38,7 +38,7 @@ use gxc\yii2base\models\user\UserIdentity;
                             </select>
                         </div>
                         <div class="form-group">
-                            <a href="<?= Url::toRoute(['admin/user/create']) ?>" class="btn btn-sm btn-warning"> <?= Yii::t('base', 'ADD NEW USER') ?> <i class="fa fa-plus fa-fw"></i></a>
+                            <a href="<?= Url::toRoute(['admin/user/create', 'tenant' => $tenantId]) ?>" class="btn btn-sm btn-warning"> <?= Yii::t('base', 'ADD NEW USER') ?> <i class="fa fa-plus fa-fw"></i></a>
                         </div>
                     </form>
                     <div class="clearfix"></div>
