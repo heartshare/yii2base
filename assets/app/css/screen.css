@@ -218,7 +218,7 @@ table.tbl-grid tbody > tr > td:first-child {text-align: left;}
 .info-wrapper .info-item{padding: 15px 15px 15px 15px;}
 .info-wrapper .info-item .info-item-header {overflow: hidden; margin: 0; padding: 0 0 5px 0; border-bottom: 1px solid #ddd; position: relative}
 .info-wrapper .info-item .info-item-header h1{font-size: 18px; display: inline-block; padding: 0; margin: 0; color:#777;font-weight: 400; line-height: 34px; vertical-align: middle}
-.info-wrapper .info-item .info-item-header h1 a{font-size:14px; position: relative;}
+.info-wrapper .info-item .info-item-header h1 a{font-size:18px; position: relative;}
 .info-wrapper .info-item .grid-header h1 {font-weight: bold !important;color: #333;text-shadow: 1px 1px 0 #fff;line-height: 40px; vertical-align: middle; padding:0 10px;}
 .info-wrapper .info-item .grid-header h1 .label {text-shadow: none;}
 .info-wrapper .info-item .info-item-header .btn-permissions {display: block; padding: 5px 10px;}

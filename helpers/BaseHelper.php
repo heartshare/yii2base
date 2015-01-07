@@ -318,4 +318,21 @@ class BaseHelper
 			throw new NotFoundHttpException(\Yii::t('base','Module Regions are empty.'));
 		}
 	}
+
+	public static function printErrors($errors = [])
+	{
+		$errorArr = [];
+		if (!empty($errors)) {
+			foreach ($errors as $type => $error) {
+				foreach ($error as $k => $err) {
+					$errorArr[] = $err;
+				}
+			}
+		}
+		
+		$errResult = implode('<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $errorArr);
+
+		Yii::$app->session->setFlash('message', ['error', Yii::t('base', $errResult), false]);
+		
+	}
 }

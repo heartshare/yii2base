@@ -1,14 +1,17 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
-$this->title = Yii::t('base', 'Create {modelClass}: ', [
+$this->title = Yii::t('base', 'Create {modelClass}', [
     'modelClass' => 'User',
 ]) . ' ' . $model->id;
 $this->params['formId'] = 'user-create-form';
-$this->params['breadcrumbs'][] = ['label' => Yii::t('base', 'Users'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('base', 'Update');
+// $this->params['breadcrumbs'][] = ['label' => Yii::t('base', 'Users'), 'url' => ['index']];
+// $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+// $this->params['breadcrumbs'][] = Yii::t('base', 'Update');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('base', 'Users'), 'url' => Url::toRoute(['admin/auth', 'type' => 'user'])];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('base', 'Create new User')];
 ?>
 
 <div class="row">
@@ -41,7 +44,7 @@ $this->params['breadcrumbs'][] = Yii::t('base', 'Update');
                         ],
                         [
                             'label' => '<i class="fa fa-users"></i> Users',
-                            'content' => $this->render('_form', ['model' => $model, 'staffZoneRoles' => $staffZoneRoles, 'guestZoneRoles' => $guestZoneRoles, 'formId' => $this->params['formId']]),
+                            'content' => $this->render('_form', ['model' => $model, 'staffZoneRoles' => $staffZoneRoles, 'guestZoneRoles' => $guestZoneRoles, 'formId' => $this->params['formId'], 'breadcrumbs' => $this->params['breadcrumbs']]),
                             'active' => true
                         ],
                         [

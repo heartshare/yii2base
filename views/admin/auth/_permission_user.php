@@ -42,6 +42,7 @@ use yii\widgets\ActiveForm;
                     ]);
                 ?>
                     <div class="table-responsive col-md-7" style="margin-top: 10px;">
+                        <div>This user has permission from roles: </div>
                         <?php foreach ($rolePermissions as $region => $itemRegion): ?>
                         <table class="table table-hover table-5">
                             <thead>
