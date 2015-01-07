@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @link http://www.gxccms.com/
+ * @copyright Copyright (c) 2014 GXC CMS
+ * @license http://www.gxccms.com/license/yii2cms/
+ */
 namespace gxc\yii2base\models\tenant;
 
 use Yii;
@@ -8,7 +12,10 @@ use yii\data\ActiveDataProvider;
 use gxc\yii2base\models\tenant\Tenant;
 
 /**
- * TenantSearch represents the model behind the search form about `gxc\yii2base\models\tenant\Tenant`.
+ * Tenant Search | use to search on Tenant
+ *
+ * @author Tung Mang Vien <tungmv7@gmail.com>
+ * @since 2.0
  */
 class TenantSearch extends Tenant
 {

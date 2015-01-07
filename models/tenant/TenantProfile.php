@@ -1,18 +1,19 @@
 <?php
-
+/**
+ * @link http://www.gxccms.com/
+ * @copyright Copyright (c) 2014 GXC CMS
+ * @license http://www.gxccms.com/license/yii2cms/
+ */
 namespace gxc\yii2base\models\tenant;
 
 use gxc\yii2base\classes\TbActiveRecord;
 use Yii;
 
 /**
- * This is the model class for table "base_tenant_profile".
+ * Tenant Profile
  *
- * @property string $id
- * @property string $store
- * @property string $user_registered_id
- * @property string $address_registered_id
- * @property string $registered_at
+ * @author Tung Mang Vien <tungmv7@gmail.com>
+ * @since 2.0
  */
 class TenantProfile extends TbActiveRecord
 {
