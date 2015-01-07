@@ -51,7 +51,7 @@ class TenantModule extends TbActiveRecord
     public function rules()
     {
         return [
-            [['module', 'store', 'plan', 'expiry_mode'], 'required'],
+            [['module', 'plan', 'expiry_mode'], 'required'],
             [['permissions'], 'string'],
             [['expiry_mode', 'status'], 'integer'],
             [['expired_at'], 'safe'],
@@ -98,7 +98,8 @@ class TenantModule extends TbActiveRecord
 
     public function getUpdatedUser()
     {
-        return $this->hasOne(UserDisplay::classname(), ['updated_by' => 'user_id']);
+        $userDisplay = \Yii::$app->tenant->getModel('UserDisplay', 'class');
+        return $this->hasOne($userDisplay::classname(), ['user_id' => 'updated_by']);
     }
 
     public static function calculateExpireTimeByManual()
@@ -116,19 +117,19 @@ class TenantModule extends TbActiveRecord
         return ModuleHelper::getModule($id)['icon'];
     }
 
-    public function getModuleInfo()
+    public static function getModuleInfo($tid, $module)
     {
         $html = '';
-        $moduleInfo = ModuleHelper::getModule($this->module);
+        $moduleInfo = ModuleHelper::getModule($module->module);
         if(!empty($moduleInfo)) {
             $html .= Html::a(Html::tag('strong', $moduleInfo['name']),
-                ['module-form', 'mid' => $this->id, 'tid' => 1],
+                ['module-form', 'mid' => $module->id, 'tid' => $tid],
                 [
                     'data-toggle' => 'modal',
                     'data-target' => '#module-form',
                 ]);
             $html .= Html::tag('br');
-            $html .= Html::tag('span', Yii::t('base', 'Plan') . ': '. $moduleInfo['plans'][$this->plan]['name'], ['class' => 'info-desc']);
+            $html .= Html::tag('span', Yii::t('base', 'Plan') . ': '. $moduleInfo['plans'][$module->plan]['name'], ['class' => 'info-desc']);
         }
         return $html;
 
@@ -199,18 +200,18 @@ class TenantModule extends TbActiveRecord
         }
 
         // check mode
-        if ($model->expiry_mode == self::EXPIRED_MODE_NONE)
+        if ($model->expiry_mode == self::EXPIRED_MODE_NONE) {
             $html .= Html::tag('p', Html::tag('b', Yii::t('base', 'Never expires')) . str_replace('"', '\'', $status), ['style' => 'margin:0;']);
 
-        elseif ($model->expiry_mode == self::EXPIRED_MODE_TIME)
+        } elseif ($model->expiry_mode == self::EXPIRED_MODE_TIME) {
             $html .= TimeFromX::widget([
                 'name' => 'tenant_module_expire',
                 'value' => $expired_at,
                 'template' => Yii::t('base', 'Expires in ') . ' <b>{time}</b>' . str_replace('"', '\'', $status),
                 'options' => ['style' => 'margin:0;']
             ]);
-
-        $html .= Html::tag('span', date('d/M/Y', $expired_at), ['info-desc']);
+            $html .= Html::tag('span', date('d/M/Y', $expired_at), ['info-desc']);
+        }
 
         // return html
         return $html;
@@ -221,7 +222,7 @@ class TenantModule extends TbActiveRecord
         $html = '';
 
         $html .= Html::tag('p', Yii::t('base', 'Updated') . ': ' . Yii::t('base', "Manual"), ['style' => 'margin: 0;']);
-        $html .= Html::tag('p', Yii::t('base', 'by') . $model->updatedUser->display_name, ['style' => 'margin: 0;']);
+        $html .= Html::tag('p', Yii::t('base', 'by') . ' ' . $model->updatedUser->display_name, ['style' => 'margin: 0;']);
 
         return $html;
     }

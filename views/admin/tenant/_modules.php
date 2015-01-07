@@ -33,8 +33,8 @@
                                 'class'=>'yii\grid\DataColumn',
                                 'options' => ['style' => 'width:20%;'],
                                 'attribute' => 'module',
-                                'content' => function ($model){
-                                    return $model->getModuleInfo($model);
+                                'content' => function ($model, $tenant) use ($tenant){
+                                    return $model->getModuleInfo($tenant->id, $model);
                                 }
                             ],
                             [

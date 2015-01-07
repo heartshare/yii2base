@@ -150,21 +150,23 @@ class TenantController extends BeController
      */
     protected function afterSaveTenantInfo($model, $tenant)
     {
-
         // create user if not exist
-        $userClass = \Yii::$app->tenant->createModel('User');
+        $userClass = \Yii::$app->tenant->getModel('User', 'class');
         // get user store settings
         $userStore = \Yii::$app->tenant->getModel((new \ReflectionClass($userClass))->getShortName(), 'store');
         // find user
         $user = $userClass::findOne(['email' => $model->email, 'store' => $model->$userStore]);
         if (empty($user)) {
-            $user = \Yii::$app->tenant->createModel('User');
+            $user = \Yii::$app->tenant->createModel((new \ReflectionClass($userClass))->getShortName());
             $user->email = $model->email;
             $user->store = $tenant->$userStore;
             if($user->save()){
                 // create user display
                 $userDisplay = \Yii::$app->tenant->createModel('UserDisplay');
-                $userDisplay->store = $user->store;
+                // get user display store settings
+                $userDisplayStore = \Yii::$app->tenant->getModel((new \ReflectionClass($userDisplay))->getShortName(), 'store');
+                // save user display information
+                $userDisplay->store = $model->$userDisplayStore;
                 $userDisplay->user_id = $user->id;
                 $userDisplay->display_name = $userDisplay->screen_name = Yii::t('base', 'Unknown');
                 $userDisplay->save();
@@ -172,17 +174,18 @@ class TenantController extends BeController
         }
 
         // create tenant profile if not exist
-        $tenantProfileClass = \Yii::$app->tenant->createModel('TenantProfile');
+        $tenantProfileClass = \Yii::$app->tenant->getModel('TenantProfile', 'class');
         // get tenant profile store settings
         $tenantProfileStore = \Yii::$app->tenant->getModel((new \ReflectionClass($tenantProfileClass))->getShortName(), 'store');
         // find tenant profile
         $tenantProfile = $tenantProfileClass::findOne(['store' => $model->$tenantProfileStore]);
         if (empty($tenantProfile) && !empty($user->id)) {
-            $tenantProfile = $tenantProfileClass;
+            $tenantProfile = Yii::$app->tenant->createModel('TenantProfile');
             $tenantProfile->store = $tenant->$tenantProfileStore;
             $tenantProfile->user_registered_id = $user->id;
             $tenantProfile->registered_at = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
             $tenantProfile->save();
+
         // save new owner user info
         } else {
             $tenantProfile->user_registered_id = $user->id;
@@ -226,7 +229,7 @@ class TenantController extends BeController
      */
     protected function findModel($id)
     {
-        $tenantClass = \Yii::$app->tenant->createModel('Tenant');
+        $tenantClass = \Yii::$app->tenant->getModel('Tenant', 'class');
 
         if (($model = $tenantClass::findOne($id)) !== null) {
             return $model;
@@ -247,7 +250,7 @@ class TenantController extends BeController
         $model = $this->findModel($id);
 
         $contact = Yii::$app->tenant->createModel('TenantContactForm');
-        $addressClass = Yii::$app->tenant->createModel('Address');
+        $addressClass = Yii::$app->tenant->getModel('Address', 'class');
         // get address store settings
         $addressStore = \Yii::$app->tenant->getModel((new \ReflectionClass($addressClass))->getShortName(), 'store');
         // find address
@@ -289,7 +292,6 @@ class TenantController extends BeController
                     $tenantProfile->address_registered_id = $address->id;
                     $tenantProfile->save();
                 }
-
                 // flash successfully
                 // no need flash because redirect to difference view
                 // Yii::$app->session->setFlash('message', ['success', 'Update Tenant Contact Information Successfully.']);
@@ -332,7 +334,6 @@ class TenantController extends BeController
      */
     public function actionModules($id)
     {
-
         $tenant = $this->findModel($id);
         $modules = Yii::$app->tenant->createModel('TenantModuleSearch')->search(Yii::$app->request->queryParams);
         return $this->render('tabs', [
@@ -355,11 +356,11 @@ class TenantController extends BeController
     public function actionModuleForm($tid, $mid)
     {
         $tenant = $this->findModel($tid);
-        $modelClass = Yii::$app->tenant->createModel('TenantModule');
+        $modelClass = Yii::$app->tenant->getModel('TenantModule', 'class');
         // get tenant module store settings
         $tenantModuleStore = \Yii::$app->tenant->getModel((new \ReflectionClass($modelClass))->getShortName(), 'store');
 
-        $model = !empty($mid) ? $modelClass::findOne(['id' => $mid]) : $modelClass;
+        $model = !empty($mid) ? $modelClass::findOne(['id' => $mid]) : Yii::$app->tenant->createModel((new \ReflectionClass($modelClass))->getShortName());
         $title = !empty($mid) ? Yii::t('base', 'Update Module') . ' #' . $model->id : Yii::t('base', 'Add new module');
 
         if (!Yii::$app->request->isPjax && Yii::$app->request->isAjax && $model->load(Yii::$app->request->post()))
@@ -374,7 +375,7 @@ class TenantController extends BeController
             $model->updated_by = Yii::$app->user->id;
             $model->updated_mode = $modelClass::UPDATE_MODE_MANUAL;
             $model->store = $tenant->$tenantModuleStore;
-            $model->status = TenantModule::STATUS_ACTIVE;
+            $model->status = $modelClass::STATUS_ACTIVE;
 
             if($model->save())
                 Yii::$app->session->setFlash('message', ['success', 'Update Tenant Module Successfully.']);
@@ -399,7 +400,7 @@ class TenantController extends BeController
     {
         if(Yii::$app->request->isAjax) {
 
-            $tenantModuleClass = Yii::$app->tenant->createModel("TenantModule");
+            $tenantModuleClass = Yii::$app->tenant->getModel("TenantModule", 'class');
             $moduleInfo = $tenantModuleClass::getModuleExtraInfo($id);
 
             return json_encode(['module' => $moduleInfo[0], 'plans' => $moduleInfo[1]]);
