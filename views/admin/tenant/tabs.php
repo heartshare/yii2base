@@ -17,6 +17,7 @@
         </div>-->
     </header>
 </div>
+<div class="row"><?= $this->render('../widgets/_notification.php', ['style' => 'margin-top:0;']) ?></div>
 <div class="row">
     <section class="main-ctn">
         <div class="inner">

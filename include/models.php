@@ -16,7 +16,7 @@ return [
 	],
     'TenantProfile' => [
         'class' => 'gxc\yii2base\models\tenant\TenantProfile',
-        'store' => ''
+        'store' => 'content_store'
     ],
 	'TenantSearch' => [
 		'class' => 'gxc\yii2base\models\tenant\TenantSearch',
@@ -87,7 +87,7 @@ return [
 	// Address Models
 	'Address' => [
 		'class' => 'gxc\yii2base\models\address\Address',
-		'store' => ''
+		'store' => 'content_store'
 	]
 
 ];

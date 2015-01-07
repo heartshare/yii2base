@@ -10,6 +10,7 @@ namespace gxc\yii2base\models\tenant;
 use gxc\yii2base\helpers\LocalizationHelper;
 use gxc\yii2base\models\address\Address;
 use gxc\yii2base\models\user\User;
+use gxc\yii2base\widgets\TimeFromX;
 use Yii;
 use yii\helpers\Html;
 
@@ -99,7 +100,9 @@ class Tenant extends TbActiveRecord
 
     public function getProfile()
     {
-        return $this->hasOne(TenantProfile::classname(), ['store' => 'app_store']);
+        // get tenant profile store settings
+        $tenantProfileStore = \Yii::$app->tenant->getModel((new \ReflectionClass(TenantProfile::classname()))->getShortName(), 'store');
+        return $this->hasOne(TenantProfile::classname(), ['store' => $tenantProfileStore]);
     }
 
     public function getOwner()
@@ -209,13 +212,15 @@ class Tenant extends TbActiveRecord
 
         // get registered time
         // format: <p class="join-des"><span>Registered 20 days ago.</span></p>
-        // we use moment.js fromNow from unix timestamp to optimize
-        // http://momentjs.com/docs/#/displaying/fromnow/
         if($view !== false && !empty($tenant->profile)) {
             $duration = Yii::$app->locale->toLocalTime($tenant->profile->registered_at, null)->getTimestamp();
-            $html .= "\n" . Html::tag('p', Html::hiddenInput('registered_time_ago', $duration, ['id' => 'duration_' . $tenant->id]), ['class' => 'join-des']);
-            $durationJs = '$("#duration_'.$tenant->id.'").parent().html("<span>'.Yii::t('base', 'Registered ').'"+moment.unix($("#duration_'.$tenant->id.'").val()).fromNow()+"</span>");';
-            $view->registerJs($durationJs, View::POS_READY);
+            $html .= TimeFromX::widget([
+                'view' => $view,
+                'name' => 'registered_time_ago',
+                'value' => $duration,
+                'options' => ['class' => 'join-des'],
+                'template' => Yii::t('base', 'Registered') . ' {time} '
+            ]);
         }
 
         return $html;

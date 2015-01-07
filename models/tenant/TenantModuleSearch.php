@@ -51,25 +51,30 @@ class TenantModuleSearch extends Tenant
      */
     public function search($params)
     {
-        if(isset($params['id'])) {
-
-            $tenant = Tenant::findOne(['id' => $params['id']]);
-            $query = TenantModule::find(['store' => 'a.6f9.r27']);
-//                if($tenant)
-//                    $query->andFilterWhere(['store' => $tenant->app_store]);
-
+        // params['id'] is tenant id - required to load all modules of this tenant
+        if (isset($params['id'])) {
+            $tenantClass = Yii::$app->tenant->createModel('Tenant');
+            // find tenant
+            $tenant = $tenantClass::findOne(['id' => $params['id']]);
+            if (!empty($tenant)) {
+                $tenantModuleClass = Yii::$app->tenant->createModel('TenantModule');
+                // get tenant module store settings
+                $tenantModuleStore = \Yii::$app->tenant->getModel((new \ReflectionClass($tenantModuleClass))->getShortName(), 'store');
+                // find tenant module
+                $query = $tenantModuleClass::find();
+                $query->andWhere(['store' => $tenant->$tenantModuleStore]);
                 $dataProvider = new ActiveDataProvider([
                     'query' => $query,
                     'pagination' => [
                         'pageSize' => 10
                     ]
                 ]);
-
                 if (!($this->load($params) && $this->validate())) {
                     return $dataProvider;
                 }
-
                 return $dataProvider;
+            } else
+                return false;
         } else {
             return false;
         }

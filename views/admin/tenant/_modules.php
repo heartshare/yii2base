@@ -39,9 +39,16 @@
                             ],
                             [
                                 'class'=>'yii\grid\DataColumn',
-                                'attribute' => 'update_time',
+                                'attribute' => 'expired_at',
                                 'content' => function ($model){
-                                    return \gxc\yii2base\models\tenant\TenantModule::renderUpdateTime($model);
+                                    return $model->renderExpiredAt($model);
+                                }
+                            ],
+                            [
+                                'class'=>'yii\grid\DataColumn',
+                                'attribute' => 'updated_by',
+                                'content' => function ($model){
+                                    return $model->renderUpdatedBy($model);
                                 }
                             ],
                             [

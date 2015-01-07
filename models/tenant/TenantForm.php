@@ -44,8 +44,31 @@ class TenantForm extends Model{
             [['domain', 'system_domain'], 'url'],
             [['name', 'domain', 'system_domain', 'status', 'email'], 'required'],
             [['email'], 'email'],
-            [['app_store', 'content_store', 'resource_store'], 'required', 'on' => 'update']
+            [['app_store', 'content_store', 'resource_store'], 'required', 'on' => 'update'],
+            [['domain', 'system_domain'], 'validateDomain'],
         ];
+    }
+
+    /**
+     * validate domain
+     */
+    public function validateDomain($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $tenantClass = Yii::$app->tenant->createModel("Tenant");
+            $tenant = $tenantClass::find();
+            $tenant->andFilterWhere(['domain' => $this->$attribute]);
+            $tenant->orFilterWhere(['system_domain' => $this->$attribute]);
+
+            // exclude current tenant id on update mode
+            if(!empty($this->id))
+                $tenant->andOnCondition('`id` <> :id', [':id' => $this->id]);
+            if ($tenant->exists()) {
+                $this->addError($attribute, Yii::t('base', 'This domain was added with other tenant.'));
+                return false;
+            }
+        }
+        return true;
     }
 
     public function attributeLabels()

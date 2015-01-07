@@ -42,11 +42,12 @@ class TimeFromX extends InputWidget {
     public $prefix = 'duration_';
     public $target;
     public $template = '{time}';
+    public $wrapperTag = 'p';
 
 
     public function run()
     {
-        echo Html::tag('p', Html::hiddenInput($this->name, $this->value, ['id' => $this->prefix . $this->id]), $this->options);
+        echo Html::tag($this->wrapperTag, Html::hiddenInput($this->name, $this->value, ['id' => $this->prefix . $this->id]), $this->options);
 
         // check if not set target HTML element id
         // set target id is current hidden input

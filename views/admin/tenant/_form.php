@@ -11,7 +11,8 @@ $layoutAsset = LayoutAsset::register($this);
         'id' => $formId,
         'options' => [
             'class' => 'base-form',
-        ]
+        ],
+        'enableAjaxValidation' => true
     ]);
     ?>
     <div class="row section section-first">
@@ -24,6 +25,7 @@ $layoutAsset = LayoutAsset::register($this);
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-12">
+                            <?= \yii\helpers\Html::activeHiddenInput($model, 'id') ?>
                             <?= $form->field($model, 'email')->textInput(['maxlength' => 128]) ?>
                         </div>
                         <div class="col-md-12">

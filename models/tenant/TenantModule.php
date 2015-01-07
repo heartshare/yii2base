@@ -7,6 +7,8 @@
 
 namespace gxc\yii2base\models\tenant;
 
+use gxc\yii2base\models\user\UserDisplay;
+use gxc\yii2base\widgets\TimeFromX;
 use Yii;
 
 use gxc\yii2base\classes\TbActiveRecord;
@@ -22,9 +24,8 @@ use yii\helpers\Html;
  */
 class TenantModule extends TbActiveRecord
 {
-    const EXPIRED_MODE_TIME = 1;
-    const EXPIRED_MODE_SUBSCRIPTION = 2;
-    const EXPIRED_MODE_PARTNER = 3;
+    const EXPIRED_MODE_NONE = 1;
+    const EXPIRED_MODE_TIME = 2;
 
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 2;
@@ -64,11 +65,9 @@ class TenantModule extends TbActiveRecord
         parent::beforeSave($this->isNewRecord);
 
         $this->updated_at = Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
-        if ($this->isNewRecord) {
+        if (empty($this->expired_at) && $this->expiry_mode != self::EXPIRED_MODE_NONE)
+            $this->expired_at = Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
 
-        } else {
-
-        }
         return true;
     }
 
@@ -92,10 +91,14 @@ class TenantModule extends TbActiveRecord
     public function getExpiredModes()
     {
         return [
-            self::EXPIRED_MODE_TIME => Yii::t('base', 'Expired at a Specific time'),
-            self::EXPIRED_MODE_SUBSCRIPTION => Yii::t('base', 'Expired by Subscription Plan'),
-            self::EXPIRED_MODE_PARTNER => Yii::t('base', 'Expired by Partner Contraction')
+            self::EXPIRED_MODE_NONE => Yii::t('base', 'Never expire'),
+            self::EXPIRED_MODE_TIME => Yii::t('base', 'Expired at a Specific time')
         ];
+    }
+
+    public function getUpdatedUser()
+    {
+        return $this->hasOne(UserDisplay::classname(), ['updated_by' => 'user_id']);
     }
 
     public static function calculateExpireTimeByManual()
@@ -163,8 +166,63 @@ class TenantModule extends TbActiveRecord
         return [$module, $plans];
     }
 
-    public static function renderUpdateTime($model)
+    /**
+     * render expired at information
+     *
+     * @param $model
+     * @return string
+     */
+    public static function renderExpiredAt($model)
     {
+        $html = '';
 
+        $expired_at = Yii::$app->locale->toLocalTime($model->expired_at, null)->getTimestamp();
+
+        // set status html
+        switch ($model->status) {
+            case self::STATUS_ACTIVE:
+            case self::STATUS_NEAR_EXPIRE_WEEK:
+                $status = Html::tag('span', '', ['class' => 'statusDot statusDot-success']);
+                break;
+
+            case self::STATUS_PENDING:
+                $status = Html::tag('span', '', ['class' => 'statusDot statusDot-warning']);
+                break;
+
+            case self::STATUS_INACTIVE:
+            case self::STATUS_NEAR_EXPIRE_DAY:
+                $status = Html::tag('span', '', ['class' => 'statusDot statusDot-danger']);
+                break;
+
+            default:
+                $status = '';
+        }
+
+        // check mode
+        if ($model->expiry_mode == self::EXPIRED_MODE_NONE)
+            $html .= Html::tag('p', Html::tag('b', Yii::t('base', 'Never expires')) . str_replace('"', '\'', $status), ['style' => 'margin:0;']);
+
+        elseif ($model->expiry_mode == self::EXPIRED_MODE_TIME)
+            $html .= TimeFromX::widget([
+                'name' => 'tenant_module_expire',
+                'value' => $expired_at,
+                'template' => Yii::t('base', 'Expires in ') . ' <b>{time}</b>' . str_replace('"', '\'', $status),
+                'options' => ['style' => 'margin:0;']
+            ]);
+
+        $html .= Html::tag('span', date('d/M/Y', $expired_at), ['info-desc']);
+
+        // return html
+        return $html;
+    }
+
+    public static function renderUpdatedBy($model)
+    {
+        $html = '';
+
+        $html .= Html::tag('p', Yii::t('base', 'Updated') . ': ' . Yii::t('base', "Manual"), ['style' => 'margin: 0;']);
+        $html .= Html::tag('p', Yii::t('base', 'by') . $model->updatedUser->display_name, ['style' => 'margin: 0;']);
+
+        return $html;
     }
 }

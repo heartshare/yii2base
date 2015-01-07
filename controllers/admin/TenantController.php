@@ -7,14 +7,13 @@
 
 namespace gxc\yii2base\controllers\admin;
 
-use gxc\yii2base\models\tenant\TenantModule;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
-use gxc\yii2base\classes\BeController;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
+
+use gxc\yii2base\classes\BeController;
 
 /**
  * Tenant Controller of Base Module
@@ -62,6 +61,12 @@ class TenantController extends BeController
     {
         $model = \Yii::$app->tenant->createModel('TenantForm');
 
+        // ajax validation
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
             // save tenant info
@@ -76,7 +81,11 @@ class TenantController extends BeController
                 Yii::$app->session->setFlash('message', ['success', Yii::t('base', 'Create New Tenant Successfully.')]);
                 return $this->redirect(['view', 'id' => $tenant->id]);
             } else {
-                throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
+                // flash error
+                Yii::$app->session->setFlash('message', ['error', Yii::t('base', 'Error when save new Tenant.')]);
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
             }
         } else {
             return $this->render('create', [
@@ -94,6 +103,13 @@ class TenantController extends BeController
     public function actionUpdate($id)
     {
         $model = \Yii::$app->tenant->createModel('TenantForm');
+
+        // ajax validation
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
             // save tenant info
@@ -108,7 +124,11 @@ class TenantController extends BeController
                 Yii::$app->session->setFlash('message', ['success', 'Update Tenant Successfully.']);
                 return $this->redirect(['update', 'id' => $tenant->id]);
             } else {
-                throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
+                // flash error
+                Yii::$app->session->setFlash('message', ['error', Yii::t('base', 'Error when update Tenant.') . ' #' . $tenant->id]);
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
             }
         } else {
             // load attribute to model
@@ -130,13 +150,17 @@ class TenantController extends BeController
      */
     protected function afterSaveTenantInfo($model, $tenant)
     {
+
         // create user if not exist
         $userClass = \Yii::$app->tenant->createModel('User');
-        $user = $userClass::findOne(['email' => $model->email, 'store' => $model->app_store]);
+        // get user store settings
+        $userStore = \Yii::$app->tenant->getModel((new \ReflectionClass($userClass))->getShortName(), 'store');
+        // find user
+        $user = $userClass::findOne(['email' => $model->email, 'store' => $model->$userStore]);
         if (empty($user)) {
             $user = \Yii::$app->tenant->createModel('User');
             $user->email = $model->email;
-            $user->store = $tenant->app_store;
+            $user->store = $tenant->$userStore;
             if($user->save()){
                 // create user display
                 $userDisplay = \Yii::$app->tenant->createModel('UserDisplay');
@@ -149,10 +173,13 @@ class TenantController extends BeController
 
         // create tenant profile if not exist
         $tenantProfileClass = \Yii::$app->tenant->createModel('TenantProfile');
-        $tenantProfile = $tenantProfileClass::findOne(['store' => $model->app_store]);
+        // get tenant profile store settings
+        $tenantProfileStore = \Yii::$app->tenant->getModel((new \ReflectionClass($tenantProfileClass))->getShortName(), 'store');
+        // find tenant profile
+        $tenantProfile = $tenantProfileClass::findOne(['store' => $model->$tenantProfileStore]);
         if (empty($tenantProfile) && !empty($user->id)) {
             $tenantProfile = $tenantProfileClass;
-            $tenantProfile->store = $tenant->app_store;
+            $tenantProfile->store = $tenant->$tenantProfileStore;
             $tenantProfile->user_registered_id = $user->id;
             $tenantProfile->registered_at = \Yii::$app->locale->toUTCTime(null, null, 'Y-m-d H:i:s');
             $tenantProfile->save();
@@ -221,8 +248,9 @@ class TenantController extends BeController
 
         $contact = Yii::$app->tenant->createModel('TenantContactForm');
         $addressClass = Yii::$app->tenant->createModel('Address');
-
-        //load from db if exist
+        // get address store settings
+        $addressStore = \Yii::$app->tenant->getModel((new \ReflectionClass($addressClass))->getShortName(), 'store');
+        // find address
         $address = $addressClass::findOne(['id' => $model->profile->address_registered_id]);
 
         if ($contact->load(Yii::$app->request->post()) && $contact->validate()) {
@@ -232,7 +260,7 @@ class TenantController extends BeController
                 $address = $addressClass;
                 $isNew = true;
             }
-            $address->store = $model->app_store;
+            $address->store = $model->$addressStore;
             $address->first_name = $contact->first_name;
             $address->last_name = $contact->last_name;
             $address->email = $contact->email;
@@ -254,7 +282,10 @@ class TenantController extends BeController
                 // check if isNewAddress
                 if($isNew) {
                     $tenantProfileClass = \Yii::$app->tenant->createModel('TenantProfile');
-                    $tenantProfile = $tenantProfileClass::findOne(['store' => $model->app_store]);
+                    // get tenant profile store settings
+                    $tenantProfileStore = \Yii::$app->tenant->getModel((new \ReflectionClass($tenantProfileClass))->getShortName(), 'store');
+                    // find tenant profile store
+                    $tenantProfile = $tenantProfileClass::findOne(['store' => $model->$tenantProfileStore]);
                     $tenantProfile->address_registered_id = $address->id;
                     $tenantProfile->save();
                 }
@@ -325,6 +356,9 @@ class TenantController extends BeController
     {
         $tenant = $this->findModel($tid);
         $modelClass = Yii::$app->tenant->createModel('TenantModule');
+        // get tenant module store settings
+        $tenantModuleStore = \Yii::$app->tenant->getModel((new \ReflectionClass($modelClass))->getShortName(), 'store');
+
         $model = !empty($mid) ? $modelClass::findOne(['id' => $mid]) : $modelClass;
         $title = !empty($mid) ? Yii::t('base', 'Update Module') . ' #' . $model->id : Yii::t('base', 'Add new module');
 
@@ -339,7 +373,7 @@ class TenantController extends BeController
             // set base values
             $model->updated_by = Yii::$app->user->id;
             $model->updated_mode = $modelClass::UPDATE_MODE_MANUAL;
-            $model->store = $tenant->app_store;
+            $model->store = $tenant->$tenantModuleStore;
             $model->status = TenantModule::STATUS_ACTIVE;
 
             if($model->save())
