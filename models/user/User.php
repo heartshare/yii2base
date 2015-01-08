@@ -67,28 +67,28 @@ class User extends TbActiveRecord
         ];
     }
 
-    public function getIdentityInfo()
+    public function getIdentity($zone = 'staff')
     {
-        // User has_one UserIdentity via UserIdentity.user_id -> id
-        return $this->hasOne(UserIdentity::className(), ['user_id' => 'id']);
+        // User has_one UserIdentity via UserIdentity.user_id -> id and UserIdentity.zone
+        return $this->hasOne(UserIdentity::className(), ['user_id' => 'id'])->where('zone = :zone', [':zone' => $zone]);
     }
 
-    public function getDisplayInfo()
+    public function getDisplay($zone = 'staff')
     {
-        // User has_one UserDisplay via UserDisplay.user_id -> id
-        return $this->hasOne(UserDisplay::className(), ['user_id' => 'id']);
+        // User has_one UserDisplay via UserDisplay.user_id -> id and UserDisplay.zone
+        return $this->hasOne(UserDisplay::className(), ['user_id' => 'id'])->where('zone = :zone', [':zone' => $zone]);
     }
 
-    public function getProfileInfo()
+    public function getProfile($zone = 'staff')
     {
-        // User has_one UserProfile via UserProfile.user_id -> id
-        return $this->hasOne(UserProfile::className(), ['user_id' => 'id']);
+        // User has_one UserProfile via UserProfile.user_id -> id and UserProfile.zone
+        return $this->hasOne(UserProfile::className(), ['user_id' => 'id'])->where('zone = :zone', [':zone' => $zone]);
     }
 
-     public function getPermissionInfo()
+     public function getPermission()
     {
         // User has_one UserPermission via UserPermission.user_id -> id
-        return $this->hasOne(UserPermission::className(), ['user_id' => 'id']);
+        return $this->hasMany(UserPermission::className(), ['user_id' => 'id']);
     }
 
     /**

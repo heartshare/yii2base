@@ -88,6 +88,7 @@ class UserController extends BeController
             $guestZoneRoles[$role] = $detail['description'];
         }
 
+        // Get Tenant
         $tenantId = isset($_GET['tenant']) ? $_GET['tenant'] : \Yii::$app->tenant->current['id'];
         $tenant = \Yii::$app->tenant->createModel('Tenant')->findOne($tenantId);
 
@@ -108,7 +109,6 @@ class UserController extends BeController
                             $identityErrors[$identity->zone][] = \Yii::t('base', ucfirst($identity->zone) . ' zone is exist');
                         }
                     }
-
                 }
             }
 
@@ -118,7 +118,7 @@ class UserController extends BeController
                     $user->attributes = $model->attributes;
                     $user->store = $tenant->$store;
                     if (!$user->save()) {
-                        BaseHelper::printErrors($user->getErrors());   
+                        BaseHelper::printErrors($user->getErrors());
                     }
                 }
 
@@ -135,6 +135,8 @@ class UserController extends BeController
             } else {
                 BaseHelper::printErrors($identityErrors);
             } 
+        } else {
+            BaseHelper::printErrors($model->getErrors());
         }
 
         return $this->render('create', [
@@ -173,7 +175,7 @@ class UserController extends BeController
             $model = \Yii::$app->tenant->createModel('UserForm');
             $user = $this->findModel($id);
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                if ($model->zone == $user->identityInfo->zone) {
+                if ($model->zone == $user->identity->zone) {
                     $user->attributes = $model->attributes;
                     if ($user->save()) {
                         // Save additional information
@@ -181,27 +183,26 @@ class UserController extends BeController
 
                         Yii::$app->session->setFlash('message', ['success', \Yii::t('base', 'Update User Successfully.')]);
                     } else {
-                        // var_dump($user->getErrors());
-                        throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
+                        BaseHelper::printErrors($user->getErrors());
                     }
                 }
             } else {
                 // Load attribute to model
                 if ($user) {
                     $model->attributes = $user->attributes;
-                    $model->first_name = isset($user->profileInfo->first_name) ? $user->profileInfo->first_name : '';
-                    $model->last_name = isset($user->profileInfo->last_name) ? $user->profileInfo->last_name : '';
-                    $model->location = isset($user->profileInfo->location) ? $user->profileInfo->location : '';
-                    $model->timezone = isset($user->profileInfo->timezone) ? $user->profileInfo->timezone : '';
-                    $model->birthdate = isset($user->profileInfo->birthday) ? \Yii::$app->locale->toUTCTime($user->profileInfo->birthday, 'Y-m-d', 'd-m-Y') : '';
-                    $model->bio = isset($user->profileInfo->bio) ? $user->profileInfo->bio : '';
-                    $model->screen_name = isset($user->displayInfo->screen_name) ? $user->displayInfo->screen_name : '';
-                    $model->display_name = isset($user->displayInfo->display_name) ? $user->displayInfo->display_name : '';
-                    $model->password = isset($user->identityInfo->password_hash) ? $user->identityInfo->password_hash : '';
-                    $model->status = isset($user->identityInfo->status) ? $user->identityInfo->status : '';
-                    $model->zone = isset($user->identityInfo->zone) ? $user->identityInfo->zone : '';
+                    $model->first_name = isset($user->profile->first_name) ? $user->profile->first_name : '';
+                    $model->last_name = isset($user->profile->last_name) ? $user->profile->last_name : '';
+                    $model->location = isset($user->profile->location) ? $user->profile->location : '';
+                    $model->timezone = isset($user->profile->timezone) ? $user->profile->timezone : '';
+                    $model->birthdate = isset($user->profile->birthday) ? \Yii::$app->locale->toUTCTime($user->profile->birthday, 'Y-m-d', 'd-m-Y') : '';
+                    $model->bio = isset($user->profile->bio) ? $user->profile->bio : '';
+                    $model->screen_name = isset($user->display->screen_name) ? $user->display->screen_name : '';
+                    $model->display_name = isset($user->display->display_name) ? $user->display->display_name : '';
+                    $model->password = isset($user->identity->password_hash) ? $user->identity->password_hash : '';
+                    $model->status = isset($user->identity->status) ? $user->identity->status : '';
+                    $model->zone = isset($user->identity->zone) ? $user->identity->zone : '';
                     $identity .= '_zone';
-                    $model->$identity = isset($user->permissionInfo->item_name) ? $user->permissionInfo->item_name : '';
+                    $model->$identity = isset($user->getPermission()->item_name) ? $user->getPermission()->item_name : '';
                 }
             }
 

@@ -53,6 +53,7 @@ use gxc\yii2base\models\user\UserIdentity;
                                 <th><a href="">Name</a></th>
                                 <th><a href="">Email</a></th>
                                 <th><a href="">Recent Login</a></th>
+                                <th><a href="">Zone</a></th>
                                 <th><a href="">Status</a></th>
                                 <th><a href="">Access Level</a></th>
                                 <th>
@@ -60,17 +61,18 @@ use gxc\yii2base\models\user\UserIdentity;
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($users as $user): ?>
+                            <?php foreach ($userIdentities as $userIdentity): ?>
                             <tr>
                                 <td><img src="images/noavatar.png" class="avatarImg" /></td>
                                 <td>
-                                    <a href="#"><strong><?= isset($user->displayInfo->display_name) ? $user->displayInfo->display_name : '' ?></strong>
+                                    <a href="#"><strong><?= isset($userIdentity->display->display_name) ? $userIdentity->display->display_name : '' ?></strong>
                                     <p class="user-join-des info-small">Joined 2 days ago</p>
                                 </td>
-                                <td><?= $user->email ?></td>
+                                <td><?= $userIdentity->basic->email ?></td>
                                 <td style="width:20%;"  class="info-small">21/01/2014 02:02 PM</td>
+                                <td><?= $userIdentity->zone ?></td>
                                 <td>
-                                    <?php if (isset($user->identityInfo->status) && $user->identityInfo->status == UserIdentity::STATUS_ACTIVE): ?>
+                                    <?php if (isset($userIdentity->status) && $userIdentity->status == UserIdentity::STATUS_ACTIVE): ?>
                                     <span class="statusDot statusDot-success"></span>
                                     <?php else: ?>
                                     <span class="statusDot statusDot-danger"></span>
@@ -79,9 +81,9 @@ use gxc\yii2base\models\user\UserIdentity;
                                 <td><span class="label label-danger">Owner</span></td>
                                 <td>
                                     <div class="btn-group pull-right grid-action-buttons">
-                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/user/update', 'id' => $user->id, 'identity' => $user->identityInfo->zone]) ?>" title="Update" data-pjax="0"><span class="fa fa-pencil"></span>Update</a>
-                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/auth/assign', 'id' => $user->id, 'identity' => $user->identityInfo->zone, 'type' => 'user', 'module' => isset($currentModule->module) ? $currentModule->module : 'app', 'tenant' => $tenantId]) ?>" title="Update" data-pjax="0"><span class="fa fa-tasks"></span>Permissions</a>
-                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/user/delete', 'id' => $user->id]) ?>" title="Delete" data-confirm="Are you sure you want to delete this item?" data-method="post" data-pjax="0"><span class="fa fa-trash-o"></span> Delete</a>
+                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/user/update', 'id' => $userIdentity->user_id, 'identity' => $userIdentity->zone]) ?>" title="Update" data-pjax="0"><span class="fa fa-pencil"></span>Update</a>
+                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/auth/assign', 'id' => $userIdentity->user_id, 'identity' => $userIdentity->zone, 'type' => 'user', 'module' => isset($currentModule->module) ? $currentModule->module : 'app', 'tenant' => $tenantId]) ?>" title="Update" data-pjax="0"><span class="fa fa-tasks"></span>Permissions</a>
+                                        <a class="pull-left btn btn-xs btn-default" href="<?= Url::toRoute(['admin/user/delete', 'id' => $userIdentity->user_id]) ?>" title="Delete" data-confirm="Are you sure you want to delete this item?" data-method="post" data-pjax="0"><span class="fa fa-trash-o"></span> Delete</a>
                                     </div>
                                 </td>
                             </tr>

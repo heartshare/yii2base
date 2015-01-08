@@ -42,7 +42,7 @@ $this->params['buttons'][] = ['label' => Yii::t('base', 'Add module for this Ten
                             ],
                             [
                                 'label' => '<i class="fa fa-users"></i> Users',
-                                'content' => $this->render('_user', ['tenantId' => $tenant->id, 'roles' => $roles, 'users' => $users]),
+                                'content' => $this->render('_user', ['tenantId' => $tenant->id, 'roles' => $roles, 'userIdentities' => $userIdentities]),
                                 'active' => true
                             ],
                             [
