@@ -40,7 +40,7 @@ class Address extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'created_by', 'updated_by', 'status'], 'integer'],
-            [['created_by', 'updated_by', 'created_at', 'updated_at'], 'required'],
+            [['created_by', 'updated_by', 'created_at', 'updated_at'], 'safe'],
             [['created_at', 'updated_at'], 'safe'],
             [['store', 'country_code', 'state_code', 'city_code', 'alias', 'postcode', 'phone', 'phone_mobile'], 'string', 'max' => 64],
             [['company', 'state', 'city'], 'string', 'max' => 255],
@@ -53,7 +53,7 @@ class Address extends \yii\db\ActiveRecord
     /**
      * init value before validate form address information
      */
-    public function beforeValidate()
+    public function beforeSave()
     {
         parent::beforeSave($this->isNewRecord);
 
