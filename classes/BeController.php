@@ -4,6 +4,7 @@ namespace gxc\yii2base\classes;
 
 use Yii;
 use yii\base\InvalidParamException;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\filters\VerbFilter;
 
@@ -15,6 +16,28 @@ use yii\filters\VerbFilter;
  */
 class BeController extends \yii\web\Controller
 {
+	// temp code to prevent error when submit
+	public function behaviors()
+	{
+		return [
+			'access' => [
+				'class' => AccessControl::className(),
+				'rules' => [
+					[
+						'actions' => ['login', 'error'],
+						'allow' => true,
+						'roles' => ['?']
+					],
+					[
+						// 'actions' => ['logout'],
+						'allow' => true,
+						'roles' => ['@'],
+					],
+				],
+			]
+		];
+	}
+
 	public function beforeAction($action)
     {
     	if (parent::beforeAction($action)) {

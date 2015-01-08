@@ -9,7 +9,6 @@ namespace gxc\yii2base\controllers\admin;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -25,17 +24,6 @@ use gxc\yii2base\classes\BeController;
  */
 class TenantController extends BeController
 {
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ]
-        ];
-    }
 
     /**
      * Lists all Tenant models.
