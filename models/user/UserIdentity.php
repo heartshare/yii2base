@@ -88,6 +88,24 @@ class UserIdentity extends TbActiveRecord implements IdentityInterface
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
+    public function getBasic()
+    {
+        // User has_one User via User.id -> user_id
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public function getProfile()
+    {
+        // User has_one User via UserProfile.user_id -> user_id and UserProfile.zone
+        return $this->hasOne(UserProfile::className(), ['user_id' => 'user_id', 'zone' => 'zone']);
+    }
+
+    public function getDisplay()
+    {
+        // User has_one User via UserDisplay.user_id -> user_id and UserDisplay.zone
+        return $this->hasOne(UserDisplay::className(), ['user_id' => 'user_id', 'zone' => 'zone']);
+    }
+
     /**
      * @inheritdoc
      */

@@ -56,13 +56,13 @@ class AuthController extends BeController
             $currentModule = \Yii::$app->tenant->createModel('TenantModule')->find()->where($arrCondition)->one();
 
             // Get all users
-            $users = \Yii::$app->tenant->createModel('User')->find()->orderBy('id DESC')->all();
+            $userIdentities = \Yii::$app->tenant->createModel('UserIdentity')->find()->orderBy('user_id DESC')->all();
 
             return $this->render('index', [
                 'currentModule' => $currentModule,
                 'tenant' => $tenant,
                 'roles' => $roles,
-                'users' => $users
+                'userIdentities' => $userIdentities
             ]);
         } else {
             throw new NotFoundHttpException(\Yii::t('base','The requested page does not exist.'));
