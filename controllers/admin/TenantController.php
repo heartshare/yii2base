@@ -298,7 +298,12 @@ class TenantController extends BeController
                 return $this->redirect(['view', 'id' => $model->id]);
 
             } else {
-                throw new NotFoundHttpException(Yii::t('base', 'The requested page does not exist.'));
+                Yii::$app->session->setFlash('message', ['error', 'Error when update Tenant Contact Information.']);
+                return $this->render('tabs', [
+                    'mode' => 'contact',
+                    'model' => $model,
+                    'contact' => $contact
+                ]);
             }
 
         } elseif (!empty($address)) {
