@@ -88,6 +88,7 @@ class UserController extends BeController
             $guestZoneRoles[$role] = $detail['description'];
         }
 
+        // Get Tenant
         $tenantId = isset($_GET['tenant']) ? $_GET['tenant'] : \Yii::$app->tenant->current['id'];
         $tenant = \Yii::$app->tenant->createModel('Tenant')->findOne($tenantId);
 
@@ -134,6 +135,8 @@ class UserController extends BeController
             } else {
                 BaseHelper::printErrors($identityErrors);
             } 
+        } else {
+            BaseHelper::printErrors($model->getErrors());
         }
 
         return $this->render('create', [

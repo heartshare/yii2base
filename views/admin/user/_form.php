@@ -42,7 +42,7 @@ $layoutAsset = LayoutAsset::register($this);
                     </div>
                 </div>
 
-                <?= $form->errorSummary($model); ?>
+                <?php // echo $form->errorSummary($model); ?>
 
                 <div class="row section section-first">
                     <div class="col-md-3 section-summary">
@@ -83,7 +83,7 @@ $layoutAsset = LayoutAsset::register($this);
                         <div class="inner-form row" <?= isset($_GET['id']) ? 'style="display:none"' : '' ?>>
                             <div class="col-md-8">
                                 <label class="control-label"><?= \Yii::t('base', 'This is an account of'); ?></label>
-                                <?= $form->field($model, 'zone', ['template' => '{input}'])->radioList(User::getUserZones(), ['class' => 'zone-radio', 'separator' => '<br>']); ?>
+                                <?= $form->field($model, 'zone', ['template' => '{input}{error}'])->radioList(User::getUserZones(), ['class' => 'zone-radio', 'separator' => '<br>']); ?>
                             </div>
                         </div>
 
