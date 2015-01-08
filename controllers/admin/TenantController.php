@@ -260,7 +260,7 @@ class TenantController extends BeController
 
             $isNew = false;
             if (empty($address)) {
-                $address = $addressClass;
+                $address = Yii::$app->tenant->createModel((new \ReflectionClass($addressClass))->getShortName());
                 $isNew = true;
             }
             $address->store = $model->$addressStore;
@@ -377,9 +377,10 @@ class TenantController extends BeController
             $model->store = $tenant->$tenantModuleStore;
             $model->status = $modelClass::STATUS_ACTIVE;
 
-            if($model->save())
+            if ($model->save()) {
                 Yii::$app->session->setFlash('message', ['success', 'Update Tenant Module Successfully.']);
-            else
+                Yii::$app->session->setFlash('modal', ['close' => true, 'waitingTime' => 5]);
+            } else
                 Yii::$app->session->setFlash('error', ['success', 'Error when update Tenant Module.']);
         }
 
@@ -399,11 +400,15 @@ class TenantController extends BeController
     public function actionSuggestModule($id)
     {
         if(Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
 
             $tenantModuleClass = Yii::$app->tenant->getModel("TenantModule", 'class');
             $moduleInfo = $tenantModuleClass::getModuleExtraInfo($id);
 
-            return json_encode(['module' => $moduleInfo[0], 'plans' => $moduleInfo[1]]);
+            return [
+                'module' => $moduleInfo[0],
+                'plans' => $moduleInfo[1]
+            ];
         }
     }
 

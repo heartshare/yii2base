@@ -18,7 +18,8 @@ use \yii\helpers\Html;
     <?php $form = ActiveForm::begin([
         'id' => 'module-form-main',
         'action' => $action,
-        'options' => ['class' => 'base-form', 'style' => 'padding:0;',
+        'options' => [
+            'class' => 'base-form', 'style' => 'padding:0;',
             'data-pjax' => true // important to use pjax submit form
         ],
         'enableAjaxValidation' => true,
@@ -28,9 +29,8 @@ use \yii\helpers\Html;
         'prompt' => Yii::t('base', '-- Select -- '),
         'onChange' => '
                     $.post("' . \yii\helpers\Url::toRoute(['suggest-module']) . '?id="+this.value+"", {_csrf: "' . Yii::$app->request->getCsrfToken() . '"}).done(function(data){
-                        var obj = JSON.parse(data);
-                        $("#module-info").html(obj.module);
-                        $("#' . Html::getInputId($model, 'plan') . '").html(obj.plans);
+                        $("#module-info").html(data.module);
+                        $("#' . Html::getInputId($model, 'plan') . '").html(data.plans);
                     });
                 '
     ]); ?>
@@ -42,8 +42,31 @@ use \yii\helpers\Html;
     <?= $form->field($model, 'expired_at')->textInput() ?>
     <div class="buttons text-right">
         <?= Html::a(Yii::t('base', 'Cancel'), '#', ['data-dismiss' => 'modal', 'class' => 'btn btn-default']); ?>
-        <?= Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-success', 'data-pax' => true]) ?>
+        <?= Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
     <?php ActiveForm::end() ?>
+    <?php
+        // modal process
+        if (Yii::$app->session->hasFlash('modal')) {
+            $modalConfig = Yii::$app->session->getFlash('modal');
+            // close modal after submit successfully
+            if(isset($modalConfig['close']) && $modalConfig['close']) {
+                $this->registerJs("
+                    setTimeout(function(){
+                        $('#module-form').modal('hide')
+                    }, 3000);
+                ");
+                $this->registerJs("
+                $('body').on('hidden.bs.modal', '.modal', function () {
+                    // clear cache and content on modal-content element
+                    $(this).removeData('bs.modal');
+                    $('.modal-content', this).empty();
+                    // rebind data to tenant modules container
+                    $.pjax.reload({container:'#tenant-modules'});
+                });
+            ");
+            }
+        }
+    ?>
     <?php \yii\widgets\Pjax::end(); ?>
 </div>
