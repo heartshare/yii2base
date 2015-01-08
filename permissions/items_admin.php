@@ -62,22 +62,25 @@ return [
 
 	// Permission Roles
 	'roles' => [		
-		'superAdmin' => [
-			'description' => 'Super Admin',			
+		'app.superAdmin' => [
+			'description' => 'Super Admin',
+			'zone' => 'staff'		
 		],
-		'admin' => [
+		'app.admin' => [
 			'description' => 'Admin',
 			'children' => [
 				'tenant.*',
 				'user.*',
 				'post.*',
-			]
+			],
+			'zone' => 'staff'
 		],
-		'user' => [
+		'app.user' => [
 			'description' => 'User',
 			'children' => [
 				'post.*',
-			]
+			],
+			'zone' => 'staff'
 		]
 	],	
 ];

@@ -218,7 +218,7 @@ class AuthController extends BeController
                         $detail['controller'] = isset($temp[0]) ? ucfirst($temp[0]) : '';
 
                         // Set active for assign roles
-                        if ($role == 'superAdmin' || (isset($detail['roles']) && in_array($role, $detail['roles']))) {
+                        if (strpos($role, 'superAdmin') !== false || (isset($detail['roles']) && in_array($role, $detail['roles']))) {
                             $detail['check'] = 1;
                         }
 

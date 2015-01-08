@@ -233,7 +233,7 @@ class BaseHelper
 			$cacheId = self::getCacheKey('permission', 'role');
 			$roles = Yii::$app->cache->get($cacheId);
 			$roles = false;
-			if ($roles == false) {
+			if ($roles === false) {
 				foreach ($regions as $i => $region) {
 					$region = 'items_' . $region . '.php';
 					$regions[$i] = $region;
@@ -246,6 +246,10 @@ class BaseHelper
 							foreach ($permissionFiles as $file) {
 								$permissions = BaseHelper::fetchArray($file);
 								if (array_key_exists('roles', $permissions)) {
+									// foreach ($permissions['roles'] as $role => $detail) {
+									// 	$roleElement = explode('.', $role);
+									// 	$roles[$roleElement[1]];
+									// }
 									$roles = array_merge($permissions['roles'], $roles);
 								}
 							}
