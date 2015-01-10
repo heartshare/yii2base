@@ -136,7 +136,9 @@ class UserController extends BeController
                 BaseHelper::printErrors($identityErrors);
             } 
         } else {
-            BaseHelper::printErrors($model->getErrors());
+            if (!empty($model->getErrors())) {
+                BaseHelper::printErrors($model->getErrors());
+            }
         }
 
         return $this->render('create', [
@@ -190,17 +192,20 @@ class UserController extends BeController
                 // Load attribute to model
                 if ($user) {
                     $model->attributes = $user->attributes;
-                    $model->first_name = isset($user->profile->first_name) ? $user->profile->first_name : '';
-                    $model->last_name = isset($user->profile->last_name) ? $user->profile->last_name : '';
-                    $model->location = isset($user->profile->location) ? $user->profile->location : '';
-                    $model->timezone = isset($user->profile->timezone) ? $user->profile->timezone : '';
-                    $model->birthdate = isset($user->profile->birthday) ? \Yii::$app->locale->toUTCTime($user->profile->birthday, 'Y-m-d', 'd-m-Y') : '';
-                    $model->bio = isset($user->profile->bio) ? $user->profile->bio : '';
-                    $model->screen_name = isset($user->display->screen_name) ? $user->display->screen_name : '';
-                    $model->display_name = isset($user->display->display_name) ? $user->display->display_name : '';
-                    $model->password = isset($user->identity->password_hash) ? $user->identity->password_hash : '';
-                    $model->status = isset($user->identity->status) ? $user->identity->status : '';
-                    $model->zone = isset($user->identity->zone) ? $user->identity->zone : '';
+                    $userProfile = $user->getProfile($identity)->one();
+                    $userDisplay = $user->getDisplay($identity)->one();
+                    $userIdentity = $user->getIdentity($identity)->one();
+                    $model->first_name = isset($userProfile->first_name) ? $userProfile->first_name : '';
+                    $model->last_name = isset($userProfile->last_name) ? $userProfile->last_name : '';
+                    $model->location = isset($userProfile->location) ? $userProfile->location : '';
+                    $model->timezone = isset($userProfile->timezone) ? $userProfile->timezone : '';
+                    $model->birthdate = isset($userProfile->birthday) ? \Yii::$app->locale->toUTCTime($userProfile->birthday, 'Y-m-d', 'd-m-Y') : '';
+                    $model->bio = isset($userProfile->bio) ? $userProfile->bio : '';
+                    $model->screen_name = isset($userDisplay->screen_name) ? $userDisplay->screen_name : '';
+                    $model->display_name = isset($userDisplay->display_name) ? $userDisplay->display_name : '';
+                    $model->password = isset($userIdentity->password_hash) ? $userIdentity->password_hash : '';
+                    $model->status = isset($userIdentity->status) ? $userIdentity->status : '';
+                    $model->zone = isset($userIdentity->zone) ? $userIdentity->zone : '';
                     $identity .= '_zone';
                     $model->$identity = isset($user->getPermission()->item_name) ? $user->getPermission()->item_name : '';
                 }
